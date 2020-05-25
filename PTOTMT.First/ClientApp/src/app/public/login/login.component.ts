@@ -23,8 +23,6 @@ export class LoginComponent  {
             let token = (<any>response).token;
             let user = (<any>response).user;
            this.user.setOption("user", user);
-           console.log("user details from login component after received api response : ");
-          console.log(user);
            localStorage.setItem("jwt", token);
           this.invalidLogin = false;
           this.router.navigate(["/pto-calendar"]);

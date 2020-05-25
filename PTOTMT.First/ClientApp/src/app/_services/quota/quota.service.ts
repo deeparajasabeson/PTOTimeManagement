@@ -22,7 +22,9 @@ export class QuotaService {
       })
     };
     console.log("going to call api in quotas service" + this.quotaUrl);
-    return this.http.post(this.quotaUrl, quotaData, httpOptions);
+    let response = this.http.post(this.quotaUrl, quotaData, httpOptions);
+    debugger;
+    return response;
   }
 } 
 

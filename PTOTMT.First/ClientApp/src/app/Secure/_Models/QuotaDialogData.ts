@@ -1,10 +1,11 @@
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 // QuotaDialogData.ts
 export interface QuotaDialogData {
   quotaName: string;
   hours: number;
-  startDate: Date;
+  startDate: NgbDateStruct;
   startTime: string;
-  endDate: Date;
+  endDate: NgbDateStruct;
   endTime: string;
   description: string;
 }

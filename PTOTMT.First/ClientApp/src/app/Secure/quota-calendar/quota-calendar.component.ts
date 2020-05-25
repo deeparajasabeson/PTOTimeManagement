@@ -7,6 +7,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGrigPlugin from '@fullcalendar/timegrid';
 import { MatDialog,  MAT_DIALOG_DATA } from '@angular/material';
 import { MatDialogConfig } from '@angular/material/dialog';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 import { QuotaEditorComponent } from '../quota-editor/quota-editor.component';
 import { QuotaDialogData } from '../_models/QuotaDialogData';
@@ -20,20 +21,27 @@ import { UserService } from '../../_services/user/user.service';
 })
 export class QuotaCalendarComponent {
   public user;
+  toDate = new Date();
+
+  toDateNgbDateStruct: NgbDateStruct= {
+    year: this.toDate.getFullYear(),
+    month: this.toDate.getMonth(),
+    day: this.toDate.getDate()
+  }
+
   quota: QuotaDialogData = {
     quotaName: "Christmas",
     hours: 50,
-    startDate: new Date(),
+    startDate: this.toDateNgbDateStruct,
     startTime: "10:30",
-    endDate: new Date(),
+    endDate: this.toDateNgbDateStruct,
     endTime: "20:30",
     description: "Holidays during Christmas Eve"
   }
-  previousDate = null;
-  // references the #calendar in the template
-  @ViewChild('calendar', null) calendarComponent: FullCalendarComponent; // the #calendar in the template
 
-  calendarVisible = true;
+  previousDate = null;
+  @ViewChild('calendar', null) calendarComponent: FullCalendarComponent; // references #calendar in the template
+    calendarVisible = true;
   calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin]; // important!
   calendarWeekends = true;
   calendarEvents: EventInput[] = [
@@ -55,7 +63,7 @@ export class QuotaCalendarComponent {
     dialogConfig.data = {  quota: this.quota };
 
     const dialogRef = this.dialog.open(QuotaEditorComponent, dialogConfig);
-    dialogRef.componentInstance.quota = this.quota;
+    dialogRef.componentInstance.quota = this.quota;  //another way to pass quota to modal window
 
     dialogRef.afterClosed().subscribe(resultData => {
       if (resultData != null) {
@@ -66,23 +74,26 @@ export class QuotaCalendarComponent {
   }
 
   saveQuota() {
-    this.user = this.userService.getOption();
+    let userDetails = this.userService.getOption();
+
+
+
     const quotaEntity: QuotaEntity = {
-      Id: "",
+      Id: this.generateUUID(),
       Name: this.quota.quotaName,
       Description: this.quota.description,
       OriginalHours: this.quota.hours,
       RemainingHours:0,
       StartDateTime: this.quota.startDate,
       EndDateTime: this.quota.endDate,
-      TeamId: this.user.TeamId,
+      TeamId: userDetails.user.teamId,
       IsActive: true,
       CreatedBy: this.user.Id,
       CreatedOn: new Date(),
-      UpdatedBy: "",
-      UpdatedOn: null
+      UpdatedBy: this.user.Id,
+      UpdatedOn: new Date()
     };
-    
+    debugger;
     this.quotaService.saveQuota(quotaEntity)
       .subscribe(response => {
         console.log("response from saveQuota() in QuotaService");
@@ -93,6 +104,23 @@ export class QuotaCalendarComponent {
       }
     );
   }
+
+  generateUUID() {                               //Generating GUID in Typescript
+    var d = new Date().getTime();//Timestamp
+      var d2 = (performance && performance.now && (performance.now() * 1000)) || 0;
+      //Time in microseconds since page-load or 0 if unsupported
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16; //random number between 0 and 16
+      if (d > 0) {  //Use timestamp until depleted
+        r = (d + r) % 16 | 0;
+        d = Math.floor(d / 16);
+      } else {  //Use microseconds since page-load if supported
+        r = (d2 + r) % 16 | 0;
+        d2 = Math.floor(d2 / 16);
+      }
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+}
 
   isUserAuthenticated(): boolean {
     let token: string = localStorage.getItem("jwt");

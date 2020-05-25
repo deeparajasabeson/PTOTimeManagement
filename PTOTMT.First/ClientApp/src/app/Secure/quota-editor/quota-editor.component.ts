@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewChild, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder,  Validators, NgForm } from '@angular/forms';
-import { NgbDateStruct, NgbCalendar, NgbDatepicker } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { QuotaDialogData } from '../_models/QuotaDialogData';
 import { MaterialModule } from '../material.module';
 
@@ -11,17 +11,15 @@ import { MaterialModule } from '../material.module';
   styleUrls: ['./quota-editor.component.css']
 })
 export class QuotaEditorComponent implements OnInit {
+
   @Input() public quota: QuotaDialogData;  //Input from Calendar through @Input() property
 
   quotaeditorForm: FormGroup;
-  private toDate = new Date();
-  endDateRangeStartDate = new Date();
-
-  startDateFilter = (date: Date): boolean => {
-    return date > this.quota.endDate;
-  }
-  endDateFilter = (date: Date): boolean => {
-    return date < this.quota.startDate || date < new Date();
+  private toDate = new Date();  //used in endDate filter in calendar template
+  toDateNgbDateStruct: NgbDateStruct = {
+    year: this.toDate.getFullYear(),
+    month: this.toDate.getMonth(),
+    day: this.toDate.getDate()
   }
 
   constructor(
@@ -40,26 +38,6 @@ export class QuotaEditorComponent implements OnInit {
       endTime: [this.quota.endTime, [Validators.required, Validators.min(0.01), Validators.max(12.59)]],
       description: [this.quota.description, Validators.maxLength(50)]
     });
-    this.quotaeditorForm.controls.startDate.setValue({
-      year: this.quota.startDate.getFullYear(),
-      month: this.quota.startDate.getMonth(),
-      day: this.quota.startDate.getDate()
-    });
-    this.quotaeditorForm.get('endDate').setValue({
-      year: this.quota.endDate.getFullYear(),
-      month: this.quota.endDate.getMonth(),
-      day: this.quota.endDate.getDate(),
-    });
-  }
-
-  startDate: NgbDateStruct;
-  changeStartDateEvent(event) {
-    this.startDate = event.next;
-    this.quota.startDate = event.value;
-  }
-
-  changeEndDateEvent(event) {
-    this.quota.endDate = event.value;
   }
 
   navigateEvent(event) {
