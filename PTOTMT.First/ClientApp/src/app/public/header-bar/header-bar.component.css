@@ -1,0 +1,13 @@
+.header {
+  margin: 0px;
+  padding: 0px;
+  text-align: center;
+  word-break: break-all;
+  width: 100%;
+}
+
+.topbar-location {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+}

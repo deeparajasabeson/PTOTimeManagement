@@ -1,0 +1,38 @@
+/* https://stackoverflow.com/a/48689004/9263761 */
+.modal-title {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  background-color: #003366;
+  color: white;
+}
+
+input[type="text"], textarea {
+  background-color: #d1d1d1;
+  outline-style: solid;
+  outline-color: chartreuse;
+}
+
+.modal-box {
+  padding: 10px;
+  background-color: #f2f2f2;
+  border: solid;
+  box-shadow: 5px 10px #888888;
+  border-radius: 25px;
+  position: relative;
+}
+
+.modal-footer {
+  justify-self: right;
+  align-self: center;
+}
+
+.submitquota:hover {
+  color: green;
+  background: #fff;
+}
+
+.cancelquota:hover {
+  color: red;
+  background: #fff;
+}

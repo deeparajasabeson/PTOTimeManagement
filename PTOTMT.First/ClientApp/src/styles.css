@@ -1,0 +1,136 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@fullcalendar/core/main.css';
+@import '~@fullcalendar/daygrid/main.css';
+@import "~bootstrap/dist/css/bootstrap.css";
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import '~ngx-toastr/toastr.css';
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: "Lucida Sans Unicode";
+}
+
+body, html {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+code {
+  color: #e01a76;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.form-control.ng-touched.ng-invalid {
+  border: 2px solid red;
+}
+
+.text-success {
+  color: green;
+}
+
+.logout:hover {
+  cursor: pointer;
+}
+
+ul li {
+  text-decoration: none;
+  list-style: none;
+  font-size: 25px;
+}
+
+/* Small devices (landscape phones, 544px and up) */
+@media (min-width: 350px) {
+  html {
+    font-size: 0.25rem;
+  }
+  a {
+    font-size: 0.22rem
+  }
+  img {
+    height: 30px;
+    width: 65px;
+  }
+}
+
+  /* Small devices (landscape phones, 544px and up) */
+  @media (min-width: 544px) {
+    html {
+      font-size: 0.5rem;
+    }
+    a {
+      font-size: 0.45rem
+    }
+    img {
+      height: 40px;
+      width: 90px;
+    }
+
+    /*1rem = 16px*/
+  }
+
+  /* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
+  @media (min-width: 768px) {
+    html {
+      font-size: 0.75rem;
+    }
+    a {
+      font-size: 0.67rem;
+    }
+    img {
+      height: 50px;
+      width: 110px;
+    }
+    /*1rem = 16px*/
+  }
+
+  /* Large devices (desktops, 992px and up) */
+  @media (min-width: 992px) {
+    html {
+      font-size: 1rem;
+    }
+
+    a {
+      font-size: 0.9rem;
+    }
+
+    img {
+      height: 60px;
+      width: 130px;
+    }
+    /*1rem = 16px*/
+  }
+
+  /* Extra large devices (large desktops, 1200px and up) */
+  @media (min-width: 1200px) {
+    html {
+      font-size: 1.25rem;
+    }
+    a {
+      font-size: 1.12rem;
+    }
+    img {
+      height: 70px;
+      width: 150px;
+    }
+    /*1rem = 16px*/
+  }
+
+.ng-valid[required], .ng-valid.required {
+  border-left: 5px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form) {
+  border-left: 5px solid #a94442; /* red */
+}

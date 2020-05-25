@@ -1,0 +1,89 @@
+<div class="modal-box dialog-wrapper">
+  <div class="navbar modal-title">
+    <h5 mat-dialog-title>&nbsp;&nbsp;New Quota </h5>
+  </div>
+  <form [formGroup]="quotaeditorForm" (ngSubmit)="saveQuota(quotaeditorForm.value)" >
+    <div mat-dialog-content>
+      <div class="row">
+        <div class="col-6">
+            PTO Name<br />
+            <input type="text"
+                   formControlName="quotaName"
+                   style="width:60%"
+                   maxlength="30">
+          </div>
+        <div class="col-6">
+            Available PTO Hours <br />
+            <input type="number"
+                   step=1
+                   formControlName="hours"
+                   style="width:20%">
+        </div>
+      </div><br />
+        <b>PTO Quota Details</b>
+        <div class="row">
+          <div class="col-3">
+            Start Date
+            <div class="input-group">
+              <input ngbDatepicker
+                     formControlName="startDate"
+                     placeholder="mm/dd/yyyy"
+                     #dpstartDate="ngbDatepicker"
+                     name="startDate"
+                     size="10"
+                     (dateChange)="changeStartDateEvent($event)">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="dpstartDate.toggle()" type="button">📅</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-2">
+            Start Time
+            <input type="time"
+                   formControlName="startTime"
+                   placeholder="HH:mm"
+                   name="startTime"
+                   step=1800> <!--30 minutes-->
+          </div>
+          <div class="col-1"></div>
+          <div class="col-3">
+            End Date
+            <div class="input-group">
+              <input ngbDatepicker
+                     formControlName="endDate"
+                     placeholder="mm/dd/yyyy"
+                     #dpendDate="ngbDatepicker"
+                     name="endDate"
+                     size="10"
+                     min="{{startDate > toDate ? startDate : toDate | date: 'mm/dd/yyyy'}}"
+                     (dateChange)="changeEndDateEvent($event)">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="dpendDate.toggle()" type="button">📅</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-2">
+            End Time
+            <input type="time"
+                   formControlName="endTime"
+                   placeholder="HH:mm"
+                   name="endTime"
+                   step=1800>       <!--30 minutes-->
+          </div>
+        </div>
+        <br />
+        Description
+          <input type="text"
+                 formControlName ="description"
+                 style="width:75%"
+                 maxlength="50">
+    </div>
+    <div mat-dialog-actions class="modal-footer ">
+      <button type="submit"
+              class="btn btn-success submitquota"
+              [mat-dialog-close]="data">Submit Quota</button>
+      <button class="btn btn-danger cancelquota" (click)="onNoClick()">Cancel</button>
+      <br />
+    </div>
+    </form>
+</div>

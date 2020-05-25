@@ -1,0 +1,19 @@
+  <br>
+  <button class="btn btn-info pull-left" (click)="getNewQuota()">New PTO Quota</button>
+  <div class="text-right">
+    <button (click)='toggleWeekends()'>toggle weekends</button>
+  </div>
+  <div class='app-calendar' *ngIf="calendarVisible">
+    <full-calendar #calendar
+                   defaultView="dayGridMonth"
+                   [header]="{
+                          left: 'prev,next today',
+                          center: 'title',
+                          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                      }"
+                   [plugins]="calendarPlugins"
+                   [weekends]="calendarWeekends"
+                   (dateClick)="handleDateClick($event)"
+                   [events]="calendarEvents">
+    </full-calendar>
+  </div>

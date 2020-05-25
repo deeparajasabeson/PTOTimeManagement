@@ -1,0 +1,8 @@
+<app-header-bar fxLayout="column"></app-header-bar>
+<div fxLayout="row" fxFlex="100"  fxLayout.xs="column" fxLayout.sm="column"> <!-- Becomes  top menu bar when screen shrinks-->
+  <app-top-menu fxLayout="column" fxFlex="18%" fxFlex.lt-lg=""></app-top-menu>  <!-- Left Column, Top Row -->
+  <div class="content" fxLayout="column" fxFlex="82%" fxFlex.lt-lg="">     <!-- Right Column, Bottom Row -->
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<app-footer-bar></app-footer-bar>

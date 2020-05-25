@@ -1,0 +1,37 @@
+<ul class="navbar-nav" *ngIf="isAuthenticated | async">
+  <li class="nav-item">
+    <fa-layers size="2x">
+      <fa-icon icon="bell"></fa-icon>
+      <fa-layers-counter [content]="counter"></fa-layers-counter>
+    </fa-layers>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-dark" [routerLink]='["/authentication/profile"]' title="Manage">
+      <span *ngIf="userName | async">
+        <fa-icon icon="user"></fa-icon>&nbsp;
+      </span>
+      <b>Hello {{ userName | async }}</b>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-dark" [routerLink]='["/authentication/logout"]' [state]='{ local: true }' title="Logout">
+      <fa-icon icon="fa-sign-out"></fa-icon>&nbsp;
+      <b>Logout</b>
+    </a>
+  </li>
+</ul>
+<ul class="navbar-nav" *ngIf="!(isAuthenticated | async)">
+  <li class="nav-item">
+    <a class="nav-link text-dark" [routerLink]='["/authentication/register"]'>
+      <fa-icon icon="user-plus"></fa-icon>&nbsp;
+      <b>Register</b>
+    </a>
+  </li>
+  &emsp;
+  <li class="nav-item">
+    <a class="nav-link text-dark" [routerLink]='["/authentication/login"]'>
+      <fa-icon icon="sign-in-alt"></fa-icon>&nbsp;
+      <b>Login</b>
+    </a>
+  </li>
+</ul>

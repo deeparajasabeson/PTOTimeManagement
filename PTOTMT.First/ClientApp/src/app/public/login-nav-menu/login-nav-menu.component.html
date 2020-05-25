@@ -1,0 +1,38 @@
+<ul class="nav navbar-nav navbar-right" *ngIf="isAuthenticated">
+  <li class="nav-item">
+    <fa-layers size="1.8x">
+      <fa-icon icon="bell"></fa-icon>
+      <fa-layers-counter [content]="counter"></fa-layers-counter>
+    </fa-layers>
+  </li>  &nbsp;  &nbsp;
+  <li class="nav-item">
+    <span *ngIf="userName ">
+      <fa-icon icon="user"></fa-icon>
+    </span>
+    <b>{{ userName  }}</b>
+  </li>  &nbsp;
+  <li class="nav-item">
+    <a class="nav-link text-dark" [routerLink]='["/loggedout"]' [state]='{ local: true }' title="Loggedout">
+      <fa-icon icon="sign-out-alt"></fa-icon>
+      <!--<mat-icon matBadge="10">
+        notifications
+      </mat-icon>-->
+      <b>Logout</b>
+    </a>
+  </li>
+</ul>
+<ul class="nav navbar-nav navbar-right" *ngIf="!(isAuthenticated)">
+  <li class="nav-item">
+    <a class="nav-link text-dark" [routerLink]='["/register"]'>
+      <fa-icon icon="user-plus"></fa-icon>&nbsp;
+      <b>Register</b>
+    </a>
+  </li>
+  &emsp;
+  <li class="nav-item">
+    <a class="nav-link text-dar" [routerLink]='["/login"]'>
+      <fa-icon icon="sign-in-alt"></fa-icon>&nbsp;
+      <b>Login</b>
+    </a>
+  </li>
+</ul>

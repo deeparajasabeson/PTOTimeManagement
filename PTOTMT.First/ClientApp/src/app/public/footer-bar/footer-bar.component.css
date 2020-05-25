@@ -1,0 +1,12 @@
+.footer-location {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+:host {
+  padding: 0px;
+  background-color: darkblue;
+  border-top: double;
+}
