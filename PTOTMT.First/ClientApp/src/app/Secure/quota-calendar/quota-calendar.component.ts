@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import interactionPlugin from '@fullcalendar/interaction'; // for dateClick
 import { EventInput } from '@fullcalendar/core';
@@ -11,13 +12,14 @@ import { QuotaEditorComponent } from '../quota-editor/quota-editor.component';
 import { QuotaDialogData } from '../_models/QuotaDialogData';
 import { QuotaEntity } from '../_entities/QuotaEntity';
 import { QuotaService } from '../../_services/quota/quota.service';
-import { Router } from '@angular/router';
+import { UserService } from '../../_services/user/user.service';
 
 @Component({
   selector: 'app-quota-calendar',
   templateUrl: './quota-calendar.component.html'
 })
 export class QuotaCalendarComponent {
+  public user;
   quota: QuotaDialogData = {
     quotaName: "Christmas",
     hours: 50,
@@ -38,7 +40,10 @@ export class QuotaCalendarComponent {
     { title: 'Event Now', start: new Date() }
   ];
 
-  constructor(public dialog: MatDialog, private router: Router, private quotaService: QuotaService) { }
+  constructor(public dialog: MatDialog,
+                       private router: Router,
+                       private quotaService: QuotaService,
+                       private userService: UserService) { }
 
   getNewQuota(): void {
     const dialogConfig = new MatDialogConfig();
@@ -61,6 +66,7 @@ export class QuotaCalendarComponent {
   }
 
   saveQuota() {
+    this.user = this.userService.getOption();
     const quotaEntity: QuotaEntity = {
       Id: "",
       Name: this.quota.quotaName,

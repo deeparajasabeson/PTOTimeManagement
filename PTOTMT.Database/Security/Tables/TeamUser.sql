@@ -10,8 +10,8 @@
     [UpdatedBy]      UNIQUEIDENTIFIER   NOT NULL,
     [UpdatedOn]      DATETIMEOFFSET (7) DEFAULT (getutcdate()) NOT NULL,
     CONSTRAINT PK_TeamUserId PRIMARY KEY CLUSTERED ([Id] ASC),
-    CONSTRAINT FK_UserTeamUser_UserId FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers]  ([Id]),
+    CONSTRAINT FK_UserTeamUser_UserId FOREIGN KEY ([UserId]) REFERENCES [security].[User]  ([Id]),
     CONSTRAINT FK_TeamTeamUser FOREIGN KEY ([TeamId]) REFERENCES [Security].[Team] ([Id]),
-    CONSTRAINT FK_UserTeamUser_CreatedBy FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[AspNetUsers]  ([Id]),
-    CONSTRAINT FK_UserTeamUser_UpdatedBy FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[AspNetUsers]  ([Id])
+    CONSTRAINT FK_UserTeamUser_CreatedBy FOREIGN KEY ([CreatedBy]) REFERENCES [security].[User]  ([Id]),
+    CONSTRAINT FK_UserTeamUser_UpdatedBy FOREIGN KEY ([UpdatedBy]) REFERENCES [security].[User]  ([Id])
  );

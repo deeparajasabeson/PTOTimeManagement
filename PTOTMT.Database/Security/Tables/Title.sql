@@ -8,7 +8,7 @@
     [UpdatedBy]   UNIQUEIDENTIFIER   NOT NULL,
     [UpdatedOn]   DATETIMEOFFSET (7) DEFAULT (getutcdate()) NOT NULL,
     CONSTRAINT PK_TitleId PRIMARY KEY CLUSTERED ([Id] ASC),
-    CONSTRAINT FK_UserTitle_CreatedBy FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[AspNetUsers]  ([Id]),
-    CONSTRAINT FK_UserTitle_UpdatedBy FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[AspNetUsers]  ([Id])
+    CONSTRAINT FK_UserTitle_CreatedBy FOREIGN KEY ([CreatedBy]) REFERENCES [security].[User]  ([Id]),
+    CONSTRAINT FK_UserTitle_UpdatedBy FOREIGN KEY ([UpdatedBy]) REFERENCES[security].[User] ([Id])
 );
 

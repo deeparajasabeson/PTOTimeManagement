@@ -19,7 +19,7 @@ namespace PTOTMT.Repository.Implementation.WebAPI
             this._context = context;
         }
 
-        public User GetUser(string userName, string password) 
+        public User GetUserDetails(string userName, string password) 
         {
             return context.User.Where(user => user.UserName == userName && user.Password == password).FirstOrDefault();
         }

@@ -4,6 +4,6 @@ namespace PTOTMT.Repository.Abstraction.WebAPI
 {
     public interface IUserRepository : IRepository<User>
     {
-        User GetUser(string userName, string password);
+        User GetUserDetails(string userName, string password);
     }
 }

@@ -44,7 +44,7 @@ namespace PTOTMT.First
             });
             services.AddHttpClient("API Client", client =>
             {
-                client.BaseAddress = new Uri("http://localhost:44327/api");
+                client.BaseAddress = new Uri("http://localhost:44382/api/");
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             })
             // Add the re-try policy: in this instance, re-try three times,

@@ -18,12 +18,12 @@
     [UpdatedOn]      DATETIMEOFFSET (7) DEFAULT (getutcdate()) NOT NULL,
     CONSTRAINT PK_UserId PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT FK_LocationUser FOREIGN KEY ([LocationId]) REFERENCES [Config].[Location] ([Id]),
-    CONSTRAINT FK_UserUser_ReportToUserId FOREIGN KEY ([ReportToUserId]) REFERENCES [dbo].[AspNetUsers]  ([Id]),
+    CONSTRAINT FK_UserUser_ReportToUserId FOREIGN KEY ([ReportToUserId]) REFERENCES [security].[User]  ([Id]),
     CONSTRAINT FK_RoleUser FOREIGN KEY ([RoleId]) REFERENCES [Security].[Role] ([Id]),
     CONSTRAINT FK_TeamUser FOREIGN KEY ([TeamFunctionId]) REFERENCES [Security].[Team] ([Id]),
     CONSTRAINT FK_TitleUser FOREIGN KEY ([TitleId]) REFERENCES [Security].[Title] ([Id]),
-    CONSTRAINT FK_UserUser_CreatedBy FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[AspNetUsers]  ([Id]),
-    CONSTRAINT FK_UserUser_UpdatedBy FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[AspNetUsers]  ([Id])
+    CONSTRAINT FK_UserUser_CreatedBy FOREIGN KEY ([CreatedBy]) REFERENCES [security].[User]  ([Id]),
+    CONSTRAINT FK_UserUser_UpdatedBy FOREIGN KEY ([UpdatedBy]) REFERENCES[security].[User]  ([Id])
 );
 
 

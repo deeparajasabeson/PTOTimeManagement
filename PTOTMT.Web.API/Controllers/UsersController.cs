@@ -19,7 +19,7 @@ namespace PTOTMT.Service.Controllers
         }
 
         // GET: api/Users
-        [HttpGet]
+        [HttpGet, Route("")]
         public IEnumerable<User> GetUser()
         {
             return uow.UserRepo.GetAll();
@@ -100,13 +100,16 @@ namespace PTOTMT.Service.Controllers
             return NotFound();
         }
 
+        [HttpGet("userexists/{id}")]
         public bool UserExists(Guid? id)
         {
             return uow.UserRepo.Exists(id);
         }
-        public User GetUser([FromQuery] string username, [FromQuery] string password)
+
+        [HttpGet("userdetails")]
+        public ActionResult<User> GetUserDetails([FromQuery] string username, [FromQuery] string password)
         {
-            return uow.UserRepo.GetUser(username, password);
+            return uow.UserRepo.GetUserDetails(username, password);
         }
     }
 }

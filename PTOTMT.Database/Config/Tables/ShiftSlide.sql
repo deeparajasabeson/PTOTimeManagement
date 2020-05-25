@@ -11,6 +11,6 @@
     [UpdatedOn]   DATETIMEOFFSET (7) DEFAULT (getutcdate()) NOT NULL,
     CONSTRAINT PK_ShiftSlideId PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT FK_TeamShiftSlide FOREIGN KEY ([TeamFunctionId]) REFERENCES [Security].[Team] ([Id]),
-    CONSTRAINT FK_UserShiftSlide_CreatedBy FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[AspNetUsers]  ([Id]),
-    CONSTRAINT FK_UserShiftSlide_UpdatedBy FOREIGN KEY ([UpdatedBy]) REFERENCES[dbo].[AspNetUsers]  ([Id])    
+    CONSTRAINT FK_UserShiftSlide_CreatedBy FOREIGN KEY ([CreatedBy]) REFERENCES [security].[User] ([Id]),
+    CONSTRAINT FK_UserShiftSlide_UpdatedBy FOREIGN KEY ([UpdatedBy]) REFERENCES [security].[User] ([Id])    
 );

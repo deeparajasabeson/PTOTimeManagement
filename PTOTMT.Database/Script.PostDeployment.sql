@@ -44,14 +44,13 @@ Declare @UserId uniqueidentifier = NEWID(),
 Insert into Security.[User]
 (Id, FirstName, LastName, UserName, Password, TitleId, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamFunctionId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(@UserId, 'Deepa', 'Rajasabeson', @TitleId, 'drajas401', 'deeparajasabeson@gmail.com', @RoleId, @ReportToUserId, @LocationId,  @TeamId, 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(@UserId, 'Deepa', 'Rajasabeson', 'deeparajasabeson@gmail.com', 'deepa', @TitleId, 'drajas401', 'deeparajasabeson@gmail.com', @RoleId, @ReportToUserId, @LocationId,  @TeamId, 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
 
 
 Insert into Security.[User]
-(Id, FirstName, LastName, TitleId, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamFunctionId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, FirstName, LastName, UserName, Password,TitleId, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamFunctionId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(@ReportToUserId, 'Harold', 'Gulube',@TitleId , 'hgulub400', 'haroldgulube@gmail.com',@RoleId, @UserId,@LocationId, @TeamId, 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
-
+(@ReportToUserId, 'Harold', 'Gulube', 'haroldgulube@gmail.com', 'harold' , @TitleId , 'hgulub400', 'haroldgulube@gmail.com',@RoleId, @UserId,@LocationId, @TeamId, 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
 
 -- Security.Role TABLE
 Insert into Security.Role 
