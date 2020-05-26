@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { QuotaEntity } from '../../secure/_entities/QuotaEntity';
+import { QuotaEntity } from '../../_entities/QuotaEntity';
 
 
 @Injectable({

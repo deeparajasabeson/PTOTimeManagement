@@ -10,8 +10,8 @@ import { MatDialogConfig } from '@angular/material/dialog';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 import { QuotaEditorComponent } from '../quota-editor/quota-editor.component';
-import { QuotaDialogData } from '../_models/QuotaDialogData';
-import { QuotaEntity } from '../_entities/QuotaEntity';
+import { QuotaDialogData } from '../../_models/QuotaDialogData';
+import { QuotaEntity } from '../../_entities/QuotaEntity';
 import { QuotaService } from '../../_services/quota/quota.service';
 import { UserService } from '../../_services/user/user.service';
 
@@ -74,29 +74,41 @@ export class QuotaCalendarComponent {
   }
 
   saveQuota() {
-    let userDetails = this.userService.getOption();
+    let userDetails = this.userService.getUser();
 
+    let startDateTime = new Date(
+      this.quota.startDate.year,
+      this.quota.startDate.month,
+      this.quota.startDate.day,
+      parseInt(this.quota.startTime.substr(0, 2)),
+      parseInt(this.quota.startTime.substr(2, 2)));
 
+    let endDateTime = new Date(
+      this.quota.endDate.year,
+      this.quota.endDate.month,
+      this.quota.endDate.day,
+      parseInt(this.quota.endTime.substr(0, 2)),
+      parseInt(this.quota.endTime.substr(2, 2)));
 
     const quotaEntity: QuotaEntity = {
       Id: this.generateUUID(),
       Name: this.quota.quotaName,
       Description: this.quota.description,
       OriginalHours: this.quota.hours,
-      RemainingHours:0,
-      StartDateTime: this.quota.startDate,
-      EndDateTime: this.quota.endDate,
-      TeamId: userDetails.user.teamId,
+      RemainingHours: 0,
+      StartDateTime: startDateTime,
+      EndDateTime: endDateTime,
+      TeamId: userDetails.TeamFunctionId,
       IsActive: true,
-      CreatedBy: this.user.Id,
-      CreatedOn: new Date(),
-      UpdatedBy: this.user.Id,
-      UpdatedOn: new Date()
+      CreatedBy: userDetails.Id,
+      CreatedOn: this.toDate,
+      UpdatedBy: userDetails.Id,
+      UpdatedOn: this.toDate
     };
     debugger;
     this.quotaService.saveQuota(quotaEntity)
       .subscribe(response => {
-        console.log("response from saveQuota() in QuotaService");
+        console.log("Response received in quota-calendar from saveQuota() in QuotaService ");
         console.log(response);
       }, err => {
               console.log("Error Occured :");

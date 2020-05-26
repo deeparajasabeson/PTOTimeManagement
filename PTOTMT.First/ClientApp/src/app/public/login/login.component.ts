@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
-//import { tap } from 'rxjs/operators';
 import {  NgForm } from '@angular/forms';
 import { AuthService } from '../../_services/auth/auth.service';
 import { UserService } from '../../_services/user/user.service';
@@ -20,17 +19,17 @@ export class LoginComponent  {
     this.auth.login(form)
       .subscribe(response =>
       {
-            let token = (<any>response).token;
-            let user = (<any>response).user;
-           this.user.setOption("user", user);
-           localStorage.setItem("jwt", token);
+          let token = (<any>response).token;
+          let user = (<any>response).user;
+          this.user.setUser( user);
+          localStorage.setItem("jwt", token);
           this.invalidLogin = false;
           this.router.navigate(["/pto-calendar"]);
           }, err => {
               console.log("Error Occured :");
               console.log(err);
               this.invalidLogin = true;
-        }
-    );
+         }
+      );
   }
 }

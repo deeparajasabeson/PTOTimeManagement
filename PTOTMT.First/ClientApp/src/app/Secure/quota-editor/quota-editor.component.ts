@@ -2,7 +2,7 @@ import { Component, Inject, OnInit, ViewChild, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder,  Validators, NgForm } from '@angular/forms';
 import { NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
-import { QuotaDialogData } from '../_models/QuotaDialogData';
+import { QuotaDialogData } from '../../_models/QuotaDialogData';
 import { MaterialModule } from '../material.module';
 
 @Component({
