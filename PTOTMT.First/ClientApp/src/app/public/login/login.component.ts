@@ -13,23 +13,23 @@ export class LoginComponent  {
 
   constructor( private router: Router,
                         private auth: AuthService,
-                        private user: UserService) { }
+                        private userService: UserService) { }
 
   public login(form: NgForm) {
     this.auth.login(form)
       .subscribe(response =>
       {
-          let token = (<any>response).token;
-          let user = (<any>response).user;
-          this.user.setUser( user);
-          localStorage.setItem("jwt", token);
-          this.invalidLogin = false;
-          this.router.navigate(["/pto-calendar"]);
-          }, err => {
+        let token = (<any>response).token;
+        let user = (<any>response).user;
+        this.userService.setUserEntity(user);
+        localStorage.setItem("jwt", token);
+
+        this.invalidLogin = false;
+        this.router.navigate(["/pto-calendar"]);
+      }, err => {
               console.log("Error Occured :");
               console.log(err);
               this.invalidLogin = true;
-         }
-      );
+      });
   }
 }

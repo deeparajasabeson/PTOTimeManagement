@@ -14,6 +14,7 @@ import { QuotaDialogData } from '../../_models/QuotaDialogData';
 import { QuotaEntity } from '../../_entities/QuotaEntity';
 import { QuotaService } from '../../_services/quota/quota.service';
 import { UserService } from '../../_services/user/user.service';
+import { UserEntity } from '../../_entities/UserEntity';
 
 @Component({
   selector: 'app-quota-calendar',
@@ -74,21 +75,21 @@ export class QuotaCalendarComponent {
   }
 
   saveQuota() {
-    let userDetails = this.userService.getUser();
+    let userDetails: UserEntity = this.userService.getUserEntity();
 
     let startDateTime = new Date(
       this.quota.startDate.year,
       this.quota.startDate.month,
       this.quota.startDate.day,
       parseInt(this.quota.startTime.substr(0, 2)),
-      parseInt(this.quota.startTime.substr(2, 2)));
+      parseInt(this.quota.startTime.substr(3, 2)));
 
     let endDateTime = new Date(
       this.quota.endDate.year,
       this.quota.endDate.month,
       this.quota.endDate.day,
       parseInt(this.quota.endTime.substr(0, 2)),
-      parseInt(this.quota.endTime.substr(2, 2)));
+      parseInt(this.quota.endTime.substr(3, 2)));
 
     const quotaEntity: QuotaEntity = {
       Id: this.generateUUID(),
@@ -98,11 +99,11 @@ export class QuotaCalendarComponent {
       RemainingHours: 0,
       StartDateTime: startDateTime,
       EndDateTime: endDateTime,
-      TeamId: userDetails.TeamFunctionId,
+      TeamId: userDetails.teamFunctionId,
       IsActive: true,
-      CreatedBy: userDetails.Id,
+      CreatedBy: userDetails.id,
       CreatedOn: this.toDate,
-      UpdatedBy: userDetails.Id,
+      UpdatedBy: userDetails.id,
       UpdatedOn: this.toDate
     };
     debugger;
@@ -118,7 +119,7 @@ export class QuotaCalendarComponent {
   }
 
   generateUUID() {                               //Generating GUID in Typescript
-    var d = new Date().getTime();//Timestamp
+    var d = new Date().getTime();
       var d2 = (performance && performance.now && (performance.now() * 1000)) || 0;
       //Time in microseconds since page-load or 0 if unsupported
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

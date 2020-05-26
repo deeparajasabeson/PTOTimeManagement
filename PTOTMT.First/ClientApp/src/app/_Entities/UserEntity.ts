@@ -1,20 +1,20 @@
 // UserEntity.ts
 export interface UserEntity {
-  Id: string;
-  FirstName: string;
-  LastName: string;
-  UserName: string;
-  Password: string;
-  TitleId: string;
-  NTLogin: string;
-  EmailAddress: string;
-  RoleId: string
-  ReportToUserId: string;
-  LocationId: string;
-  TeamFunctionId: string;
-  IsActive: boolean;
-  CreatedBy: string;
-  CreatedOn: Date;
-  UpdatedBy: string;
-  UpdatedOn: Date;
+  id: string;
+  firstName: string;
+  lastName: string;
+  userName: string;
+  password: string;
+  titleId: string;
+  ntLogin: string;
+  emailAddress: string;
+  roleId: string
+  reportToUserId: string;
+  locationId: string;
+  teamFunctionId: string;
+  isActive: boolean;
+  createdBy: string;
+  createdOn: Date;
+  updatedBy: string;
+  updatedOn: Date;
 }

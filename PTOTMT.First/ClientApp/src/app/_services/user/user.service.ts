@@ -5,12 +5,12 @@ import { UserEntity } from '../../_entities/UserEntity';
   providedIn: 'root'
 })
 export class UserService {
-  private user;
-  setUser(value) {
-    this.user = value;
+  private userEntity: UserEntity;
+  setUserEntity(value: UserEntity) {
+    this.userEntity = value;
   }
-  getUser() {
-    return this.user;
+  getUserEntity(): UserEntity {
+    return this.userEntity;
   }
 
   private details = {};
