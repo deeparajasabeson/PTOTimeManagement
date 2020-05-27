@@ -31,7 +31,6 @@ export class HttpConfigInterceptor implements HttpInterceptor {
     newHeaders = newHeaders.append('Content-Type', 'application/json')
                                                   .append('Authorization', 'Bearer ${authToken}')
                                                   .append('Accept', 'application/json');
-    console.log('Token added to HTTP request');
     // Clone the request and replace the original headers with
     // cloned headers, updated with the authorization.
     const clonedAuthRequest = req.clone({
@@ -43,8 +42,6 @@ export class HttpConfigInterceptor implements HttpInterceptor {
     // or pass it to the next interceptor if any
     return next.handle(clonedAuthRequest).pipe(
       map((event: HttpEvent<any>) => {
-        console.log('event--->>>', event);
-        console.log('All: ' + JSON.stringify(event));
         if (event instanceof HttpResponse) {
           if (event instanceof HttpResponse) {
             if (event.body && event.body.success) {

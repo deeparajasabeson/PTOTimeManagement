@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
+using System.Linq;
 
 namespace PTOTMT.Service.Controllers
 {
@@ -40,6 +41,16 @@ namespace PTOTMT.Service.Controllers
             return quota;
         }
 
+        // GET: api/Quotas/quotabyteamid/<teamId:Guid>
+        [HttpGet("quotasbyteamid/{teamId}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IEnumerable<Quota> GetQuotasByTeamId(Guid? teamId)
+        {
+            var quotas = GetQuota();
+            return quotas.Where(q => q.TeamId == teamId);
+            //return CreatedAtAction(nameof(GetQuota), quotas);
+        }
+
         // PUT: api/Quotas/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
@@ -67,7 +78,7 @@ namespace PTOTMT.Service.Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<Quota> PostQuota(Quota quota)
+        public IActionResult PostQuota(Quota quota)
         {
             Quota addedQuota = uow.QuotaRepo.Post(quota);
             uow.SaveChanges();

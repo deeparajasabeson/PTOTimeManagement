@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
+using Microsoft.Net.Http.Headers;
 
 namespace PTOTMT.Service
 {
@@ -28,7 +29,8 @@ namespace PTOTMT.Service
                 {
                     policy.AllowAnyHeader()
                              .AllowAnyMethod()
-                             .AllowAnyOrigin();
+                             .AllowAnyOrigin()
+                             .WithExposedHeaders("x-custom-header");
                 });
             });
             services.AddDbContext<PTOTMTWebAPIContext>(options =>

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import interactionPlugin from '@fullcalendar/interaction'; // for dateClick
@@ -13,14 +13,15 @@ import { QuotaEditorComponent } from '../quota-editor/quota-editor.component';
 import { QuotaDialogData } from '../../_models/QuotaDialogData';
 import { QuotaEntity } from '../../_entities/QuotaEntity';
 import { QuotaService } from '../../_services/quota/quota.service';
-import { UserService } from '../../_services/user/user.service';
+import { DataStorageService } from '../../_services/datastorage/datastorage.service';
 import { UserEntity } from '../../_entities/UserEntity';
+
 
 @Component({
   selector: 'app-quota-calendar',
   templateUrl: './quota-calendar.component.html'
 })
-export class QuotaCalendarComponent {
+export class QuotaCalendarComponent implements OnInit {
   public user;
   toDate = new Date();
 
@@ -31,28 +32,59 @@ export class QuotaCalendarComponent {
   }
 
   quota: QuotaDialogData = {
-    quotaName: "Christmas",
-    hours: 50,
+    quotaName: "",
+    hours: 0,
     startDate: this.toDateNgbDateStruct,
-    startTime: "10:30",
+    startTime: "00:00",
     endDate: this.toDateNgbDateStruct,
-    endTime: "20:30",
-    description: "Holidays during Christmas Eve"
+    endTime: "00:00",
+    description: ""
   }
 
   previousDate = null;
   @ViewChild('calendar', null) calendarComponent: FullCalendarComponent; // references #calendar in the template
-    calendarVisible = true;
+  calendarVisible = true;
   calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin]; // important!
   calendarWeekends = true;
-  calendarEvents: EventInput[] = [
-    { title: 'Event Now', start: new Date() }
-  ];
+  calendarEvents: EventInput[] = [];
 
   constructor(public dialog: MatDialog,
                        private router: Router,
                        private quotaService: QuotaService,
-                       private userService: UserService) { }
+                       private datastorageService: DataStorageService) { }
+
+  ngOnInit() {
+    this.readQuotasbyTeamId();
+  }
+  static subscribeData: any;
+  static setSubscribeData(data): any {
+    QuotaCalendarComponent.subscribeData = data;
+    return data;
+  }
+
+  readQuotasbyTeamId() {
+    let teamId: string = this.datastorageService.getUserEntity().teamFunctionId;
+    let quotaList = null;
+    this.quotaService.getQuotasByTeamId(teamId)
+      .subscribe((data: QuotaEntity[]) => {
+        console.log("Response returned from Get Quotas by Team Id :")
+        console.log(data);
+        QuotaCalendarComponent.setSubscribeData(data);
+      })
+
+    quotaList = QuotaCalendarComponent.subscribeData;
+    if (quotaList != null) {
+      for (var i = 0; i < quotaList.length; ++i) {
+        this.calendarEvents[i] =
+        {
+          title: quotaList[i].name,
+          start: quotaList[i].startDateTime,
+          end: quotaList[i].endDateTime,
+          id: quotaList[i].id
+        };
+      }
+    }
+  }
 
   getNewQuota(): void {
     const dialogConfig = new MatDialogConfig();
@@ -75,7 +107,7 @@ export class QuotaCalendarComponent {
   }
 
   saveQuota() {
-    let userDetails: UserEntity = this.userService.getUserEntity();
+    let userDetails: UserEntity = this.datastorageService.getUserEntity();
 
     let startDateTime = new Date(
       this.quota.startDate.year,
@@ -107,8 +139,7 @@ export class QuotaCalendarComponent {
       UpdatedOn: this.toDate
     };
     console.log(this.quotaService.saveQuota(quotaEntity));
-    console.log("Returned data from quota SaveData Service...")
-    
+    console.log("Returned data from quota SaveData Service...");
   }
 
   generateUUID() {                               //Generating GUID in Typescript

@@ -5,7 +5,7 @@ namespace PTOTMT.Repository.Abstraction.WebAPI
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        IEnumerable<TEntity> GetAll();
+        List<TEntity> GetAll();
         TEntity GetById(object id);
         void Put(TEntity model);
         TEntity Post(TEntity model);

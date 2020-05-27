@@ -49,7 +49,6 @@
   <ItemGroup>
     <Folder Include="ClientApp\src\app\_guards\" />
     <Folder Include="ClientApp\src\app\_services\error-dialog\" />
-    <Folder Include="ClientApp\src\app\_services\user\" />
   </ItemGroup>
 
   <ItemGroup>

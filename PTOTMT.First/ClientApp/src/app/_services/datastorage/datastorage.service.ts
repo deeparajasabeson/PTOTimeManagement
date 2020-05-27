@@ -1,10 +1,19 @@
 import { Injectable } from '@angular/core';
 import { UserEntity } from '../../_entities/UserEntity';
+import { QuotaEntity } from '../../_entities/QuotaEntity';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class DataStorageService {
+  private quotas: QuotaEntity[];
+  setQuotaEntityList(value: QuotaEntity[]) {
+    this.quotas = value;
+  }
+  getQuotaEntityList(): QuotaEntity[] {
+    return this.quotas;
+  }
+
   private userEntity: UserEntity;
   setUserEntity(value: UserEntity) {
     this.userEntity = value;

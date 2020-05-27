@@ -15,7 +15,7 @@ import { AlertComponent } from './public/alert/alert.component';
 
 import { ErrorDialogService } from './_services/error-dialog/error-dialog.service';
 import { AuthService } from './_services/auth/auth.service';
-import { UserService } from './_services/user/user.service';
+import { DataStorageService } from './_services/datastorage/datastorage.service';
 import { HttpConfigInterceptor } from './_interceptors/HttpConfigInterceptor';
 //import { httpInterceptorProviders } from './_interceptors/index';
 
@@ -67,7 +67,7 @@ export function tokenGetter() {
   providers: [
     AuthService,
     ErrorDialogService,
-    UserService,
+    DataStorageService,
     { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
   ],
   entryComponents: [ErrorDialogComponent],

@@ -10,7 +10,7 @@ namespace PTOTMT.Repository.Implementation.WebAPI
     {
         protected PTOTMTWebAPIContext _context { get; set; }
 
-        public IEnumerable<TEntity> GetAll()
+        public List<TEntity> GetAll()
         {
             return _context.Set<TEntity>().ToList();
         }
