@@ -64,15 +64,12 @@ export class QuotaCalendarComponent implements OnInit {
 
   readQuotasbyTeamId() {
     let teamId: string = this.datastorageService.getUserEntity().teamFunctionId;
-    let quotaList = null;
     this.quotaService.getQuotasByTeamId(teamId)
       .subscribe((data: QuotaEntity[]) => {
-        console.log("Response returned from Get Quotas by Team Id :")
-        console.log(data);
         QuotaCalendarComponent.setSubscribeData(data);
       })
 
-    quotaList = QuotaCalendarComponent.subscribeData;
+    let quotaList = QuotaCalendarComponent.subscribeData;
     if (quotaList != null) {
       for (var i = 0; i < quotaList.length; ++i) {
         this.calendarEvents[i] =
@@ -83,6 +80,7 @@ export class QuotaCalendarComponent implements OnInit {
           id: quotaList[i].id
         };
       }
+      debugger;
     }
   }
 
