@@ -47,7 +47,8 @@ export class QuotaCalendarComponent implements OnInit {
   calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin]; // important!
   calendarWeekends = true;
   calendarEvents: EventInput[] = [];
-
+  eventColor: string[] = ["red", "green", "blue", "brown", "yellow", "gray", "cyan"];
+ 
   constructor(public dialog: MatDialog,
                        private router: Router,
                        private quotaService: QuotaService,
@@ -77,22 +78,26 @@ export class QuotaCalendarComponent implements OnInit {
           title: quotaList[i].name,
           start: quotaList[i].startDateTime,
           end: quotaList[i].endDateTime,
-          id: quotaList[i].id
+          id: quotaList[i].id,
+          allDay: false,
+          color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
+          textColor: "white"
         };
       }
-      debugger;
     }
   }
 
-  getNewQuota(): void {
+  getNewQuota(startDate: Date): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;   // The user can't close the dialog by clicking outside its body
-    dialogConfig.autoFocus    = true;
-    dialogConfig.id                 = "quota-editor";
-    dialogConfig.height          = "60%";
-    dialogConfig.width           = "70%";
-    dialogConfig.data = {  quota: this.quota };
-
+    dialogConfig.autoFocus = true;
+    dialogConfig.id = "quota-editor";
+    dialogConfig.height = "60%";
+    dialogConfig.width = "70%";
+    dialogConfig.data = { quota: this.quota };
+    if (startDate != null) {
+      dialogConfig.data.quota.startDate = startDate;
+    }
     const dialogRef = this.dialog.open(QuotaEditorComponent, dialogConfig);
     dialogRef.componentInstance.quota = this.quota;  //another way to pass quota to modal window
 
@@ -136,10 +141,20 @@ export class QuotaCalendarComponent implements OnInit {
       UpdatedBy: userDetails.id,
       UpdatedOn: this.toDate
     };
-    console.log(this.quotaService.saveQuota(quotaEntity));
-    console.log("Returned data from quota SaveData Service...");
+    let quota = this.quotaService.saveQuota(quotaEntity);
+    if (quota != null) {
+      this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
+        title: quotaEntity.Name,
+        start: startDateTime,
+        end: endDateTime,
+        id: quotaEntity.Id,
+        allDay: false,
+        color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
+        textColor: "white"
+      })
+    }
   }
-
+  
   generateUUID() {                               //Generating GUID in Typescript
     var d = new Date().getTime();
       var d2 = (performance && performance.now && (performance.now() * 1000)) || 0;
@@ -186,18 +201,7 @@ export class QuotaCalendarComponent implements OnInit {
   }
 
   handleDateClick(arg) {
-    // change the day's background color just for fun
-    if (this.previousDate !== null) {
-      this.previousDate.dayEl.style.backgroundColor = 'blue';
-    }
-    this.previousDate = arg;
-    arg.dayEl.style.backgroundColor = 'red';
-    this.getNewQuota();
-     this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
-       title: this.quota.quotaName,
-        start: arg.date,
-        allDay: arg.allDay
-      })
+    this.getNewQuota(arg.date);
   }
 }
 

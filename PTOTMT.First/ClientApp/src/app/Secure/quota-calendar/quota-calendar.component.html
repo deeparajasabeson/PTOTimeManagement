@@ -1,19 +1,34 @@
-  <br>
-  <button class="btn btn-info pull-left" (click)="getNewQuota()">New PTO Quota</button>
-  <div class="text-right">
-    <button (click)='toggleWeekends()'>toggle weekends</button>
-  </div>
-  <div class='app-calendar' *ngIf="calendarVisible">
-    <full-calendar #calendar
-                   defaultView="dayGridMonth"
-                   [header]="{
+<br>
+<button class="btn btn-info pull-left" (click)="getNewQuota(null)">New PTO Quota</button>
+<div class="text-right">
+  <button (click)='toggleWeekends()'>toggle weekends</button>
+</div>
+<div class='app-calendar' *ngIf="calendarVisible">
+  <full-calendar #calendar
+                 deepChangeDetection="true"
+                 defaultView="dayGridMonth"
+                 [titleFormat]="{ year: 'numeric', month: 'short', day: 'numeric' }"
+                 [header]="{
                           left: 'prev,next today',
                           center: 'title',
                           right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
                       }"
-                   [plugins]="calendarPlugins"
-                   [weekends]="calendarWeekends"
-                   (dateClick)="handleDateClick($event)"
-                   [events]="calendarEvents">
-    </full-calendar>
-  </div>
+                 [plugins]="calendarPlugins"
+                 [weekends]="calendarWeekends"
+                 (dateClick)="handleDateClick($event)"
+                 [events]="calendarEvents"
+                 [navLinks]="true"
+                 [editable]="true"
+                 [eventLimit]="true"
+                 [height]="parent">
+  </full-calendar>
+</div>
+
+<!--[customButtons]="{
+     NewQuota: {
+        text: 'New Quota',
+        click: function() {
+           alert('clicked the custom button!');
+        }
+     }
+}"-->

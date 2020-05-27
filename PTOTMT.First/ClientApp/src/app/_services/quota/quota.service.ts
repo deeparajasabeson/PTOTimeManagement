@@ -35,8 +35,6 @@ export class QuotaService {
     };
     this.http.post(this.quotaUrl, quotaData, httpOptions)
       .subscribe((data: QuotaEntity) => {
-        console.log("Response returned from create new quota create :")
-        console.log(data);
         return data;
     })
   }
