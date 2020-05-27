@@ -10,8 +10,8 @@ export class QuotaService {
   // The url of your login route on the server
   quotaUrl: string;
 
-  constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    this.quotaUrl = baseUrl + "api/quotas/";
+  constructor(private http: HttpClient) {
+    this.quotaUrl = "https://localhost:44382/api/quotas";
   }
 
   public saveQuota(quota: QuotaEntity) {
@@ -21,10 +21,13 @@ export class QuotaService {
         "Content-Type": "application/json"
       })
     };
-    console.log("going to call api in quotas service" + this.quotaUrl);
-    let response = this.http.post(this.quotaUrl, quotaData, httpOptions);
-    debugger;
-    return response;
+    //let response =
+    let response = this.http.post(this.quotaUrl, quotaData, httpOptions)
+      .subscribe((data: QuotaEntity) => {
+        console.log("Response returned from create new quota response :")
+        console.log(data);
+        return data;
+    })
   }
 } 
 

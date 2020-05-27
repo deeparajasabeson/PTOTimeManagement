@@ -106,16 +106,9 @@ export class QuotaCalendarComponent {
       UpdatedBy: userDetails.id,
       UpdatedOn: this.toDate
     };
-    debugger;
-    this.quotaService.saveQuota(quotaEntity)
-      .subscribe(response => {
-        console.log("Response received in quota-calendar from saveQuota() in QuotaService ");
-        console.log(response);
-      }, err => {
-              console.log("Error Occured :");
-              console.log(err);
-      }
-    );
+    console.log(this.quotaService.saveQuota(quotaEntity));
+    console.log("Returned data from quota SaveData Service...")
+    
   }
 
   generateUUID() {                               //Generating GUID in Typescript

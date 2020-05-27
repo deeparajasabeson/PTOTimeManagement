@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-//using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Cors;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
 
@@ -10,7 +10,7 @@ namespace PTOTMT.Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[EnableCors("CrossOrigin")]
+    [EnableCors("CrossOrigin")]
     public class QuotasController : ControllerBase
     {
         private readonly IUnitOfWorkWebAPI uow;

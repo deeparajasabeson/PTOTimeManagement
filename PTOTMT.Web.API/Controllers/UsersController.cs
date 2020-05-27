@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
+using Microsoft.AspNetCore.Cors;
 
 namespace PTOTMT.Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("CrossOrigin")]
     public class UsersController : ControllerBase
     {
         private readonly IUnitOfWorkWebAPI uow;

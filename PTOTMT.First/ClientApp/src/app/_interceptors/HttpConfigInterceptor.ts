@@ -3,6 +3,7 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse
 import { Observable, throwError } from 'rxjs';
 import { map, catchError, retry } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 import { ErrorDialogService } from '../_services/error-dialog/error-dialog.service';
 
@@ -10,7 +11,10 @@ import { ErrorDialogService } from '../_services/error-dialog/error-dialog.servi
 @Injectable()
 export class HttpConfigInterceptor implements HttpInterceptor {
 
-  constructor(public errorDialogService: ErrorDialogService, public toasterService: ToastrService) { }
+  constructor(
+    public errorDialogService: ErrorDialogService,
+    public toasterService: ToastrService,
+    public router: Router) { }
 
   intercept(
     req: HttpRequest<any>,
@@ -39,8 +43,17 @@ export class HttpConfigInterceptor implements HttpInterceptor {
     // or pass it to the next interceptor if any
     return next.handle(clonedAuthRequest).pipe(
       map((event: HttpEvent<any>) => {
+        console.log('event--->>>', event);
+        console.log('All: ' + JSON.stringify(event));
         if (event instanceof HttpResponse) {
-          console.log('event--->>>', event);
+          if (event instanceof HttpResponse) {
+            if (event.body && event.body.success) {
+              this.toasterService.success(
+                event.body.success.message,
+                event.body.success.title,
+                { positionClass: 'toast-bottom-center' });
+            }
+          }
         }
         return event;
       }),
@@ -48,10 +61,15 @@ export class HttpConfigInterceptor implements HttpInterceptor {
       catchError((error: any) => {
         if (error instanceof HttpErrorResponse) {
           try {
-            this.toasterService.error(error.error.message, error.error.title, { positionClass: 'toast-bottom-center' });
+            this.toasterService.error(
+              error.error.message,
+              error.error.title,
+              { positionClass: 'toast-bottom-center' });
           }
           catch (e) {
-            this.toasterService.error('An error occurred', '', { positionClass: 'toast-bottom-center' });
+            this.toasterService.error(
+              'An error occurred', '',
+              { positionClass: 'toast-bottom-center' });
           }
         }
         let data;
@@ -67,12 +85,15 @@ export class HttpConfigInterceptor implements HttpInterceptor {
           data = {
             reason: error && error.error && error.error.reason ? error.error.reason : '',
             error: 'Error body was: ${error.error}',
-            status: 'Backend returned code ${error.status}'
+            status: 'Backend returned code : ' + error.status 
           };
+          if (error.status == 401 || error.status == 403) {
+            this.router.navigateByUrl("/login");
+          }
+          this.errorDialogService.openDialog(data);
+          // return an observable with a user-facing error message
+          return throwError(error);
         }
-        this.errorDialogService.openDialog(data);
-        // return an observable with a user-facing error message
-        return throwError(error);
       })) as Observable<HttpEvent<any>>;
  }
 }
