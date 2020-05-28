@@ -1,5 +1,5 @@
 <br>
-<button class="btn btn-info pull-left" (click)="getNewQuota(null)">New PTO Quota</button>
+<!--<button class="btn btn-info pull-left" (click)="getNewQuota(null)">New PTO Quota</button>-->
 <div class="text-right">
   <button (click)='toggleWeekends()'>toggle weekends</button>
 </div>
@@ -8,19 +8,20 @@
                  deepChangeDetection="true"
                  defaultView="dayGridMonth"
                  [titleFormat]="{ year: 'numeric', month: 'short', day: 'numeric' }"
-                 [header]="{
-                          left: 'prev,next today',
-                          center: 'title',
-                          right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-                      }"
+                 [customButtons]="options.customButtons"
+                 [header]="options.header"
                  [plugins]="calendarPlugins"
                  [weekends]="calendarWeekends"
-                 (dateClick)="handleDateClick($event)"
                  [events]="calendarEvents"
                  [navLinks]="true"
                  [editable]="true"
                  [eventLimit]="true"
+                 [selectable]="true"
+                 (dateClick)="handleDateClick($event)"
+                 (eventClick)="editQuota($event)"
+                 (eventMouseover)="MouseOver($event)"
                  [height]="parent">
+                 <!--(eventRender)="eventrender($event)">-->  
   </full-calendar>
 </div>
 

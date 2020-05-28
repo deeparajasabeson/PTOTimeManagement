@@ -10,20 +10,24 @@ import { Observable } from 'rxjs';
 export class QuotaService {
   // The url of your login route on the server
   quotaUrl: string;
+  httpOptions: any = {
+    headers: new HttpHeaders({
+      "Content-Type": "application/json"
+    })
+  };
 
   constructor(private http: HttpClient) {
     this.quotaUrl = "https://localhost:44382/api/quotas";
+    }
+
+  public getQuataById(quotaId: string): Observable<any>{
+    let requestUrl: string = this.quotaUrl + "/" + quotaId;
+    return this.http.get(requestUrl, this.httpOptions);
   }
 
   public getQuotasByTeamId(teamId: string) : Observable<any>{
-    let quotaList;
-    const httpOptions = {
-      headers: new HttpHeaders({
-        "Content-Type": "application/json"
-      })
-    };
     let requestUrl: string = this.quotaUrl + "/quotasbyteamid/" + teamId;
-    return this.http.get(requestUrl, httpOptions);
+    return this.http.get(requestUrl, this.httpOptions);
     }
 
   public saveQuota(quota: QuotaEntity) {

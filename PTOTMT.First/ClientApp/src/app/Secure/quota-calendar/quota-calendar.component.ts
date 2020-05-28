@@ -22,9 +22,16 @@ import { UserEntity } from '../../_entities/UserEntity';
   templateUrl: './quota-calendar.component.html'
 })
 export class QuotaCalendarComponent implements OnInit {
-  public user;
+  @ViewChild('calendar', null) calendarComponent: FullCalendarComponent; // references #calendar in the template
+  eventColor: string[] = ["red", "green", "blue", "brown", "BlueViolet", "gray", "cyan", "CadetBlue", "DarkGoldenRod", "DarkKhaki", "DarkGreen", "DarkRed", "DarkOrange", "DarkSeaGreen", "DarkSlateGrey", "Indigo", "LightSeaGreen", "LightSalmon", "maroon", "MediumVioletRed", "Chocolate", "CornflowerBlue", "Black", "Coral"];
+  calendarVisible = true;
+  calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin]; // important!
+  calendarWeekends = true;
+  calendarEvents: EventInput[] = [];
+  options: any;
+  user = null;
+  previousDate = null;
   toDate = new Date();
-
   toDateNgbDateStruct: NgbDateStruct= {
     year: this.toDate.getFullYear(),
     month: this.toDate.getMonth(),
@@ -40,56 +47,89 @@ export class QuotaCalendarComponent implements OnInit {
     endTime: "00:00",
     description: ""
   }
-
-  previousDate = null;
-  @ViewChild('calendar', null) calendarComponent: FullCalendarComponent; // references #calendar in the template
-  calendarVisible = true;
-  calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin]; // important!
-  calendarWeekends = true;
-  calendarEvents: EventInput[] = [];
-  eventColor: string[] = ["red", "green", "blue", "brown", "yellow", "gray", "cyan"];
- 
-  constructor(public dialog: MatDialog,
-                       private router: Router,
-                       private quotaService: QuotaService,
-                       private datastorageService: DataStorageService) { }
-
-  ngOnInit() {
-    this.readQuotasbyTeamId();
-  }
   static subscribeData: any;
   static setSubscribeData(data): any {
     QuotaCalendarComponent.subscribeData = data;
     return data;
   }
+  // Constructor - executes when component is created first
+  constructor(public dialog: MatDialog,
+                       private quotaService: QuotaService,
+                       private datastorageService: DataStorageService) {  }
 
+  // Execute after constructor when component is initialized
+  ngOnInit() {
+    this.options = {
+      customButtons: {
+        newquota: {
+          text: 'New PTO Quota',
+          click: () => this.getQuota(null)    // click: this.getQuota(null).bind(this) // <-------- CAN ALSO USE THIS ONE
+        }
+      },
+      header: {
+        left: 'prev,next today newquota',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      }
+    };
+    this.readQuotasbyTeamId();
+  }
+
+  //Read Quotas by Team Id
   readQuotasbyTeamId() {
     let teamId: string = this.datastorageService.getUserEntity().teamFunctionId;
     this.quotaService.getQuotasByTeamId(teamId)
       .subscribe((data: QuotaEntity[]) => {
         QuotaCalendarComponent.setSubscribeData(data);
-      })
+      });
 
     let quotaList = QuotaCalendarComponent.subscribeData;
-    if (quotaList != null) {
-      for (var i = 0; i < quotaList.length; ++i) {
-        this.calendarEvents[i] =
-        {
-          title: quotaList[i].name,
-          start: quotaList[i].startDateTime,
-          end: quotaList[i].endDateTime,
-          id: quotaList[i].id,
-          allDay: false,
-          color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
-          textColor: "white"
-        };
-      }
+    if (quotaList == null) {
+      return
+    }
+    for (var i = 0; i < quotaList.length; ++i) {
+      this.calendarEvents[i] =
+      {
+        title: quotaList[i].name,
+        start: quotaList[i].startDateTime,
+        end: quotaList[i].endDateTime,
+        id: quotaList[i].id,
+        allDay: false,
+        color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
+        textColor: "white"
+      };
     }
   }
 
-  getNewQuota(startDate: Date): void {
+  // Edit Quota when event is clicked
+  editQuota(event) {
+    let quotaId = event.event.id;
+    if (quotaId != null) {
+      return;
+    }
+    this.quotaService.getQuataById(quotaId)
+      .subscribe((data: QuotaEntity) => {
+        QuotaCalendarComponent.setSubscribeData(data);
+      });
+
+    let quotaToEdit = QuotaCalendarComponent.subscribeData;
+    if (quotaToEdit == null) {
+      return;
+    }
+    this.quota.quotaName: quotaToEdit.name,
+    this.quota.hours: 0,
+    this.quota.startDate: this.toDateNgbDateStruct,
+    this.quota.startTime: "00:00",
+    this.quota.endDate: this.toDateNgbDateStruct,
+    this.quota.endTime: "00:00",
+    this.quota. description: ""
+    this.getQuota(null);
+  }
+
+  // Get New Quota and set start date
+  getQuota(startDate: Date): void {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;   // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;   // User can't close the dialog by clicking outside its body
     dialogConfig.autoFocus = true;
     dialogConfig.id = "quota-editor";
     dialogConfig.height = "60%";
@@ -109,6 +149,7 @@ export class QuotaCalendarComponent implements OnInit {
     });
   }
 
+  // Save Quota
   saveQuota() {
     let userDetails: UserEntity = this.datastorageService.getUserEntity();
 
@@ -152,10 +193,15 @@ export class QuotaCalendarComponent implements OnInit {
         color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
         textColor: "white"
       })
+      let calendarApi = this.calendarComponent.getApi();
+      if (calendarApi.needsRerender) {
+        calendarApi.render();
+      }
     }
   }
-  
-  generateUUID() {                               //Generating GUID in Typescript
+
+  //Generating GUID in Typescript
+  generateUUID() {      
     var d = new Date().getTime();
       var d2 = (performance && performance.now && (performance.now() * 1000)) || 0;
       //Time in microseconds since page-load or 0 if unsupported
@@ -172,36 +218,48 @@ export class QuotaCalendarComponent implements OnInit {
     });
 }
 
+  // Check whether User is authenticated
   isUserAuthenticated(): boolean {
     let token: string = localStorage.getItem("jwt");
-    if (token) {
-      return true;
-    }
-    else {
-      return false;
-    }
+    return(token) ? true : false;
   }
 
+  //Execute when Mouse Over an event -- yet to test
+  MouseOver(event) {
+    console.log(event.el);
+  }
+
+// Toggle calendar visibility
   toggleVisible() {
     this.calendarVisible = !this.calendarVisible;
   }
 
+  // Toogle calendar Weekends
   toggleWeekends() {
     this.calendarWeekends = !this.calendarWeekends;
   }
 
-  gotoPast() {
+  // Go to date passed as argument in calendar
+  gotoDate(date: Date) {
     let calendarApi = this.calendarComponent.getApi();
-    calendarApi.gotoDate('2005-12-29'); // call a method on the Calendar object
+    calendarApi.gotoDate(date);
   }
 
-  someMethod() {
-    let calendarApi = this.calendarComponent.getApi();
-    calendarApi.next();
-  }
-
+  // Execute when date cell is clicked
   handleDateClick(arg) {
-    this.getNewQuota(arg.date);
+    this.getQuota(arg.date);
   }
+//Add tooltip to events   --- for ng fullcalendar
+//eventrender(event, element)
+//{
+//  event.element[0]
+//           .querySelectorAll(".fc-content")[0]
+//           .setAttribute("data-tooltip", event.event.title);
+
+  // Event tool tip when mouse over event
+  //eventrender(event) {
+  //  event.el.childNodes[0].childNodes[2].attr('data-toggle', 'tooltip');
+  //  event.el.childNodes[0].childNodes[2].attr('title', event.title);   
+  //}
 }
 
