@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import interactionPlugin from '@fullcalendar/interaction'; // for dateClick
 import { EventInput } from '@fullcalendar/core';
@@ -12,10 +11,10 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { QuotaEditorComponent } from '../quota-editor/quota-editor.component';
 import { QuotaDialogData } from '../../_models/QuotaDialogData';
 import { QuotaEntity } from '../../_entities/QuotaEntity';
+import { QuotaFromDBEntity } from '../../_entities/QuotaFromDBEntity';
 import { QuotaService } from '../../_services/quota/quota.service';
 import { DataStorageService } from '../../_services/datastorage/datastorage.service';
 import { UserEntity } from '../../_entities/UserEntity';
-
 
 @Component({
   selector: 'app-quota-calendar',
@@ -24,6 +23,8 @@ import { UserEntity } from '../../_entities/UserEntity';
 export class QuotaCalendarComponent implements OnInit {
   @ViewChild('calendar', null) calendarComponent: FullCalendarComponent; // references #calendar in the template
   eventColor: string[] = ["red", "green", "blue", "brown", "BlueViolet", "gray", "cyan", "CadetBlue", "DarkGoldenRod", "DarkKhaki", "DarkGreen", "DarkRed", "DarkOrange", "DarkSeaGreen", "DarkSlateGrey", "Indigo", "LightSeaGreen", "LightSalmon", "maroon", "MediumVioletRed", "Chocolate", "CornflowerBlue", "Black", "Coral"];
+  originalHours = 0;
+  isNewEvent = true;
   calendarVisible = true;
   calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin]; // important!
   calendarWeekends = true;
@@ -34,13 +35,15 @@ export class QuotaCalendarComponent implements OnInit {
   toDate = new Date();
   toDateNgbDateStruct: NgbDateStruct= {
     year: this.toDate.getFullYear(),
-    month: this.toDate.getMonth(),
+    month: this.toDate.getMonth() + 1,
     day: this.toDate.getDate()
   }
 
   quota: QuotaDialogData = {
+    id: "",
     quotaName: "",
-    hours: 0,
+    originalHours: 0,
+    remainingHours: 0,
     startDate: this.toDateNgbDateStruct,
     startTime: "00:00",
     endDate: this.toDateNgbDateStruct,
@@ -52,10 +55,16 @@ export class QuotaCalendarComponent implements OnInit {
     QuotaCalendarComponent.subscribeData = data;
     return data;
   }
+
+  static subscribeQuotaFromDBEntity: QuotaFromDBEntity;
+  static setSubscribeQuotaFromDBEntity(quota): QuotaFromDBEntity {
+    QuotaCalendarComponent.subscribeQuotaFromDBEntity = quota;
+    return quota;
+  }
   // Constructor - executes when component is created first
   constructor(public dialog: MatDialog,
                        private quotaService: QuotaService,
-                       private datastorageService: DataStorageService) {  }
+                       private datastorageService: DataStorageService) { }
 
   // Execute after constructor when component is initialized
   ngOnInit() {
@@ -78,8 +87,8 @@ export class QuotaCalendarComponent implements OnInit {
   //Read Quotas by Team Id
   readQuotasbyTeamId() {
     let teamId: string = this.datastorageService.getUserEntity().teamFunctionId;
-    this.quotaService.getQuotasByTeamId(teamId)
-      .subscribe((data: QuotaEntity[]) => {
+    let response = this.quotaService.getQuotasByTeamId(teamId);
+    response .subscribe((data: QuotaFromDBEntity[]) => {
         QuotaCalendarComponent.setSubscribeData(data);
       });
 
@@ -102,28 +111,51 @@ export class QuotaCalendarComponent implements OnInit {
   }
 
   // Edit Quota when event is clicked
-  editQuota(event) {
-    let quotaId = event.event.id;
-    if (quotaId != null) {
+  handleEventClick(info) {
+    let quotaId = info.event.id;
+    if (quotaId == null) {
       return;
     }
-    this.quotaService.getQuataById(quotaId)
-      .subscribe((data: QuotaEntity) => {
-        QuotaCalendarComponent.setSubscribeData(data);
-      });
 
-    let quotaToEdit = QuotaCalendarComponent.subscribeData;
+    let response = this.quotaService.getQuotaById(quotaId);
+    response.subscribe((data: QuotaFromDBEntity) => {
+      QuotaCalendarComponent.setSubscribeQuotaFromDBEntity(data);
+    });
+
+    let quotaToEdit = QuotaCalendarComponent.subscribeQuotaFromDBEntity;
     if (quotaToEdit == null) {
-      return;
+      return
     }
-    this.quota.quotaName: quotaToEdit.name,
-    this.quota.hours: 0,
-    this.quota.startDate: this.toDateNgbDateStruct,
-    this.quota.startTime: "00:00",
-    this.quota.endDate: this.toDateNgbDateStruct,
-    this.quota.endTime: "00:00",
-    this.quota. description: ""
+
+    let startDateTime = new Date(quotaToEdit.startDateTime);
+    let quotaStartDate: NgbDateStruct = {
+      year: startDateTime.getFullYear(),
+      month: startDateTime.getMonth() + 1,
+      day: startDateTime.getDate()
+    }
+
+    let endDateTime = new Date(quotaToEdit.endDateTime);
+    let quotaEndDate: NgbDateStruct = {
+      year: endDateTime.getFullYear(),
+      month: endDateTime.getMonth() + 1,
+      day: endDateTime.getDate()
+    }
+
+    this.quota.id = quotaToEdit.id;
+    this.quota.quotaName = quotaToEdit.name,
+    this.quota.originalHours = quotaToEdit.originalHours;
+    this.quota.remainingHours = quotaToEdit.remainingHours;
+    this.quota.startDate = quotaStartDate;
+    this.quota.startTime = quotaToEdit.startDateTime.substr(11, 5);
+    this.quota.endDate = quotaEndDate;
+    this.quota.endTime = quotaToEdit.endDateTime.substr(11, 5);
+    this.quota.description = quotaToEdit.description;
+
+    this.isNewEvent = false;
+    this.originalHours = quotaToEdit.originalHours;
     this.getQuota(null);
+    this.isNewEvent = true;
+    this.originalHours = 0;
   }
 
   // Get New Quota and set start date
@@ -134,7 +166,7 @@ export class QuotaCalendarComponent implements OnInit {
     dialogConfig.id = "quota-editor";
     dialogConfig.height = "60%";
     dialogConfig.width = "70%";
-    dialogConfig.data = { quota: this.quota };
+    dialogConfig.data = { quota: this.quota };  // One way to pass data to modal window
     if (startDate != null) {
       dialogConfig.data.quota.startDate = startDate;
     }
@@ -142,7 +174,7 @@ export class QuotaCalendarComponent implements OnInit {
     dialogRef.componentInstance.quota = this.quota;  //another way to pass quota to modal window
 
     dialogRef.afterClosed().subscribe(resultData => {
-      if (resultData != null) {
+      if (resultData != null && resultData != undefined) {
         this.quota = resultData;
         this.saveQuota();
       }
@@ -152,7 +184,6 @@ export class QuotaCalendarComponent implements OnInit {
   // Save Quota
   saveQuota() {
     let userDetails: UserEntity = this.datastorageService.getUserEntity();
-
     let startDateTime = new Date(
       this.quota.startDate.year,
       this.quota.startDate.month,
@@ -167,36 +198,47 @@ export class QuotaCalendarComponent implements OnInit {
       parseInt(this.quota.endTime.substr(0, 2)),
       parseInt(this.quota.endTime.substr(3, 2)));
 
+    let id, remainingHours;
+    if (this.quota.id == "" && this.isNewEvent) {
+      id = this.generateUUID();
+      remainingHours = this.quota.originalHours;
+    }
+    else {
+      id = this.quota.id;
+      remainingHours = this.quota.remainingHours + (this.quota.originalHours - this.originalHours);
+    }
     const quotaEntity: QuotaEntity = {
-      Id: this.generateUUID(),
-      Name: this.quota.quotaName,
-      Description: this.quota.description,
-      OriginalHours: this.quota.hours,
-      RemainingHours: 0,
-      StartDateTime: startDateTime,
-      EndDateTime: endDateTime,
-      TeamId: userDetails.teamFunctionId,
-      IsActive: true,
-      CreatedBy: userDetails.id,
-      CreatedOn: this.toDate,
-      UpdatedBy: userDetails.id,
-      UpdatedOn: this.toDate
+      id: id,
+      name: this.quota.quotaName,
+      description: this.quota.description,
+      originalHours: this.quota.originalHours,
+      remainingHours: remainingHours,
+      startDateTime: startDateTime,
+      endDateTime: endDateTime,
+      teamId: userDetails.teamFunctionId,
+      isActive: true,
+      createdBy: userDetails.id,
+      createdOn: this.toDate,
+      updatedBy: userDetails.id,
+      updatedOn: this.toDate
     };
     let quota = this.quotaService.saveQuota(quotaEntity);
-    if (quota != null) {
-      this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
-        title: quotaEntity.Name,
-        start: startDateTime,
-        end: endDateTime,
-        id: quotaEntity.Id,
-        allDay: false,
-        color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
-        textColor: "white"
-      })
-      let calendarApi = this.calendarComponent.getApi();
-      if (calendarApi.needsRerender) {
-        calendarApi.render();
-      }
+    if (quota == null) {
+      return;
+    }
+
+    this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
+      title: quotaEntity.name,
+      start: startDateTime,
+      end: endDateTime,
+      id: quotaEntity.id,
+      allDay: false,
+      color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
+      textColor: "white"
+    })
+    let calendarApi = this.calendarComponent.getApi();
+    if (calendarApi.needsRerender) {
+      calendarApi.render();
     }
   }
 

@@ -10,7 +10,7 @@ namespace PTOTMT.Repository.Implementation.WebAPI
     {
         protected PTOTMTWebAPIContext _context { get; set; }
 
-        public List<TEntity> GetAll()
+        public IEnumerable<TEntity> GetAll()
         {
             return _context.Set<TEntity>().ToList();
         }
@@ -22,7 +22,7 @@ namespace PTOTMT.Repository.Implementation.WebAPI
 
         public void Put(TEntity model)
         {
-            _context.Entry<TEntity>(model).State = EntityState.Modified;
+            _context.Entry(model).State = EntityState.Modified;
         }
 
         public TEntity Post(TEntity model)

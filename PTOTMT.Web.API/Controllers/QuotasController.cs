@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace PTOTMT.Service.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [Microsoft.AspNetCore.Mvc.ApiController]
     [EnableCors("CrossOrigin")]
-    public class QuotasController : ControllerBase
+    public class QuotasController : Microsoft.AspNetCore.Mvc.ControllerBase
     {
         private readonly IUnitOfWorkWebAPI uow;
 
@@ -22,23 +23,18 @@ namespace PTOTMT.Service.Controllers
         }
 
         // GET: api/Quotas
-        [HttpGet]
-        public  IEnumerable<Quota> GetQuota()
+        [System.Web.Http.HttpGet]
+        public IEnumerable<Quota> GetQuota()
         {
-            return  uow.QuotaRepo.GetAll();
+            return uow.QuotaRepo.GetAll();
         }
 
         // GET: api/Quotas/5
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet]
+        [Route("{id}")]
         public ActionResult<Quota> GetQuota(Guid? id)
         {
-            var quota = uow.QuotaRepo.GetById(id);
-            if (quota == null)  
-            {
-                return NotFound();
-            }
-            return quota;
+            return uow.QuotaRepo.GetById(id);
         }
 
         // GET: api/Quotas/quotabyteamid/<teamId:Guid>
@@ -48,7 +44,6 @@ namespace PTOTMT.Service.Controllers
         {
             var quotas = GetQuota();
             return quotas.Where(q => q.TeamId == teamId);
-            //return CreatedAtAction(nameof(GetQuota), quotas);
         }
 
         // PUT: api/Quotas/5
@@ -57,7 +52,7 @@ namespace PTOTMT.Service.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult PutQuota(Guid? id, Quota quota)
         {
             if (id != quota.Id)
@@ -68,7 +63,7 @@ namespace PTOTMT.Service.Controllers
             {
                 uow.QuotaRepo.Put(quota);
                 uow.SaveChanges();
-                return NoContent();
+                return Ok();
             }
             return NotFound();
         }
@@ -80,13 +75,27 @@ namespace PTOTMT.Service.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult PostQuota(Quota quota)
         {
-            Quota addedQuota = uow.QuotaRepo.Post(quota);
-            uow.SaveChanges();
-            return CreatedAtAction(nameof(GetQuota), new { id = addedQuota.Id }, addedQuota);
+            if (QuotaExists(quota.Id)) {
+                try
+                {
+                    uow.QuotaRepo.Put(quota);
+                    uow.SaveChanges();
+                }
+                catch(DbUpdateConcurrencyException)
+                {
+                    throw;
+                }
+                return Ok();
+            }
+            else { 
+                Quota addedQuota = uow.QuotaRepo.Post(quota);
+                uow.SaveChanges();
+                return CreatedAtAction(nameof(GetQuota), new { id = addedQuota.Id }, addedQuota);
+            }
         }
 
         // DELETE: api/Quotas/5
-        [HttpDelete("{id}")]
+        [Microsoft.AspNetCore.Mvc.HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult DeleteQuotaById(Guid? id)
         {
@@ -96,7 +105,7 @@ namespace PTOTMT.Service.Controllers
                 uow.SaveChanges();
                 return NoContent();
             }
-           return NotFound();
+            return NotFound();
         }
 
         // DELETE: api/Quotas/5
@@ -113,6 +122,7 @@ namespace PTOTMT.Service.Controllers
             return NotFound();
         }
 
+        [HttpGet("exists/{id}")]
         public bool QuotaExists(Guid? id)
         {
             return uow.QuotaRepo.Exists(id);

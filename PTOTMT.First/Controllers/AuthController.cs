@@ -41,7 +41,7 @@ namespace PTOTMT.First.Controllers
                     }
                     else
                     { 
-                        throw new HttpRequestException("Http Web API call response is not successful");
+                        throw new HttpRequestException("Http Web API call response from UsersController Service is not successful");
                     }
                     if (userDetails != null)
                     {

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewChild, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder,  Validators, NgForm } from '@angular/forms';
-import { NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbDatepicker  } from '@ng-bootstrap/ng-bootstrap';
 import { QuotaDialogData } from '../../_models/QuotaDialogData';
 import { MaterialModule } from '../material.module';
 
@@ -11,7 +11,7 @@ import { MaterialModule } from '../material.module';
   styleUrls: ['./quota-editor.component.css']
 })
 export class QuotaEditorComponent implements OnInit {
-
+  @ViewChild('dp', null) dp: NgbDatepicker;
   @Input() public quota: QuotaDialogData;  //Input from Calendar through @Input() property
 
   quotaeditorForm: FormGroup;
@@ -25,13 +25,14 @@ export class QuotaEditorComponent implements OnInit {
   constructor(
         private dialogRef: MatDialogRef<QuotaEditorComponent>,
         @Inject(MAT_DIALOG_DATA) dataFromCalendar: QuotaDialogData,   //data From Calendar
-        private fb: FormBuilder,
-        private calendar: NgbCalendar)   {  }
+        private fb: FormBuilder)   {  }
 
   ngOnInit() {
     this.quotaeditorForm = this.fb.group({
+      id: [this.quota.id],
       quotaName: [this.quota.quotaName, Validators.maxLength(30)],
-      hours: [this.quota.hours, Validators.required],
+      originalHours: [this.quota.originalHours, [Validators.required, Validators.min(this.quota.remainingHours)]],
+      remainingHours: [this.quota.remainingHours],
       startDate: [this.quota.startDate, Validators.required],
       startTime: [this.quota.startTime, [Validators.required, Validators.min(0.01), Validators.max(12.59)]],
       endDate: [this.quota.endDate, Validators.required],
@@ -51,7 +52,9 @@ export class QuotaEditorComponent implements OnInit {
     }
   }
 
-  onNoClick(): void {
+  onNoClick(event: any): void {
+    event.stopPropogation();
     this.dialogRef.close();
+    this.quota = null;
   }
 }

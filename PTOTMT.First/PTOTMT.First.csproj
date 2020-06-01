@@ -38,6 +38,7 @@
     <None Remove="ClientApp\src\app\public\alert\index.ts" />
     <None Remove="ClientApp\src\app\public\DialogData.ts" />
     <None Remove="ClientApp\src\app\_Entities\QuotaEntity.ts" />
+    <None Remove="ClientApp\src\app\_Entities\QuotaFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_Models\UserEntity.ts" />
     <None Remove="ClientApp\src\app\_interceptors\index.ts" />
   </ItemGroup>
@@ -55,6 +56,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\public\alert\alert.model.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\public\alert\index.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_Entities\QuotaEntity.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_Entities\QuotaFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_Models\QuotaDialogData.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_Entities\UserEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_interceptors\index.ts" />
