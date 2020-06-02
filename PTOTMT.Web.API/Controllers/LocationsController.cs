@@ -53,7 +53,7 @@ namespace PTOTMT.Service.Controllers
             }
             if (uow.LocationRepo.Exists(id))
             {
-                uow.LocationRepo.Put(location);
+                uow.LocationRepo.Put(location, location.Id);
                 uow.SaveChanges();
                 return NoContent();
             }

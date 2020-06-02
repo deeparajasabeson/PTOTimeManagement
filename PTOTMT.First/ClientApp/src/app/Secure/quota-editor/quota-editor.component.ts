@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit, ViewChild, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder,  Validators, NgForm } from '@angular/forms';
+import { FormGroup, FormBuilder,  Validators, NgForm, AbstractControl } from '@angular/forms';
 import { NgbDateStruct, NgbDatepicker  } from '@ng-bootstrap/ng-bootstrap';
 import { QuotaDialogData } from '../../_models/QuotaDialogData';
 import { MaterialModule } from '../material.module';
+import { ValidateOriginalHours } from '../../_validators/ValidateOriginalHours';
 
 @Component({
   selector: 'app-quota-editor',
@@ -31,7 +32,8 @@ export class QuotaEditorComponent implements OnInit {
     this.quotaeditorForm = this.fb.group({
       id: [this.quota.id],
       quotaName: [this.quota.quotaName, Validators.maxLength(30)],
-      originalHours: [this.quota.originalHours, [Validators.required, Validators.min(this.quota.remainingHours)]],
+      //originalHours: [this.quota.originalHours, [Validators.required, Validators.min(this.quota.remainingHours)]],
+      originalHours: [this.quota.originalHours, [Validators.required, ValidateOriginalHours(this.quota.remainingHours)]],
       remainingHours: [this.quota.remainingHours],
       startDate: [this.quota.startDate, Validators.required],
       startTime: [this.quota.startTime, [Validators.required, Validators.min(0.01), Validators.max(12.59)]],

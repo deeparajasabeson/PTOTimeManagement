@@ -61,7 +61,7 @@ namespace PTOTMT.Service.Controllers
             }
             if (uow.QuotaRepo.Exists(id))
             {
-                uow.QuotaRepo.Put(quota);
+                uow.QuotaRepo.Put(quota, quota.Id);
                 uow.SaveChanges();
                 return Ok();
             }
@@ -78,7 +78,7 @@ namespace PTOTMT.Service.Controllers
             if (QuotaExists(quota.Id)) {
                 try
                 {
-                    uow.QuotaRepo.Put(quota);
+                    uow.QuotaRepo.Put(quota, quota.Id);
                     uow.SaveChanges();
                 }
                 catch(DbUpdateConcurrencyException)

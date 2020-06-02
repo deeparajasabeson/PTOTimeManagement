@@ -16,6 +16,7 @@ import { QuotaService } from '../../_services/quota/quota.service';
 import { DataStorageService } from '../../_services/datastorage/datastorage.service';
 import { UserEntity } from '../../_entities/UserEntity';
 
+
 @Component({
   selector: 'app-quota-calendar',
   templateUrl: './quota-calendar.component.html'

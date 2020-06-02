@@ -7,7 +7,7 @@ namespace PTOTMT.Repository.Abstraction.WebAPI
     {
         IEnumerable<TEntity> GetAll();
         TEntity GetById(object id);
-        void Put(TEntity model);
+        void Put(TEntity model, object id);
         TEntity Post(TEntity model);
         void Delete(TEntity model);
         void DeleteById(object id);

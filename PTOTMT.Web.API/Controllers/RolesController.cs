@@ -53,7 +53,7 @@ namespace PTOTMT.Service.Controllers
             }
             if (uow.RoleRepo.Exists(id))
             {
-                uow.RoleRepo.Put(role);
+                uow.RoleRepo.Put(role, role.Id);
                 uow.SaveChanges();
                 return NoContent();
             }

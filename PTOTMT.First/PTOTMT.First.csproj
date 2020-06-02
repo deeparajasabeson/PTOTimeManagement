@@ -37,10 +37,11 @@
     <None Remove="ClientApp\src\app\public\alert\alert.model.ts" />
     <None Remove="ClientApp\src\app\public\alert\index.ts" />
     <None Remove="ClientApp\src\app\public\DialogData.ts" />
-    <None Remove="ClientApp\src\app\_Entities\QuotaEntity.ts" />
-    <None Remove="ClientApp\src\app\_Entities\QuotaFromDBEntity.ts" />
-    <None Remove="ClientApp\src\app\_Models\UserEntity.ts" />
+    <None Remove="ClientApp\src\app\_entities\QuotaEntity.ts" />
+    <None Remove="ClientApp\src\app\_entities\QuotaFromDBEntity.ts" />
+    <None Remove="ClientApp\src\app\_models\UserEntity.ts" />
     <None Remove="ClientApp\src\app\_interceptors\index.ts" />
+    <None Remove="ClientApp\src\app\_validators\ValidateOriginalHours.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,11 +56,12 @@
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\public\alert\alert.model.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\public\alert\index.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\_Entities\QuotaEntity.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\_Entities\QuotaFromDBEntity.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\_Models\QuotaDialogData.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\_Entities\UserEntity.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_entities\QuotaEntity.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_entities\QuotaFromDBEntity.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_models\QuotaDialogData.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_entities\UserEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_interceptors\index.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_validators\ValidateOriginalHours.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

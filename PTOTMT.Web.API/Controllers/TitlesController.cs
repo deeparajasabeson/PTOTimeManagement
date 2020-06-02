@@ -53,7 +53,7 @@ namespace PTOTMT.Service.Controllers
             }
             if (uow.TitleRepo.Exists(id))
             {
-                uow.TitleRepo.Put(title);
+                uow.TitleRepo.Put(title, title.Id);
                 uow.SaveChanges();
                 return NoContent();
             }

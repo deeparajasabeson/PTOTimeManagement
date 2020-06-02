@@ -53,7 +53,7 @@ namespace PTOTMT.Service.Controllers
             }
             if (uow.ShiftSlideRepo.Exists(id))
             {
-                uow.ShiftSlideRepo.Put(shiftSlide);
+                uow.ShiftSlideRepo.Put(shiftSlide, shiftSlide.Id);
                 uow.SaveChanges();
                 return NoContent();
             }

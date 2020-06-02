@@ -53,7 +53,7 @@ namespace PTOTMT.Service.Controllers
             }
             if (uow.TeamRepo.Exists(id))
             {
-                uow.TeamRepo.Put(team);
+                uow.TeamRepo.Put(team, team.Id);
                 uow.SaveChanges();
                 return NoContent();
             }

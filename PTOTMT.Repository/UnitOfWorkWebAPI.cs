@@ -11,31 +11,6 @@ namespace PTOTMT.Repository
         {
             context = _context;
         }
-        private IAspNetUsersRepository _AspNetUsersRepo;
-        public IAspNetUsersRepository AspNetUsersRepo
-        {
-            get
-            {
-                if (_AspNetUsersRepo == null)
-                {
-                    _AspNetUsersRepo = new AspNetUsersRepository(context);
-                }
-                return _AspNetUsersRepo;
-            }
-        }
-
-        private IAspNetRolesRepository _AspNetRolesRepo;
-        public IAspNetRolesRepository AspNetRolesRepo
-        {
-            get
-            {
-                if (_AspNetRolesRepo == null)
-                {
-                    _AspNetRolesRepo = new AspNetRolesRepository(context);
-                }
-                return _AspNetRolesRepo;
-            }
-        }
 
         private ILocationRepository _LocationRepo;
         public ILocationRepository LocationRepo

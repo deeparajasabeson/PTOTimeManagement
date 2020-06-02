@@ -20,9 +20,19 @@ namespace PTOTMT.Repository.Implementation.WebAPI
             return _context.Set<TEntity>().Find(Id);
         }
 
-        public void Put(TEntity model)
+        public void Put(TEntity model, object Id)
         {
-            _context.Entry(model).State = EntityState.Modified;
+            _context.Set<TEntity>().AsNoTracking();
+            var entity = _context.Set<TEntity>().Find(Id);
+            if (entity != null)
+            {
+                try
+                {
+                    _context.Entry(entity).State = EntityState.Detached;
+                    _context.Set<TEntity>().Update(model);
+                }
+                catch(DbUpdateException ex) { throw ex; }
+            }
         }
 
         public TEntity Post(TEntity model)

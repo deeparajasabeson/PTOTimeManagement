@@ -4,8 +4,6 @@ namespace PTOTMT.Repository
 {
     public interface IUnitOfWorkWebAPI
     {
-        IAspNetUsersRepository AspNetUsersRepo { get; }
-        IAspNetRolesRepository AspNetRolesRepo { get; }
         ILocationRepository LocationRepo { get; }
         IQuotaRepository QuotaRepo { get; }
         IRequestRepository RequestRepo { get; }

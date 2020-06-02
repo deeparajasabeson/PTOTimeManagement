@@ -7,8 +7,6 @@ namespace PTOTMT.Common.Entities
         public PTOTMTWebAPIContext (DbContextOptions<PTOTMTWebAPIContext> options)  : base(options)
         {
         }
-        public DbSet<AspNetUsers> AspNetUsers { get; set; }
-        public DbSet<AspNetRoles> AspNetRoles { get; set; }
         public DbSet<Location> Location { get; set; }
         public DbSet<Quota> Quota { get; set; }
         public DbSet<Request> Request { get; set; }
@@ -22,8 +20,6 @@ namespace PTOTMT.Common.Entities
         public DbSet<User> User { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AspNetUsers>().ToTable("AspNetUsers", "dbo");
-            modelBuilder.Entity<AspNetRoles>().ToTable("AspNetRoles", "dbo");
             modelBuilder.Entity<Location>().ToTable("Location", "Config");
             modelBuilder.Entity<Quota>().ToTable("Quota", "PTO");
             modelBuilder.Entity<Request>().ToTable("Request", "PTO");

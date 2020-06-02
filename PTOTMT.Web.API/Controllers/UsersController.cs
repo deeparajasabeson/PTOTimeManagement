@@ -55,7 +55,7 @@ namespace PTOTMT.Service.Controllers
             }
             if (uow.UserRepo.Exists(id))
             {
-                uow.UserRepo.Put(user);
+                uow.UserRepo.Put(user, user.Id);
                 uow.SaveChanges();
                 return NoContent();
             }
