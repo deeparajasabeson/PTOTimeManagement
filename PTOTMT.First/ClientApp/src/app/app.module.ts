@@ -13,9 +13,9 @@ import { PageNotFoundComponent } from './public/pagenotfound/pagenotfound.compon
 import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 import { AlertComponent } from './public/alert/alert.component';
 
-import { ErrorDialogService } from './_services/error-dialog/error-dialog.service';
-import { AuthService } from './_services/auth/auth.service';
-import { DataStorageService } from './_services/datastorage/datastorage.service';
+import { ErrorDialogService } from './_services/error-dialog.service';
+import { AuthService } from './_services/auth.service';
+import { DataStorageService } from './_services/datastorage.service';
 import { HttpConfigInterceptor } from './_interceptors/HttpConfigInterceptor';
 //import { httpInterceptorProviders } from './_interceptors/index';
 

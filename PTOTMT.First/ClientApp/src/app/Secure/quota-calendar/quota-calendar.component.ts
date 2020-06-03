@@ -12,8 +12,8 @@ import { QuotaEditorComponent } from '../quota-editor/quota-editor.component';
 import { QuotaDialogData } from '../../_models/QuotaDialogData';
 import { QuotaEntity } from '../../_entities/QuotaEntity';
 import { QuotaFromDBEntity } from '../../_entities/QuotaFromDBEntity';
-import { QuotaService } from '../../_services/quota/quota.service';
-import { DataStorageService } from '../../_services/datastorage/datastorage.service';
+import { QuotaService } from '../../_services/quota.service';
+import { DataStorageService } from '../../_services/datastorage.service';
 import { UserEntity } from '../../_entities/UserEntity';
 
 
@@ -100,16 +100,39 @@ export class QuotaCalendarComponent implements OnInit {
     for (var i = 0; i < quotaList.length; ++i) {
       this.calendarEvents[i] =
       {
+        allDay: false,
+        backgroundColor: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
+        textColor: "white",
         title: quotaList[i].name,
         start: quotaList[i].startDateTime,
         end: quotaList[i].endDateTime,
         id: quotaList[i].id,
-        allDay: false,
-        color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
-        textColor: "white"
+        extendedProps: {
+          description: quotaList[i].description,
+          originalHours: quotaList[i].originalHours,
+          remainingHours: quotaList[i].remainingHours,
+          teamId: quotaList[i].teamId,
+          isActive: quotaList[i].isActive,
+          createdBy: quotaList[i].createdBy,
+          createdOn: quotaList[i].createdOn,
+          updatedBy: quotaList[i].updatedBy,
+          updatedOn: quotaList[i].updatedOn
+         }
       };
     }
   }
+
+  //eventRender function from Calendar
+  eventRender(info) {
+    var attr_tooltip = document.createAttribute("data-tooltip");
+    var attr_title = document.createAttribute("title");
+    attr_tooltip.value = "";
+    attr_title.value = info.event.extendedProps.description.trim()
+      + "  Original Hours : " + info.event.extendedProps.originalHours
+      + "  Remaining Hours : " + info.event.extendedProps.remainingHours;
+    info.el.setAttributeNode(attr_tooltip);
+    info.el.setAttributeNode(attr_title);
+}
 
   // Edit Quota when event is clicked
   handleEventClick(info) {
@@ -267,11 +290,6 @@ export class QuotaCalendarComponent implements OnInit {
     return(token) ? true : false;
   }
 
-  //Execute when Mouse Over an event -- yet to test
-  MouseOver(event) {
-    console.log(event.el);
-  }
-
 // Toggle calendar visibility
   toggleVisible() {
     this.calendarVisible = !this.calendarVisible;
@@ -292,17 +310,5 @@ export class QuotaCalendarComponent implements OnInit {
   handleDateClick(arg) {
     this.getQuota(arg.date);
   }
-//Add tooltip to events   --- for ng fullcalendar
-//eventrender(event, element)
-//{
-//  event.element[0]
-//           .querySelectorAll(".fc-content")[0]
-//           .setAttribute("data-tooltip", event.event.title);
-
-  // Event tool tip when mouse over event
-  //eventrender(event) {
-  //  event.el.childNodes[0].childNodes[2].attr('data-toggle', 'tooltip');
-  //  event.el.childNodes[0].childNodes[2].attr('title', event.title);   
-  //}
 }
 

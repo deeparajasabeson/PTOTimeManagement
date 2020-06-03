@@ -79,7 +79,6 @@
     <Build Include="Security\Tables\TeamUser.sql" />
     <Build Include="Config\Tables\Status.sql" />
     <Build Include="Config\Tables\RequestType.sql" />
-    <Build Include="Config\Tables\ShiftSlide.sql" />
     <Build Include="PTO\Tables\Request.sql" />
     <Build Include="PTO\Tables\Quota.sql" />
   </ItemGroup>

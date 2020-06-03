@@ -1,0 +1,1 @@
+{"version":3,"file":"ValidateHours.js","sourceRoot":"","sources":["ValidateHours.ts"],"names":[],"mappings":";;AAGA,SAAgB,aAAa,CAAC,SAAe,EAAG,SAAiB,EAAE,OAAa,EAAE,OAAe;IAC/F,OAAO,UAAC,OAAwB;QAC9B,IAAI,OAAO,CAAC,KAAK,IAAI,CAAC,EAAG;YACvB,OAAO,EAAE,qBAAqB,EAAE,IAAI,EAAE,CAAC;SACxC;QACD,OAAO,IAAI,CAAC;IACd,CAAC,CAAA;AACH,CAAC;AAPD,sCAOC"}

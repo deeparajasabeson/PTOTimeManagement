@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faBell, faUserPlus, faSignInAlt, faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { AuthService } from '../_services/auth/auth.service';
+import { AuthService } from '../_services/auth.service';
 
 import { PublicLayoutComponent } from './public-layout/public-layout.component';
 import { HeaderBarComponent } from './header-bar/header-bar.component';

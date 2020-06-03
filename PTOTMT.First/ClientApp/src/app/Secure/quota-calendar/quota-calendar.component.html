@@ -1,4 +1,3 @@
-<!--<button class="btn btn-info pull-left" (click)="getNewQuota(null)">New PTO Quota</button>-->
 <div class="text-right">
   <button (click)='toggleWeekends()'>toggle weekends</button>
 </div>
@@ -19,7 +18,6 @@
                  [height]="parent"
                  (dateClick)="handleDateClick($event)"
                  (eventClick)="handleEventClick($event)"
-                 (eventMouseover)="MouseOver($event)">
-                 <!--(eventRender)="eventrender($event)">-->  
+                 (eventRender)=" eventRender($event)">
   </full-calendar>
 </div>

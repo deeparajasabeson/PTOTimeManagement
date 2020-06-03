@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
 import {  NgForm } from '@angular/forms';
-import { AuthService } from '../../_services/auth/auth.service';
-import { DataStorageService } from '../../_services/datastorage/datastorage.service';
+import { AuthService } from '../../_services/auth.service';
+import { DataStorageService } from '../../_services/datastorage.service';
 
 @Component({
   selector: 'app-login',

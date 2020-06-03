@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { UserEntity } from '../../_entities/UserEntity';
-import { QuotaEntity } from '../../_entities/QuotaEntity';
+import { UserEntity } from '../_entities/UserEntity';
+import { StatusEntity } from '../_entities/StatusEntity';
+import { QuotaEntity } from '../_entities/QuotaEntity';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +15,20 @@ export class DataStorageService {
     return this.quotas;
   }
 
+  private statusEntity: StatusEntity;
+  setStatusEntity(value: StatusEntity) {
+    this.statusEntity = value;
+  }
+  getUserEntity(): UserEntity {
+    return this.userEntity;
+  }
+
   private userEntity: UserEntity;
   setUserEntity(value: UserEntity) {
     this.userEntity = value;
   }
-  getUserEntity(): UserEntity {
-    return this.userEntity;
+  getStatusEntity(): StatusEntity {
+    return this.statusEntity;
   }
 
   private details = {};

@@ -25,7 +25,6 @@ Use PTOTimeManagement
     delete from Config.Location 
     delete from Security.Title
     delete from Security.Team 
-    delete from Config.ShiftSlide
     delete from Config.RequestType
     delete from Security.[User]
 GO
@@ -36,7 +35,6 @@ Declare @UserId uniqueidentifier = NEWID(),
               @ReportToUserId uniqueidentifier = NEWID(),
              @LocationId uniqueidentifier = NEWID(),
              @TeamId uniqueidentifier = NEWID(),
-             @ShiftSlideId uniqueidentifier = NEWID(),
              @RequestTypeId uniqueidentifier = NEWID(),
              @StatusId uniqueidentifier = NEWID()
 
@@ -79,21 +77,21 @@ Values
 
 --Security.Team TABLE
 Insert into Security.Team 
-(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(NEWID(), 'Help Desk', 'Team of Help Desk Associates', 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Help Desk', 'Team of Help Desk Associates', 3,  8, 9, 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
 Insert into Security.Team 
-(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(NEWID(), 'OnBoarding / Recovery (OBR)', 'OnBoarding, Recovery Team', 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'OnBoarding / Recovery (OBR)', 'OnBoarding, Recovery Team', 3,  9, 6, 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
 Insert into Security.Team 
-(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
 (@TeamId, 'Sales Order Entry (SOE)', 'Sales Order Entry Team', 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
 Insert into Security.Team 
-(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(NEWID(), 'Leadership / Admin', 'Leadership, Admin Team', 1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Leadership / Admin', 'Leadership, Admin Team', 3,  8, 6, 1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
 
 
 --Security.Title TABLE
@@ -101,32 +99,6 @@ Insert into Security.Title
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
 ( @TitleId, 'SomeTitle', 'Some Title',1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
-
-
---Config.ShiftSlide TABLE
-Insert into Config.ShiftSlide
-(Id, TeamFunctionId, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
-Values 
-(@ShiftSlideId, @TeamId, 3,  8, 6, 1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
-
-Select @TeamId = Id from Security.Team where Name = 'Help Desk'
-Insert into Config.ShiftSlide
-(Id, TeamFunctionId, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
-Values 
-(NEWID(), @TeamId, 3,  8, 9, 1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
-
-Select @TeamId = Id from Security.Team where Name = 'OnBoarding / Recovery (OBR)'
-Insert into Config.ShiftSlide
-(Id, TeamFunctionId, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
-Values 
-( NEWID(), @TeamId, 3,  9, 6, 1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
-
-Select @TeamId = Id from Security.Team where Name = 'Leadership / Admin'
-Insert into Config.ShiftSlide
-(Id, TeamFunctionId, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
-Values 
-( NEWID(), @TeamId, 3,  8, 5, 1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
-
 
 --Config.RequestType TABLE
 Insert into Config.RequestType 

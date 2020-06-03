@@ -8,8 +8,7 @@ import { ValidateOriginalHours } from '../../_validators/ValidateOriginalHours';
 
 @Component({
   selector: 'app-quota-editor',
-  templateUrl: './quota-editor.component.html',
-  styleUrls: ['./quota-editor.component.css']
+  templateUrl: './quota-editor.component.html'
 })
 export class QuotaEditorComponent implements OnInit {
   @ViewChild('dp', null) dp: NgbDatepicker;
@@ -32,7 +31,6 @@ export class QuotaEditorComponent implements OnInit {
     this.quotaeditorForm = this.fb.group({
       id: [this.quota.id],
       quotaName: [this.quota.quotaName, Validators.maxLength(30)],
-      //originalHours: [this.quota.originalHours, [Validators.required, Validators.min(this.quota.remainingHours)]],
       originalHours: [this.quota.originalHours, [Validators.required, ValidateOriginalHours(this.quota.remainingHours)]],
       remainingHours: [this.quota.remainingHours],
       startDate: [this.quota.startDate, Validators.required],

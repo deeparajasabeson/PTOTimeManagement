@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { QuotaEntity } from '../../_entities/QuotaEntity';
-import { Observable, of } from 'rxjs';
-import { catchError, retry } from 'rxjs/internal/operators';
+import { Observable } from 'rxjs';
 
 
 const httpOptions = {
