@@ -7,9 +7,7 @@ import { MaterialModule } from '../material.module';
 import { TeamService } from '../../_services/team.service';
 import { DataStorageService } from '../../_services/datastorage.service';
 import { PTODialogData } from '../../_models/PTODialogData';
-import { TeamFromDBEntity } from '../../_entities/TeamFromDBEntity';
 import { ValidateHours } from '../../_validators/ValidateHours';
-import { UserEntity } from '../../_entities/UserEntity';
 
 @Component({
   selector: 'app-pto-editor',
@@ -36,10 +34,6 @@ export class PTOEditorComponent implements OnInit {
         private datastorageService: DataStorageService) { }
 
   ngOnInit() {
-    let user: UserEntity = this.datastorageService.getUserEntity();
-    let team: TeamFromDBEntity;
-    this.teamService.getTeamById(user.teamFunctionId).subscribe((data: TeamFromDBEntity) => { team = data });
-
     this.ptoeditorForm = this.fb.group({
       id: [this.pto.id],
       userId: [this.pto.userId, Validators.required],
@@ -47,7 +41,7 @@ export class PTOEditorComponent implements OnInit {
       requestTypeId: ["", Validators.required],
       description: [this.pto.description, Validators.maxLength(50)],
       hours: [this.pto.hours, [Validators.required,
-                                              ValidateHours(this.pto.allDay, this.pto.startDate, this.pto.startTime, this.pto.endDate, this.pto.endTime, team)]],
+                                              ValidateHours(this.pto.allDay, this.pto.startDate, this.pto.startTime, this.pto.endDate, this.pto.endTime)]],
       allDay: [this.pto.allDay, Validators.required ],
       startDate: [this.pto.startDate, Validators.required],
       startTime: [this.pto.startTime, [Validators.required, Validators.min(0.01), Validators.max(12.59)]],

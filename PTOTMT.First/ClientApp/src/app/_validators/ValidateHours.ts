@@ -1,41 +1,62 @@
 import { AbstractControl, ValidatorFn } from '@angular/forms';
-import { StatusService } from "../_services/status.service";
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { TeamFromDBEntity } from '../_entities/TeamFromDBEntity';
 
-export function ValidateHours(allDay: boolean,
+export function ValidateHours(
+  allDay: boolean,
   startDate: NgbDateStruct,
   startTime: string,
   endDate: NgbDateStruct,
   endTime: string,
-  team: TeamFromDBEntity
 ): ValidatorFn
 {
   return (control: AbstractControl): { [key: string]: boolean } | null => {
-    if (control.value <= 0 ) {
+    let hours = calculateHours(allDay, startDate, startTime, endDate, endTime);
+    if (control.value <= 0 || (hours != null && control.value != hours) ) {
       return { 'valideOriginalHours': true };
     }
     return null;
   }
 }
 
-
-function calculateHours(allDay: boolean, startDate: NgbDateStruct, startTime: string, endDate: NgbDateStruct, endTime: string, team: TeamFromDBEntity) {
-  let hours: number;
+//To calculate number of hours between the specifed dates and times
+function calculateHours(
+  allDay: boolean,
+  startDate: NgbDateStruct,
+  startTime: string,
+  endDate: NgbDateStruct,
+  endTime: string,
+): number {
+  let hours: number = 0;
+  let iStartTime = parseInt(startTime);
+  let iEndTime = parseInt(endTime);
   if (startDate == endDate) {
-    if (allDay) { hours = 8; } else {
-      let iStartTime = parseInt(startTime);
+    if (allDay) {
+      hours = 8;
+    }
+    else {
       let iStartHour = Math.trunc(iStartTime);
       let iStartMin = iStartTime - iStartHour;
-
-      let iEndTime = parseInt(endTime);
-
-      hours = Math.trunc(iStartTime) 
+      let iEndHour = Math.trunc(iEndTime);
+      let iEndMin = iEndTime - iEndHour;
+      hours = (iEndHour - iStartHour) + (iEndMin - iStartMin);
     }
-   
   }
   else {
-
+    if (allDay) {
+      hours = 8 * NoOfDays(startDate, endDate);
+    }
+    else {
+      return null;
+    }
   }
+  return hours;
 }
 
+//function to calculate number of days inbetween two dates
+function NoOfDays(startDate: NgbDateStruct, endDate: NgbDateStruct) : number{
+  return Math.floor((
+         Date.UTC(endDate.year, endDate.month, endDate.day)
+      - Date.UTC(startDate.year, startDate.month, startDate.day)
+    ) / (1000 * 60 * 60 * 24)
+  );
+}
