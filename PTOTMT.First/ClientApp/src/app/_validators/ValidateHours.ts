@@ -18,7 +18,7 @@ export function ValidateHours(
   }
 }
 
-//To calculate number of hours between the specifed dates and times
+//To calculate number of hours between  specifed dates and times
 function calculateHours(
   allDay: boolean,
   startDate: NgbDateStruct,

@@ -5,7 +5,7 @@ import { map, catchError, retry } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 
-import { ErrorDialogService } from '../_services/error-dialog/error-dialog.service';
+import { ErrorDialogService } from '../_services/error-dialog.service';
 
 /** Pass untouched request through to the next request handler. */
 @Injectable()

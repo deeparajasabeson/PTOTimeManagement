@@ -95,7 +95,7 @@ namespace PTOTMT.Service.Controllers
         }
 
         // DELETE: api/Quotas/5
-        [Microsoft.AspNetCore.Mvc.HttpDelete("{id}")]
+        [HttpDelete("quotabyid/{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult DeleteQuotaById(Guid? id)
         {
@@ -103,12 +103,12 @@ namespace PTOTMT.Service.Controllers
             {
                 uow.QuotaRepo.DeleteById(id);
                 uow.SaveChanges();
-                return NoContent();
+                return Ok();
             }
             return NotFound();
         }
 
-        // DELETE: api/Quotas/5
+        // DELETE: api/Quotas
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteQuota(Quota quota)

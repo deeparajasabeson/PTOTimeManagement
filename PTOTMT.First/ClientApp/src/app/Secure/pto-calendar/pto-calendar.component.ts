@@ -13,9 +13,11 @@ import { PTODialogData } from '../../_models/PTODialogData';
 import { PTOEntity } from '../../_entities/PTOEntity';
 import { StatusEntity } from '../../_entities/StatusEntity';
 import { PTOFromDBEntity } from '../../_entities/PTOFromDBEntity';
+import { RequestTypeFromDBEntity } from '../../_entities/RequestTypeFromDBEntity';
 import { PTOService } from '../../_services/pto.service';
 import { StatusService } from '../../_services/status.service';
 import { DataStorageService } from '../../_services/datastorage.service';
+import { RequestTypeService } from '../../_services/requesttype.service';
 import { UserEntity } from '../../_entities/UserEntity';
 
 
@@ -34,55 +36,84 @@ export class PTOCalendarComponent implements OnInit {
   calendarEvents: EventInput[] = [];
   options: any;
   user = null;
+  pto: PTODialogData;
   previousDate = null;
+
   toDate = new Date();
   toDateNgbDateStruct: NgbDateStruct = {
     year: this.toDate.getFullYear(),
     month: this.toDate.getMonth() + 1,
     day: this.toDate.getDate()
   }
-
-  pto: PTODialogData = {
-    id: "",
-    userId: "",
-    requestTypeId: "",
-    description: "",
-    hours: 0,
-    allDay: false,
-    startDate: this.toDateNgbDateStruct,
-    startTime: "00:00",
-    endDate: this.toDateNgbDateStruct,
-    endTime: "00:00"
-  }
+  
   static subscribeData: any;
   static setSubscribeData(data): any {
     PTOCalendarComponent.subscribeData = data;
     return data;
   }
 
-  static subscribePTOFromDBEntity: PTOFromDBEntity;
-  static setSubscribePTOFromDBEntity(pto): PTOFromDBEntity {
+  static subscribePTOFromDBEntity: any;
+  static setSubscribePTOFromDBEntity(pto): any {
     PTOCalendarComponent.subscribePTOFromDBEntity = pto;
     return pto;
+  }
+
+  static subscribeRequestTypeFromDBEntity: any;
+  static setSubscribeRequestTypeFromDBEntity(requestType): any {
+    PTOCalendarComponent.subscribeRequestTypeFromDBEntity = requestType;
+    return requestType;
   }
 
   // Constructor - executes when component is created first
   constructor(public dialog: MatDialog,
     private ptoService: PTOService,
     private statusService: StatusService,
-    private datastorageService: DataStorageService) { }
+    private datastorageService: DataStorageService,
+    private requestTypeService: RequestTypeService ) { }
 
   // Execute after constructor when component is initialized
   ngOnInit() {
+    this.requestTypeService
+          .getRequestTypes()
+          .subscribe((data: RequestTypeFromDBEntity[]) => {
+            PTOCalendarComponent.setSubscribeRequestTypeFromDBEntity(data);
+    });
+    let requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
+    debugger;
+    let requestFlexType: RequestTypeFromDBEntity;
+    this.requestTypeService
+      .getRequestTypeByName("Flex Type")
+      .subscribe((data: RequestTypeFromDBEntity) => {
+        requestFlexType = data;
+      });
+
+    this.pto = {
+      id: "",
+      userId: "",
+      requestTypeId: requestFlexType.id,
+      requestTypes: [],
+      description: "",
+      hours: 0,
+      allDay: false,
+      startDate: this.toDateNgbDateStruct,
+      startTime: "00:00",
+      endDate: this.toDateNgbDateStruct,
+      endTime: "00:00"
+    }
+    this.pto.requestTypes.push(requestTypes);
     this.options = {
       customButtons: {
-        newpto: {
+        flex: {
           text: 'Schedule Flexibility',
-          click: () => this.getPTO(null)    // click: this.getPTO(null).bind(this) // <-------- CAN ALSO USE THIS ONE
+          click: () => this.scheduleFlex()
+        },
+        newpto: {
+           text: 'New PTO Request',
+           click: () => this.getPTO(null)    // click: this.getPTO(null).bind(this) // <-------- CAN ALSO USE THIS ONE
         }
       },
       header: {
-        left: 'prev,next today newquota',
+        left: 'prev,next today newpto',
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       }
@@ -97,7 +128,7 @@ export class PTOCalendarComponent implements OnInit {
     response.subscribe((data: PTOFromDBEntity[]) => {
       PTOCalendarComponent.setSubscribeData(data);
     });
-
+    debugger;
     let ptoList = PTOCalendarComponent.subscribeData;
     if (ptoList == null) {
       return
@@ -171,16 +202,24 @@ export class PTOCalendarComponent implements OnInit {
     }
 
     this.pto.id = ptoToEdit.id;
-    this.pto.description = ptoToEdit.description,
-      this.pto.hours = ptoToEdit.hours;
+    this.pto.userId = ptoToEdit.userId;
+    this.pto.description = ptoToEdit.description
+    this.pto.requestTypes = [];
+    this.pto.requestTypes.push(PTOCalendarComponent.subscribeRequestTypeFromDBEntity);
+   this.pto.requestTypeId = ptoToEdit.requestTypeId,
+    this.pto.hours = ptoToEdit.hours;
     this.pto.startDate = ptoStartDate;
     this.pto.startTime = ptoToEdit.startDateTime.substr(11, 5);
     this.pto.endDate = ptoEndDate;
     this.pto.endTime = ptoToEdit.endDateTime.substr(11, 5);
+
     this.isNewEvent = false;
     this.getPTO(null);
     this.isNewEvent = true;
   }
+
+  //
+  scheduleFlex(): void { }
 
   // Get New PTO and set start date
   getPTO(startDate: Date): void {
@@ -190,13 +229,12 @@ export class PTOCalendarComponent implements OnInit {
     dialogConfig.id = "pto-editor";
     dialogConfig.height = "60%";
     dialogConfig.width = "70%";
-    dialogConfig.data = { pto: this.pto, teamId: this.datastorageService.getUserEntity().teamFunctionId };  // One way to pass data to modal window
+    dialogConfig.data = { pto: this.pto, isNewEvent: this.isNewEvent };  // One way to pass data to modal window
     if (startDate != null) {
       dialogConfig.data.pto.startDate = startDate;
     }
     const dialogRef = this.dialog.open(PTOEditorComponent, dialogConfig);
     dialogRef.componentInstance.pto = this.pto;  //another way to pass quota to modal window
-    dialogRef.componentInstance.teamId = this.datastorageService.getUserEntity().teamFunctionId;
 
     dialogRef.afterClosed().subscribe(resultData => {
       if (resultData != null && resultData != undefined) {
@@ -229,9 +267,11 @@ export class PTOCalendarComponent implements OnInit {
       id: (this.pto.id == "" && this.isNewEvent) ? this.generateUUID() : this.pto.id,
       userId: userDetails.id,
       description: this.pto.description,
+      requestTypeId: this.pto.requestTypeId,
       hours: this.pto.hours,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
+      allDay: this.pto.allDay,
       statusId: waitListStatus.id,
       quotaId: "",
       isActive: true,
@@ -250,7 +290,7 @@ export class PTOCalendarComponent implements OnInit {
       start: startDateTime,
       end: endDateTime,
       id: ptoEntity.id,
-      allDay: false,
+      allDay: ptoEntity.allDay,
       color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
       textColor: "white"
     })

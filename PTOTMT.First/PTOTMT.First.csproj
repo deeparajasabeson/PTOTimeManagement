@@ -41,6 +41,7 @@
     <None Remove="ClientApp\src\app\_entities\PTOFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\QuotaEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\QuotaFromDBEntity.ts" />
+    <None Remove="ClientApp\src\app\_entities\RequestTypeFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\StatusEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\TeamFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_models\PTODialogData.ts" />
@@ -66,6 +67,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\_entities\PTOFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\QuotaEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\QuotaFromDBEntity.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_entities\RequestTypeFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\StatusEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\TeamFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_models\PTODialogData.ts" />

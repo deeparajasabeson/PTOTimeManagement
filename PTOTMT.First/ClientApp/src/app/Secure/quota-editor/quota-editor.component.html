@@ -1,6 +1,11 @@
-<div class="modal-box dialog-wrapper">
-  <div class="navbar modal-title">
-    <h5 mat-dialog-title>&nbsp;&nbsp;<span *ngIf="!id">New</span><span *ngIf="id">Edit</span>&nbsp;Quota</h5>
+<div class="modal-box">
+  <div class="navbar modal-title" style="font-size: large;">
+    <h2 mat-dialog-title>
+      &nbsp;&nbsp;
+      <span *ngIf="isNewEvent">New</span>
+      <span *ngIf="!isNewEvent">Edit</span>
+      &nbsp;Quota
+    </h2>
   </div>
   <form [formGroup]="quotaeditorForm" (ngSubmit)="saveQuota(quotaeditorForm.value)" >
     <div mat-dialog-content>
@@ -22,9 +27,7 @@
         </div>
         <div class="col-3">
           Unused PTO Hours<br />
-          <h4>
-            <label formControlName="remainingHours" size="5">{{remainingHours}}</label>
-          </h4>
+          <label formControlName="remainingHours" size="5" style="font-size: large;">{{remainingHours}}</label>
           &nbsp;Hours
         </div>
       </div><br />
@@ -90,13 +93,24 @@
     </div>
     <div mat-dialog-actions class="modal-footer ">
       <button type="submit"
-                     class="btn btn-success submitbutton"
-                     (click) ="saveQuota(quotaeditorForm.value)"
-                     [mat-dialog-close]="data">Submit Quota</button>
+              class="btn btn-success submitbutton"
+              (click)="saveQuota(quotaeditorForm.value)"
+              [mat-dialog-close]="data">
+        Submit Quota
+      </button>
+      <span *ngIf="!isNewEvent">
+        <button class="btn btn-danger deletebutton"
+                (click)="deleteQuota(quotaeditorForm.value)"
+                [mat-dialog-close]="data">
+          Delete Quota
+        </button>
+      </span>
       <button type="button"
-                     class="btn btn-danger cancelbutton"
-                     [mat-dialog-close]="data"
-                     (click)="onNoClick($event)">Cancel</button>
+              class="btn btn-warning cancelbutton"
+              [mat-dialog-close]="data"
+              (click)="onNoClick($event)">
+        Cancel
+      </button>
       <br />
     </div>
     </form>

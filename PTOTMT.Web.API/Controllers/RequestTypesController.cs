@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
+
 
 namespace PTOTMT.Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("CrossOrigin")]
+
     public class RequestTypesController : ControllerBase
     {
         private readonly IUnitOfWorkWebAPI uow;
@@ -20,9 +24,10 @@ namespace PTOTMT.Service.Controllers
 
         // GET: api/RequestTypes
         [HttpGet]
-        public IEnumerable<RequestType> GetRequestType()
+        public IEnumerable<RequestType> GetRequestTypes()
         {
             return uow.RequestTypeRepo.GetAll();
+
         }
 
         // GET: api/RequestTypes/5
@@ -31,6 +36,19 @@ namespace PTOTMT.Service.Controllers
         public ActionResult<RequestType> GetRequestType(Guid? id)
         {
             var requestType = uow.RequestTypeRepo.GetById(id);
+            if (requestType == null)
+            {
+                return NotFound();
+            }
+            return requestType;
+        }
+
+        // GET: api/requesttypes/requesttypebyname/{name}
+        [HttpGet("requesttypebyname/{name}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<RequestType> GetRequestTypeByName(string name)
+        {
+            var requestType = uow.RequestTypeRepo.GetByName(name);
             if (requestType == null)
             {
                 return NotFound();
@@ -100,6 +118,7 @@ namespace PTOTMT.Service.Controllers
             return NotFound();
         }
 
+        [HttpGet("exists/{id}")]
         public bool RequestTypeExists(Guid? id)
         {
             return uow.RequestTypeRepo.Exists(id);

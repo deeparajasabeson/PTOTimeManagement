@@ -15,9 +15,10 @@ import { MaterialModule } from './material.module';
 
 import { SecureLayoutComponent } from './secure-layout/secure-layout.component';
 import { TopMenuComponent } from './top-menu/top-menu.component';
+import { LogoutComponent } from './logout/logout.component';
 import { PTOCalendarComponent } from './pto-calendar/pto-calendar.component';
 import { QuotaCalendarComponent } from './quota-calendar/quota-calendar.component';
-import { LogoutComponent } from './logout/logout.component';
+import { PTOEditorComponent } from './pto-editor/pto-editor.component';
 import { QuotaEditorComponent } from './quota-editor/quota-editor.component';
 
 const routes: Routes = [
@@ -45,10 +46,12 @@ const routes: Routes = [
     PTOCalendarComponent,
     LogoutComponent,
     QuotaCalendarComponent,
-    QuotaEditorComponent
+    QuotaEditorComponent,
+    PTOEditorComponent
   ],
   entryComponents: [
-    QuotaEditorComponent
+    QuotaEditorComponent,
+    PTOEditorComponent
   ],
   imports: [
     CommonModule,

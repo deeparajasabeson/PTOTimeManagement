@@ -20,6 +20,11 @@ namespace PTOTMT.Repository.Implementation.WebAPI
             this._context = context;
         }
 
+        public RequestType GetByName(string name)
+        {
+            return this._context.RequestType.Where(rt => rt.Name == name).FirstOrDefault();
+        }
+
         public bool ExistsName(string name)
         {
             return this._context.RequestType.Where(entity => entity.Name == name).Any();

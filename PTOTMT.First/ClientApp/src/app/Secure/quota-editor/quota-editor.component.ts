@@ -5,6 +5,7 @@ import { NgbDateStruct, NgbDatepicker  } from '@ng-bootstrap/ng-bootstrap';
 import { QuotaDialogData } from '../../_models/QuotaDialogData';
 import { MaterialModule } from '../material.module';
 import { ValidateOriginalHours } from '../../_validators/ValidateOriginalHours';
+import { QuotaService } from '../../_services/quota.service';
 
 @Component({
   selector: 'app-quota-editor',
@@ -25,7 +26,8 @@ export class QuotaEditorComponent implements OnInit {
   constructor(
         private dialogRef: MatDialogRef<QuotaEditorComponent>,
         @Inject(MAT_DIALOG_DATA) dataFromCalendar: QuotaDialogData,   //data From Calendar
-        private fb: FormBuilder)   {  }
+        private fb: FormBuilder,
+        private quotaService: QuotaService) { }
 
   ngOnInit() {
     this.quotaeditorForm = this.fb.group({
@@ -49,6 +51,14 @@ export class QuotaEditorComponent implements OnInit {
     this.dialogRef.close(this.quotaeditorForm.value);
     if (this.quotaeditorForm.valid) {
       this.quota = this.quotaeditorForm.value;
+    }
+  }
+
+  deleteQuota(quotaForm: NgForm): void {
+    this.dialogRef.close();
+    this.quota = this.quotaeditorForm.value;
+    if (confirm("Want to delete event -- " + this.quota.quotaName + " ?")) {
+      this.quotaService.deleteQuota(this.quota.id);
     }
   }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { QuotaEntity } from '../../_entities/QuotaEntity';
 import { Observable } from 'rxjs';
+import { QuotaEntity } from '../_entities/QuotaEntity';
 
 
 const httpOptions = {
@@ -37,6 +37,11 @@ export class QuotaService {
       .subscribe((data: QuotaEntity) => {
         return data;
     })
+  }
+
+  public deleteQuota(quotaId: string) {
+    let requestUrl: string = this.quotaUrl + "/quotabyid/" + quotaId;
+    this.http.delete(requestUrl, httpOptions).subscribe(data => { return data });
   }
 } 
 

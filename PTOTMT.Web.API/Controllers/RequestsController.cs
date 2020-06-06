@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
+
 
 namespace PTOTMT.Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("CrossOrigin")]
     public class RequestsController : ControllerBase
     {
         private readonly IUnitOfWorkWebAPI uow;
@@ -36,6 +40,15 @@ namespace PTOTMT.Service.Controllers
                 return NotFound();
             }
             return request;
+        }
+
+        // GET: api/requests/ptorequestsbyuserid/<userId:Guid>
+        [HttpGet("ptorequestsbyuserid/{userId}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IEnumerable<Request> GetRequestsByUserId(Guid? userId)
+        {
+            var requests = GetRequest();
+            return requests.Where(r => r.UserId == userId);
         }
 
         // PUT: api/Requests/5

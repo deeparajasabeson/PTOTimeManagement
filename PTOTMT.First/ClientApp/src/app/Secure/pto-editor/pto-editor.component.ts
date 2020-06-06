@@ -1,11 +1,10 @@
 import { Component, Inject, OnInit, ViewChild, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder,  Validators, NgForm, AbstractControl } from '@angular/forms';
+import { FormGroup, FormBuilder,  Validators, NgForm } from '@angular/forms';
 import { NgbDateStruct, NgbDatepicker  } from '@ng-bootstrap/ng-bootstrap';
 import { MaterialModule } from '../material.module';
 
-import { TeamService } from '../../_services/team.service';
-import { DataStorageService } from '../../_services/datastorage.service';
+import { PTOService } from '../../_services/pto.service';
 import { PTODialogData } from '../../_models/PTODialogData';
 import { ValidateHours } from '../../_validators/ValidateHours';
 
@@ -16,7 +15,6 @@ import { ValidateHours } from '../../_validators/ValidateHours';
 export class PTOEditorComponent implements OnInit {
   @ViewChild('dp', null) dp: NgbDatepicker;
   @Input() public pto: PTODialogData;  //Input from Calendar through @Input() property
-  @Input() public teamId: string;
 
   ptoeditorForm: FormGroup;
   private toDate = new Date();  //used in endDate filter in calendar template
@@ -30,15 +28,15 @@ export class PTOEditorComponent implements OnInit {
         private dialogRef: MatDialogRef<PTOEditorComponent>,
         @Inject(MAT_DIALOG_DATA) dataFromCalendar: PTODialogData,   //data From Calendar
         private fb: FormBuilder,
-        private teamService: TeamService,
-        private datastorageService: DataStorageService) { }
+        private ptoService: PTOService) { }
 
   ngOnInit() {
     this.ptoeditorForm = this.fb.group({
       id: [this.pto.id],
       userId: [this.pto.userId, Validators.required],
       location: ["", Validators.required],
-      requestTypeId: ["", Validators.required],
+      requestTypeId: [this.pto.requestTypeId, Validators.required],
+      resourceTypes: [this.pto.requestTypes],
       description: [this.pto.description, Validators.maxLength(50)],
       hours: [this.pto.hours, [Validators.required,
                                               ValidateHours(this.pto.allDay, this.pto.startDate, this.pto.startTime, this.pto.endDate, this.pto.endTime)]],
@@ -50,6 +48,13 @@ export class PTOEditorComponent implements OnInit {
     });
   }
 
+  onChange(isChecked: boolean) {
+    if (isChecked) {
+    }
+    else {
+    }
+  }
+
   navigateEvent(event) {
     this.pto.startDate = event.next;
   }
@@ -58,6 +63,14 @@ export class PTOEditorComponent implements OnInit {
     this.dialogRef.close(this.ptoeditorForm.value);
     if (this.ptoeditorForm.valid) {
       this.pto = this.ptoeditorForm.value;
+    }
+  }
+
+  deletePTO(ptoForm: NgForm): void {
+    this.dialogRef.close();
+    this.pto = this.ptoeditorForm.value;
+    if (confirm("Want to delete request -- " + this.pto.description + " ?")) {
+      this.ptoService.deletePTO(this.pto.id);
     }
   }
 

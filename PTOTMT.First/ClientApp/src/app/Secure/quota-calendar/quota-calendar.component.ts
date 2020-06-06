@@ -190,7 +190,7 @@ export class QuotaCalendarComponent implements OnInit {
     dialogConfig.id = "quota-editor";
     dialogConfig.height = "60%";
     dialogConfig.width = "70%";
-    dialogConfig.data = { quota: this.quota };  // One way to pass data to modal window
+    dialogConfig.data = { quota: this.quota, isNewEvent: this.isNewEvent };  // One way to pass data to modal window
     if (startDate != null) {
       dialogConfig.data.quota.startDate = startDate;
     }

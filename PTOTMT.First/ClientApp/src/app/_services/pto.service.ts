@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { PTOEntity } from '../../_entities/PTOEntity';
+import { PTOEntity } from '../_entities/PTOEntity';
 import { Observable } from 'rxjs';
 
 
@@ -36,5 +36,10 @@ export class PTOService {
       .subscribe((data: PTOEntity) => {
         return data;
       })
+  }
+
+  public deletePTO(ptoId: string) {
+    let requestUrl: string = this.ptoUrl + "/ptobyid/" + ptoId;
+    this.http.delete(requestUrl, httpOptions).subscribe(data => { return data });
   }
 }
