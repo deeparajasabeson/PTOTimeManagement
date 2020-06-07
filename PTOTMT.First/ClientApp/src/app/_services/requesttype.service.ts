@@ -20,13 +20,13 @@ export class RequestTypeService {
     this.requestTypeUrl = "https://localhost:44382/api/requesttypes";
     }
 
-  public getRequestTypes(): Observable<any> {
-    return this.http.get<any>(this.requestTypeUrl, httpOptions);
+  public getRequestTypes(): Observable<RequestTypeFromDBEntity[]> {
+    return this.http.get<RequestTypeFromDBEntity[]>(this.requestTypeUrl, httpOptions);
   }
 
-  public getRequestTypeByName(name: string) {
-    let requestUrl: string = this.requestTypeUrl +  "/requesttypebyname/" + name;
-    return this.http.get(requestUrl, httpOptions)
+  public getRequestTypeByName(name: string): Observable<RequestTypeFromDBEntity> {
+    let requestUrl: string = this.requestTypeUrl + "/requesttypebyname/" + name;
+    return this.http.get<RequestTypeFromDBEntity>(requestUrl, httpOptions);
   }
 } 
 

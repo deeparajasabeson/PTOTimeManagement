@@ -1,12 +1,17 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ErrorDialogData } from '../_models/ErrorDialogData';
 
 @Component({
   selector: 'app-error-dialog',
-  templateUrl: './error-dialog.component.html',
-  styleUrls: ['./error-dialog.component.css']
+  templateUrl: './error-dialog.component.html'
 })
 export class ErrorDialogComponent {
-  title = 'Angular-Interceptor';
-  constructor(@Inject(MAT_DIALOG_DATA) public data: string) { }
+  constructor(private dialogRef: MatDialogRef<ErrorDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) dialogdata: ErrorDialogData) {  }
+
+  public closeMe(event: any): void {
+    event.stopPropogation();
+    this.dialogRef.close();
+  }
 }

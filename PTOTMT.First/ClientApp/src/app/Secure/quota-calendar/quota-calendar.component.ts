@@ -4,7 +4,7 @@ import interactionPlugin from '@fullcalendar/interaction'; // for dateClick
 import { EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGrigPlugin from '@fullcalendar/timegrid';
-import { MatDialog,  MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { MatDialogConfig } from '@angular/material/dialog';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 

@@ -53,15 +53,18 @@ export class PTOCalendarComponent implements OnInit {
   }
 
   static subscribePTOFromDBEntity: any;
-  static setSubscribePTOFromDBEntity(pto): any {
+  static setSubscribePTOFromDBEntity(pto) {
     PTOCalendarComponent.subscribePTOFromDBEntity = pto;
-    return pto;
   }
 
-  static subscribeRequestTypeFromDBEntity: any;
-  static setSubscribeRequestTypeFromDBEntity(requestType): any {
-    PTOCalendarComponent.subscribeRequestTypeFromDBEntity = requestType;
-    return requestType;
+  static subscribeRequestType: RequestTypeFromDBEntity;
+  static setSubscribeRequestType(requestType: RequestTypeFromDBEntity) {
+    PTOCalendarComponent.subscribePTOFromDBEntity = requestType;
+  }
+
+  static subscribeRequestTypeFromDBEntity: RequestTypeFromDBEntity[];
+  static setSubscribeRequestTypeFromDBEntity(requestTypes: RequestTypeFromDBEntity[]) {
+    PTOCalendarComponent.subscribeRequestTypeFromDBEntity = requestTypes;
   }
 
   // Constructor - executes when component is created first
@@ -73,34 +76,6 @@ export class PTOCalendarComponent implements OnInit {
 
   // Execute after constructor when component is initialized
   ngOnInit() {
-    this.requestTypeService
-          .getRequestTypes()
-          .subscribe((data: RequestTypeFromDBEntity[]) => {
-            PTOCalendarComponent.setSubscribeRequestTypeFromDBEntity(data);
-    });
-    let requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
-    debugger;
-    let requestFlexType: RequestTypeFromDBEntity;
-    this.requestTypeService
-      .getRequestTypeByName("Flex Type")
-      .subscribe((data: RequestTypeFromDBEntity) => {
-        requestFlexType = data;
-      });
-
-    this.pto = {
-      id: "",
-      userId: "",
-      requestTypeId: requestFlexType.id,
-      requestTypes: [],
-      description: "",
-      hours: 0,
-      allDay: false,
-      startDate: this.toDateNgbDateStruct,
-      startTime: "00:00",
-      endDate: this.toDateNgbDateStruct,
-      endTime: "00:00"
-    }
-    this.pto.requestTypes.push(requestTypes);
     this.options = {
       customButtons: {
         flex: {
@@ -108,8 +83,8 @@ export class PTOCalendarComponent implements OnInit {
           click: () => this.scheduleFlex()
         },
         newpto: {
-           text: 'New PTO Request',
-           click: () => this.getPTO(null)    // click: this.getPTO(null).bind(this) // <-------- CAN ALSO USE THIS ONE
+          text: 'New PTO Request',
+          click: () => this.getPTO(null)    // click: this.getPTO(null).bind(this)//<-- CAN ALSO USE THIS ONE
         }
       },
       header: {
@@ -118,6 +93,38 @@ export class PTOCalendarComponent implements OnInit {
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       }
     };
+
+    let requestTypes: RequestTypeFromDBEntity[];
+    this.requestTypeService.getRequestTypes().subscribe((data: RequestTypeFromDBEntity[]) => {
+        PTOCalendarComponent.setSubscribeRequestTypeFromDBEntity(data);
+    });
+    do {
+      requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
+    } while (requestTypes == undefined)
+    let requestFlexTime: RequestTypeFromDBEntity = requestTypes.find(rt => rt.name == "Flex Time");
+
+    //let requestFlexType: RequestTypeFromDBEntity;
+    //this.requestTypeService
+    //  .getRequestTypeByName("Flex Time")
+    //  .subscribe((data: RequestTypeFromDBEntity) => {
+    //  PTOCalendarComponent.setSubscribeRequestType(data);
+    //});
+    //let requestFlexTime = PTOCalendarComponent.subscribeRequestType;
+
+    this.pto = {
+      id: "",
+      userId: "",
+      requestTypeId: requestFlexTime.id,
+      requestTypes: requestTypes,
+      description: "",
+      hours: 0,
+      allDay: false,
+      startDate: this.toDateNgbDateStruct,
+      startTime: "00:00",
+      endDate: this.toDateNgbDateStruct,
+      endTime: "00:00"
+    };
+    this.readPTObyUserId();
     this.readPTObyUserId();
   }
 
@@ -128,11 +135,11 @@ export class PTOCalendarComponent implements OnInit {
     response.subscribe((data: PTOFromDBEntity[]) => {
       PTOCalendarComponent.setSubscribeData(data);
     });
-    debugger;
     let ptoList = PTOCalendarComponent.subscribeData;
     if (ptoList == null) {
       return
     }
+    debugger;
     for (var i = 0; i < ptoList.length; ++i) {
       this.calendarEvents[i] =
       {
@@ -203,9 +210,8 @@ export class PTOCalendarComponent implements OnInit {
 
     this.pto.id = ptoToEdit.id;
     this.pto.userId = ptoToEdit.userId;
-    this.pto.description = ptoToEdit.description
-    this.pto.requestTypes = [];
-    this.pto.requestTypes.push(PTOCalendarComponent.subscribeRequestTypeFromDBEntity);
+    this.pto.description = ptoToEdit.description;
+    this.pto.requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
    this.pto.requestTypeId = ptoToEdit.requestTypeId,
     this.pto.hours = ptoToEdit.hours;
     this.pto.startDate = ptoStartDate;

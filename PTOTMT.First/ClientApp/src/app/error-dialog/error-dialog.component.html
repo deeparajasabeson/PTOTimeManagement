@@ -1,10 +1,18 @@
 <div>
-  <div>
-    <p>
-      Reason: {{data.reason}}
-    </p>
-    <p>
-      Status: {{data.status}}
-    </p>
-  </div>
+  <p style="color:blue">
+    Error: {{dialogdata.error}}
+  </p>
+  <p style="color:green">
+    Reason: {{dialogdata.reason}}
+  </p>
+  <p style="color:red">
+    Status: {{dialogdata.status}}
+  </p>
 </div>
+<button type="button"
+        [mat-dialog-close]="true" 
+        class="btn btn-warning"
+        (click)="closeMe($event)">
+  Close
+</button>
+

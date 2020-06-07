@@ -5,7 +5,7 @@ export interface RequestTypeFromDBEntity {
   description: string,
   isActive: boolean,
   createdBy: string,
-  createdOn: Date,
+  createdOn: string,
   updatedBy: string,
-  updatedOn: Date
+  updatedOn: string
 }

@@ -7,6 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { MatDialogModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './public/pagenotfound/pagenotfound.component';
@@ -46,6 +47,7 @@ export function tokenGetter() {
     FormsModule,
     FlexLayoutModule,
     BrowserAnimationsModule,
+    MatDialogModule,
     ToastrModule.forRoot({
       enableHtml: true,
       timeOut: 10000,
