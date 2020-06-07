@@ -7,6 +7,7 @@ import { MaterialModule } from '../material.module';
 import { PTOService } from '../../_services/pto.service';
 import { PTODialogData } from '../../_models/PTODialogData';
 import { ValidateHours } from '../../_validators/ValidateHours';
+import { ValidateMinutes } from '../../_validators/ValidateMinutes';
 
 @Component({
   selector: 'app-pto-editor',
@@ -15,6 +16,7 @@ import { ValidateHours } from '../../_validators/ValidateHours';
 export class PTOEditorComponent implements OnInit {
   @ViewChild('dp', null) dp: NgbDatepicker;
   @Input() public pto: PTODialogData;  //Input from Calendar through @Input() property
+  isNewEvent: boolean;
 
   ptoeditorForm: FormGroup;
   private toDate = new Date();  //used in endDate filter in calendar template
@@ -26,11 +28,14 @@ export class PTOEditorComponent implements OnInit {
 
   constructor(
         private dialogRef: MatDialogRef<PTOEditorComponent>,
-        @Inject(MAT_DIALOG_DATA) dataFromCalendar: PTODialogData,   //data From Calendar
+        @Inject(MAT_DIALOG_DATA) public dataDialog: PTODialogData,   //data From Calendar
         private fb: FormBuilder,
         private ptoService: PTOService) { }
 
   ngOnInit() {
+    this.isNewEvent = true;
+    //this.isNewEvent = this.dataDialog.isNewEvent;
+    //this.isNewEvent = this.pto.isNewEvent;
     this.ptoeditorForm = this.fb.group({
       id: [this.pto.id],
       userId: [this.pto.userId, Validators.required],
@@ -39,22 +44,41 @@ export class PTOEditorComponent implements OnInit {
       resourceTypes: [this.pto.requestTypes],
       description: [this.pto.description, Validators.maxLength(50)],
       hours: [this.pto.hours, [Validators.required,
-                                              ValidateHours(this.pto.allDay, this.pto.startDate, this.pto.startTime, this.pto.endDate, this.pto.endTime)]],
+        ValidateHours(this.pto.allDay, this.pto.startDate, this.pto.startTime, this.pto.endDate, this.pto.endTime)]],
+      minutes: [this.pto.hours - Math.floor(this.pto.hours),  ValidateMinutes],
       allDay: [this.pto.allDay, Validators.required ],
       startDate: [this.pto.startDate, Validators.required],
       startTime: [this.pto.startTime, [Validators.required, Validators.min(0.01), Validators.max(12.59)]],
       endDate: [this.pto.endDate, Validators.required],
       endTime: [this.pto.endTime, [Validators.required, Validators.min(0.01), Validators.max(12.59)]]
     });
+    this.onChanges();
   }
 
-  onChange(isChecked: boolean) {
-    if (isChecked) {
+  onChanges() {
+    this.ptoeditorForm.get('allDay').valueChanges
+      .subscribe(allDay => {
+        if (allDay) {
+          this.ptoeditorForm.get('startTime').disable();
+          this.ptoeditorForm.get('endTime').disable();
+        }
+        else {
+          this.ptoeditorForm.get('startTime').enable();
+          this.ptoeditorForm.get('endTime').enable();
+        }
+      });
+  }
+
+  onAllDayChanges(isAllDay: boolean) {
+    if (isAllDay) {
+      this.ptoeditorForm.get('startTime').disable();
+      this.ptoeditorForm.get('endTime').disable();
     }
     else {
+      this.ptoeditorForm.get('startTime').enable();
+      this.ptoeditorForm.get('endTime').enable();
     }
   }
-
   navigateEvent(event) {
     this.pto.startDate = event.next;
   }

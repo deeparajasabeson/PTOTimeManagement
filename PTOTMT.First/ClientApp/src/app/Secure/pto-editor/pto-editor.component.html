@@ -1,4 +1,4 @@
-<div class="modal-box dialog-wrapper">
+<div class="modal-box">
   <div class="navbar modal-title">
     <h2 mat-dialog-title>
       &nbsp;&nbsp;
@@ -10,118 +10,112 @@
   <form [formGroup]="ptoeditorForm" (ngSubmit)="savePTO(ptoeditorForm.value)">
     <div mat-dialog-content>
       <div class="row">
-        <div class="col-6">
-          Select PTO Type<br />
-          <select [id]="requestTypeId" [formControlName]="selectedRequestTypeId">
-            <option *ngFor="let requestType of requestTypes" [value]="requestTypes.id" [selected]="requestType.selected">
-              {{ requestTypes.name }}
-            </option>
+        <div class="col-5 form-group">
+          <label for="requestTypeId">Select PTO Type</label>
+          <select class="form-control" id="requestTypeId" formControlName="selectedRequestTypeId">
+            <option value="" disabled selected>Please select</option>
+            <option *ngFor="let requestType of requestTypes" [value]="requestType.id">{{requestType.name}}</option>
           </select>
         </div>
         <div class="col-6">
-          PTO Request Hours <br />
-          <input type="number"
-                 step="0.5"
-                 formControlName="hours"
-                 size="5"
-                 style="width:20%">
+          PTO Request<br />
+         <input type="number"
+                   step="1"
+                   formControlName="hours"
+                   size="3"
+                   style="width:20%"> Hours&nbsp;&nbsp;
+         <input type="number"
+                   formControlName="minutes"
+                   size="2"
+                    style="width:15%"> Minutes
         </div>
       </div><br />
       <b>PTO Request Details</b>
       <div class="row">
-        <div class="col-1">
-          All Day<br />
+        <div class="col-2">
           <input type="checkbox"
                  formControlName="allDay"
                  name="allDay"
-                 value="true"
-                 (change)="onChange($event.target.checked)" />
-          <div>
-          </div>
-          <div class="col-3">
-            Start Date
-            <div class="input-group">
-              <input ngbDatepicker #dp
-                     formControlName="startDate"
-                     placeholder="mm/dd/yyyy"
-                     #dpstartDate="ngbDatepicker"
-                     name="startDate"
-                     size="10"
-                     placement="bottom-left"
-                     (dateChange)="changeStartDateEvent($event)">
-              <div class="input-group-append">
-                <button class="btn btn-outline-secondary calendar" (click)="dpstartDate.toggle()" type="button">📅</button>
+                 (change)="onAllDayChanges($event.target.checked)" />&nbsp;AllDay
+        </div>
+        <div class="col-3">
+              Start Date
+              <div class="input-group">
+                <input ngbDatepicker #dp
+                       formControlName="startDate"
+                       placeholder="mm/dd/yyyy"
+                       #dpstartDate="ngbDatepicker"
+                       name="startDate"
+                       size="10"
+                       placement="bottom-left"
+                       (dateChange)="changeStartDateEvent($event)">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary calendar" (click)="dpstartDate.toggle()" type="button">📅</button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-2">
-            <span *ngIf="!allDay">
+            <div class="col-2">
               Start Time
               <input type="time"
                      formControlName="startTime"
                      placeholder="HH:mm"
                      name="startTime"
                      step=1800> <!--30 minutes-->
-            </span>
-          </div>
-          <div class="col-1"></div>
-          <div class="col-3">
-            End Date
-            <div class="input-group">
-              <input ngbDatepicker #dp
-                     formControlName="endDate"
-                     placeholder="mm/dd/yyyy"
-                     #dpendDate="ngbDatepicker"
-                     name="endDate"
-                     size="10"
-                     min="{{startDate > toDate ? startDate : toDate | date: 'mm/dd/yyyy'}}"
-                     placement="bottom-left"
-                     (dateChange)="changeEndDateEvent($event)">
-              <div class="input-group-append">
-                <button class="btn btn-outline-secondary calendar" (click)="dpendDate.toggle()" type="button">📅</button>
+            </div>
+            <div class="col-3">
+              End Date
+              <div class="input-group">
+                <input ngbDatepicker #dp
+                       formControlName="endDate"
+                       placeholder="mm/dd/yyyy"
+                       #dpendDate="ngbDatepicker"
+                       name="endDate"
+                       size="10"
+                       min="{{startDate > toDate ? startDate : toDate | date: 'mm/dd/yyyy'}}"
+                       placement="bottom-left"
+                       (dateChange)="changeEndDateEvent($event)">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary calendar" (click)="dpendDate.toggle()" type="button">📅</button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-2">
-            <span *ngIf="!allDay">
+            <div class="col-2">
               End Time
               <input type="time"
                      formControlName="endTime"
                      placeholder="HH:mm"
                      name="endTime"
                      step=1800>       <!--30 minutes-->
-            </span>
-          </div>
-       </div>
-        <br />
-        Description
-        <input type="text"
-               formControlName="description"
-               style="width:75%"
-               maxlength="50">
+            </div>
       </div>
-      <div mat-dialog-actions class="modal-footer ">
-        <button type="submit"
-                class="btn btn-success submitbutton"
-                (click)="savePTO(ptoeditorForm.value)"
+      <br />
+       Description
+       <input type="text"
+                 formControlName="description"
+                 style="width:75%"
+                 maxlength="50">
+   </div>
+    <div mat-dialog-actions class="modal-footer ">
+      <button type="submit"
+              class="btn btn-success submitbutton"
+              (click)="savePTO(ptoeditorForm.value)"
+              [mat-dialog-close]="data">
+        Submit PTO Request
+      </button>
+      <span *ngIf="!isNewEvent">
+        <button class="btn btn-danger deletebutton"
+                (click)="deletePTO(ptoeditorForm.value)"
                 [mat-dialog-close]="data">
-          Submit PTO Request
+          Delete Request
         </button>
-        <span *ngIf="!isNewEvent">
-          <button class="btn btn-danger deletebutton"
-                  (click)="deletePTO(ptoeditorForm.value)"
-                  [mat-dialog-close]="data">
-            Delete Request
-          </button>
-        </span>
-        <button type="button"
-                class="btn btn-danger cancelbutton`"
-                [mat-dialog-close]="data"
-                (click)="onNoClick($event)">
-          Cancel
-        </button>
-        <br />
-      </div>
-      </div>
+      </span>
+      <button type="button"
+              class="btn btn-danger cancelbutton`"
+              [mat-dialog-close]="data"
+              (click)="onNoClick($event)">
+        Cancel
+      </button>
+      <br />
+    </div>
   </form>
 </div>

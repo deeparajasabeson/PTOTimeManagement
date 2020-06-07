@@ -29,7 +29,6 @@ export class PTOCalendarComponent implements OnInit {
   // references the #calendar in the template
   @ViewChild('calendar', null) calendarComponent: FullCalendarComponent; // the #calendar in the template
   eventColor: string[] = ["red", "green", "blue", "brown", "BlueViolet", "gray", "cyan", "CadetBlue", "DarkGoldenRod", "DarkKhaki", "DarkGreen", "DarkRed", "DarkOrange", "DarkSeaGreen", "DarkSlateGrey", "Indigo", "LightSeaGreen", "LightSalmon", "maroon", "MediumVioletRed", "Chocolate", "CornflowerBlue", "Black", "Coral"];
-  isNewEvent = true;
   calendarVisible = true;
   calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin]; // important!
   calendarWeekends = true;
@@ -124,9 +123,9 @@ export class PTOCalendarComponent implements OnInit {
       startDate: this.toDateNgbDateStruct,
       startTime: "00:00",
       endDate: this.toDateNgbDateStruct,
-      endTime: "00:00"
+      endTime: "00:00",
+      isNewEvent: true
     };
-    this.readPTObyUserId();
     this.readPTObyUserId();
   }
 
@@ -220,10 +219,8 @@ export class PTOCalendarComponent implements OnInit {
     this.pto.startTime = ptoToEdit.startDateTime.substr(11, 5);
     this.pto.endDate = ptoEndDate;
     this.pto.endTime = ptoToEdit.endDateTime.substr(11, 5);
-
-    this.isNewEvent = false;
+    this.pto.isNewEvent = false;
     this.getPTO(null);
-    this.isNewEvent = true;
   }
 
   //
@@ -235,14 +232,16 @@ export class PTOCalendarComponent implements OnInit {
     dialogConfig.disableClose = true;   // User can't close the dialog by clicking outside its body
     dialogConfig.autoFocus = true;
     dialogConfig.id = "pto-editor";
-    dialogConfig.height = "60%";
+    dialogConfig.height = "65%";
     dialogConfig.width = "70%";
-    dialogConfig.data = { pto: this.pto, isNewEvent: this.isNewEvent };  // One way to pass data to modal window
+    dialogConfig.data = { pto: this.pto };  // One way to pass data to modal window
     if (startDate != null) {
       dialogConfig.data.pto.startDate = startDate;
     }
     const dialogRef = this.dialog.open(PTOEditorComponent, dialogConfig);
-    dialogRef.componentInstance.pto = this.pto;  //another way to pass quota to modal window
+    let instance = dialogRef.componentInstance
+    instance.pto = this.pto;  //another way to pass quota to modal window
+    instance.isNewEvent = this.pto.isNewEvent;
 
     dialogRef.afterClosed().subscribe(resultData => {
       if (resultData != null && resultData != undefined) {
@@ -272,7 +271,7 @@ export class PTOCalendarComponent implements OnInit {
       parseInt(this.pto.endTime.substr(3, 2)));
         
     const ptoEntity: PTOEntity = {
-      id: (this.pto.id == "" && this.isNewEvent) ? this.generateUUID() : this.pto.id,
+      id: (this.pto.id == "" && this.pto.isNewEvent) ? this.generateUUID() : this.pto.id,
       userId: userDetails.id,
       description: this.pto.description,
       requestTypeId: this.pto.requestTypeId,

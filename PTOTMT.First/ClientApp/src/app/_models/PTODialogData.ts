@@ -14,4 +14,5 @@ export interface PTODialogData {
   startTime: string;
   endDate: NgbDateStruct;
   endTime: string;
+  isNewEvent: boolean;
 }

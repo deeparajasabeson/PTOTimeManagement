@@ -12,7 +12,7 @@ export function ValidateHours(
   return (control: AbstractControl): { [key: string]: boolean } | null => {
     let hours = calculateHours(allDay, startDate, startTime, endDate, endTime);
     if (control.value <= 0 || (hours != null && control.value != hours) ) {
-      return { 'valideOriginalHours': true };
+      return { 'valideHours': true };
     }
     return null;
   }
