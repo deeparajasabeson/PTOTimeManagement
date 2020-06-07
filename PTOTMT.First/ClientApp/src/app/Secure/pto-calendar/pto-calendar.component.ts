@@ -88,7 +88,7 @@ export class PTOCalendarComponent implements OnInit {
         }
       },
       header: {
-        left: 'prev,next today newpto',
+        left: 'prev,next today newpto flex',
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       }
@@ -98,18 +98,20 @@ export class PTOCalendarComponent implements OnInit {
     this.requestTypeService.getRequestTypes().subscribe((data: RequestTypeFromDBEntity[]) => {
         PTOCalendarComponent.setSubscribeRequestTypeFromDBEntity(data);
     });
-    do {
-      requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
-    } while (requestTypes == undefined)
-    let requestFlexTime: RequestTypeFromDBEntity = requestTypes.find(rt => rt.name == "Flex Time");
-
-    //let requestFlexType: RequestTypeFromDBEntity;
-    //this.requestTypeService
-    //  .getRequestTypeByName("Flex Time")
-    //  .subscribe((data: RequestTypeFromDBEntity) => {
-    //  PTOCalendarComponent.setSubscribeRequestType(data);
-    //});
-    //let requestFlexTime = PTOCalendarComponent.subscribeRequestType;
+    requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
+    let requestFlexTime: RequestTypeFromDBEntity;
+    if (requestTypes == undefined) {
+        let requestFlexType: RequestTypeFromDBEntity;
+        this.requestTypeService
+          .getRequestTypeByName("Flex Time")
+          .subscribe((data: RequestTypeFromDBEntity) => {
+          PTOCalendarComponent.setSubscribeRequestType(data);
+        });
+        requestFlexTime = PTOCalendarComponent.subscribeRequestType;
+    }
+    else {
+      requestFlexTime = requestTypes.find(rt => rt.name == "Flex Time");
+    }
 
     this.pto = {
       id: "",
