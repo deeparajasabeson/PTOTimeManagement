@@ -12,7 +12,7 @@
       <div class="row">
         <div class="col-5 form-group">
           <label for="requestTypeId">Select PTO Type</label>
-          <select class="form-control" id="requestTypeId" formControlName="selectedRequestTypeId">
+          <select class="form-control" id="requestTypeId" formControlName="requestTypeId">
             <option value="" disabled selected>Please select</option>
             <option *ngFor="let requestType of requestTypes" [value]="requestType.id">{{requestType.name}}</option>
           </select>
@@ -54,14 +54,16 @@
                 </div>
               </div>
             </div>
-            <div class="col-2">
-              Start Time
-              <input type="time"
-                     formControlName="startTime"
-                     placeholder="HH:mm"
-                     name="startTime"
-                     step=1800> <!--30 minutes-->
-            </div>
+        <div class="col-2">
+          <span *ngIf="ptoeditorForm.value.allDay">
+            Start Time
+            <input type="time"
+                   formControlName="startTime"
+                   placeholder="HH:mm"
+                   name="startTime"
+                   step=1800> <!--30 minutes-->
+          </span>
+        </div>
             <div class="col-3">
               End Date
               <div class="input-group">
@@ -80,12 +82,14 @@
               </div>
             </div>
             <div class="col-2">
-              End Time
-              <input type="time"
-                     formControlName="endTime"
-                     placeholder="HH:mm"
-                     name="endTime"
-                     step=1800>       <!--30 minutes-->
+              <span *ngIf="ptoeditorForm.value.allDay">
+                End Time
+                <input type="time"
+                       formControlName="endTime"
+                       placeholder="HH:mm"
+                       name="endTime"
+                       step=1800>       <!--30 minutes-->
+                </span>
             </div>
       </div>
       <br />
@@ -112,7 +116,7 @@
       <button type="button"
               class="btn btn-danger cancelbutton`"
               [mat-dialog-close]="data"
-              (click)="onNoClick($event)">
+              (click)="onNoClick()">
         Cancel
       </button>
       <br />

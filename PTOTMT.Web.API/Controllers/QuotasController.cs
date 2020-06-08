@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Cors;
-using PTOTMT.Common.Entities;
-using PTOTMT.Repository;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PTOTMT.Repository;
+using PTOTMT.Common.Entities;
+using PTOTMT.Common.Models;
 
 namespace PTOTMT.Service.Controllers
 {
@@ -66,6 +67,21 @@ namespace PTOTMT.Service.Controllers
                 return Ok();
             }
             return NotFound();
+        }
+
+        // findQuota
+        // POST: api/Quotas
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPost]
+        public ActionResult<Quota> FindQuota(FindQuotaEntity entity)
+        {
+            var quota = uow.QuotaRepo.GetAll()
+                                                         .Where(q => q.StartDateTime <= entity.StartDateTime
+                                                                        && q.EndDateTime >= entity.EndDateTime 
+                                                                        && q.RemainingHours >= entity.Hours)
+                                                         .FirstOrDefault();
+            return quota;
         }
 
         // POST: api/Quotas

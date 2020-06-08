@@ -80,8 +80,22 @@ namespace PTOTMT.Service.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Request> PostRequest(Request request)
         {
+            Quota quotaToAllot = FindQuota(request);
+            if (quotaToAllot != null  && uow.QuotaRepo.UpdateRemainingHours(quotaToAllot, request.Hours))
+            {
+                request.QuotaId = quotaToAllot.Id;
+                var approvedStatus = uow.StatusRepo.GetAll().Where(status => status.Name == "Approved").FirstOrDefault();
+                request.StatusId = approvedStatus.Id;
+            }
+            else
+            {
+                request.QuotaId = null;
+                var waitlistStatus = uow.StatusRepo.GetAll().Where(status => status.Name == "WaitList").FirstOrDefault();
+                request.StatusId = waitlistStatus.Id;
+            }
             uow.RequestRepo.Post(request);
             uow.SaveChanges();
+            //SendStatusEmails();
             return CreatedAtAction(nameof(GetRequest), new { id = request.Id }, request);
         }
 
@@ -116,6 +130,15 @@ namespace PTOTMT.Service.Controllers
         public bool RequestExists(Guid? id)
         {
             return uow.RequestRepo.Exists(id);
+        }
+
+        private Quota FindQuota(Request request)
+        {
+            return uow.QuotaRepo.GetAll()
+                               .Where(quota => quota.StartDateTime <= request.StartDateTime
+                                                       && quota.EndDateTime >= request.EndDateTime
+                                                       && quota.RemainingHours >= request.Hours)
+                               .FirstOrDefault();
         }
     }
 }

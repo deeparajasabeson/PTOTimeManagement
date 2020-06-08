@@ -8,6 +8,7 @@ import { PTOService } from '../../_services/pto.service';
 import { PTODialogData } from '../../_models/PTODialogData';
 import { ValidateHours } from '../../_validators/ValidateHours';
 import { ValidateMinutes } from '../../_validators/ValidateMinutes';
+import { RequestTypeFromDBEntity } from '../../_entities/RequestTypeFromDBEntity';
 
 @Component({
   selector: 'app-pto-editor',
@@ -17,6 +18,7 @@ export class PTOEditorComponent implements OnInit {
   @ViewChild('dp', null) dp: NgbDatepicker;
   @Input() public pto: PTODialogData;  //Input from Calendar through @Input() property
   isNewEvent: boolean;
+  requestTypes: RequestTypeFromDBEntity[];
 
   ptoeditorForm: FormGroup;
   private toDate = new Date();  //used in endDate filter in calendar template
@@ -39,12 +41,10 @@ export class PTOEditorComponent implements OnInit {
     this.ptoeditorForm = this.fb.group({
       id: [this.pto.id],
       userId: [this.pto.userId, Validators.required],
-      location: ["", Validators.required],
       requestTypeId: [this.pto.requestTypeId, Validators.required],
-      resourceTypes: [this.pto.requestTypes],
       description: [this.pto.description, Validators.maxLength(50)],
       hours: [this.pto.hours, [Validators.required,
-        ValidateHours(this.pto.allDay, this.pto.startDate, this.pto.startTime, this.pto.endDate, this.pto.endTime)]],
+            ValidateHours(this.pto.allDay, this.pto.startDate, this.pto.startTime, this.pto.endDate, this.pto.endTime)]],
       minutes: [this.pto.hours - Math.floor(this.pto.hours),  ValidateMinutes],
       allDay: [this.pto.allDay, Validators.required ],
       startDate: [this.pto.startDate, Validators.required],
@@ -52,6 +52,10 @@ export class PTOEditorComponent implements OnInit {
       endDate: [this.pto.endDate, Validators.required],
       endTime: [this.pto.endTime, [Validators.required, Validators.min(0.01), Validators.max(12.59)]]
     });
+
+    this.requestTypes = [];
+    this.pto.requestTypes.forEach(val => this.requestTypes.push(Object.assign({}, val)));
+
     this.onChanges();
   }
 
@@ -93,13 +97,12 @@ export class PTOEditorComponent implements OnInit {
   deletePTO(ptoForm: NgForm): void {
     this.dialogRef.close();
     this.pto = this.ptoeditorForm.value;
-    if (confirm("Want to delete request -- " + this.pto.description + " ?")) {
+    if (confirm("Want to delete this request -- " + this.pto.description + " ?")) {
       this.ptoService.deletePTO(this.pto.id);
     }
   }
 
-  onNoClick(event: any): void {
-    event.stopPropogation();
+  onNoClick(): void {
     this.dialogRef.close();
     this.pto = null;
   }

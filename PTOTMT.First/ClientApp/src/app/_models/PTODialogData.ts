@@ -9,6 +9,7 @@ export interface PTODialogData {
   requestTypes: RequestTypeFromDBEntity[];
   description: string;
   hours: number;
+  minutes: number;
   allDay: boolean;
   startDate: NgbDateStruct;
   startTime: string;

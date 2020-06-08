@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { StatusEntity } from '../_entities/StatusEntity';
+import { Observable } from 'rxjs';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -26,6 +28,10 @@ export class StatusService {
   public getStatusByName(statusName: string) {
     let requestUrl: string = this.statusUrl + "?statusName=" + statusName;
     return this.http.get(this.statusUrl, httpOptions)
+  }
+
+  public getStatuses() : Observable<StatusEntity[]>{
+    return this.http.get<StatusEntity[]>(this.statusUrl, httpOptions);
   }
 } 
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { QuotaEntity } from '../_entities/QuotaEntity';
+import { FindQuotaEntity } from '../_entities/FindQuotaEntity';
 
 
 const httpOptions = {
@@ -26,9 +27,9 @@ export class QuotaService {
     return this.http.get<any>(requestUrl, httpOptions);
   }
 
-  public getQuotasByTeamId(teamId: string) : Observable<any>{
+  public getQuotasByTeamId(teamId: string) : Promise<any>{
     let requestUrl: string = this.quotaUrl + "/quotasbyteamid/" + teamId;
-    return this.http.get(requestUrl, httpOptions);
+    return this.http.get(requestUrl, httpOptions).toPromise();
     }
 
   public saveQuota(quota: QuotaEntity) {
@@ -42,6 +43,11 @@ export class QuotaService {
   public deleteQuota(quotaId: string) {
     let requestUrl: string = this.quotaUrl + "/quotabyid/" + quotaId;
     this.http.delete(requestUrl, httpOptions).subscribe(data => { return data });
+  }
+
+  public findQuota(entity: FindQuotaEntity) : Promise<any>{
+    let requestUrl: string = this.quotaUrl + "/findQuota"
+    return this.http.post(requestUrl, entity, httpOptions).toPromise();
   }
 } 
 

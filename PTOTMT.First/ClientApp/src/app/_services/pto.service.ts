@@ -25,9 +25,9 @@ export class PTOService {
     return this.http.get<any>(requestUrl, httpOptions);
   }
 
-  public getPTOsByUserId(userId: string): Observable<any> {
+  public getPTOsByUserId(userId: string): Promise<any> {
     let requestUrl: string = this.ptoUrl + "/ptorequestsbyuserid/" + userId;
-    return this.http.get(requestUrl, httpOptions);
+    return this.http.get(requestUrl, httpOptions).toPromise();
   }
 
   public savePTO(pto: PTOEntity) {

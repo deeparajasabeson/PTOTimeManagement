@@ -19,7 +19,9 @@ import { StatusService } from '../../_services/status.service';
 import { DataStorageService } from '../../_services/datastorage.service';
 import { RequestTypeService } from '../../_services/requesttype.service';
 import { UserEntity } from '../../_entities/UserEntity';
-
+import { QuotaService } from '../../_services/quota.service';
+import { FindQuotaEntity } from '../../_entities/FindQuotaEntity';
+import { QuotaEntity } from '../../_entities/QuotaEntity';
 
 @Component({
   selector: 'app-pto-calendar',
@@ -35,9 +37,12 @@ export class PTOCalendarComponent implements OnInit {
   calendarEvents: EventInput[] = [];
   options: any;
   user = null;
-  pto: PTODialogData;
-  previousDate = null;
 
+  requestTypes: RequestTypeFromDBEntity[] = null;
+  requestFlexTime: RequestTypeFromDBEntity = null;
+  pto: PTODialogData;
+
+  previousDate = null;
   toDate = new Date();
   toDateNgbDateStruct: NgbDateStruct = {
     year: this.toDate.getFullYear(),
@@ -66,12 +71,23 @@ export class PTOCalendarComponent implements OnInit {
     PTOCalendarComponent.subscribeRequestTypeFromDBEntity = requestTypes;
   }
 
+  static subscribeQuotaData: QuotaEntity;
+  static setSubscribeQuotaData(quota: QuotaEntity) {
+    PTOCalendarComponent.subscribeQuotaData = quota;
+  }
+
+  static subscribeStatusData: StatusEntity[];
+  static setSubscribeStatusData(statuses: StatusEntity[]) {
+    PTOCalendarComponent.subscribeStatusData = statuses;
+  }
+
   // Constructor - executes when component is created first
   constructor(public dialog: MatDialog,
     private ptoService: PTOService,
+    private quotaService: QuotaService,
     private statusService: StatusService,
     private datastorageService: DataStorageService,
-    private requestTypeService: RequestTypeService ) { }
+    private requestTypeService: RequestTypeService) {  }
 
   // Execute after constructor when component is initialized
   ngOnInit() {
@@ -93,32 +109,14 @@ export class PTOCalendarComponent implements OnInit {
       }
     };
 
-    let requestTypes: RequestTypeFromDBEntity[];
-    this.requestTypeService.getRequestTypes().subscribe((data: RequestTypeFromDBEntity[]) => {
-        PTOCalendarComponent.setSubscribeRequestTypeFromDBEntity(data);
-    });
-    requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
-    let requestFlexTime: RequestTypeFromDBEntity;
-    if (requestTypes == undefined) {
-        let requestFlexType: RequestTypeFromDBEntity;
-        this.requestTypeService
-          .getRequestTypeByName("Flex Time")
-          .subscribe((data: RequestTypeFromDBEntity) => {
-          PTOCalendarComponent.setSubscribeRequestType(data);
-        });
-        requestFlexTime = PTOCalendarComponent.subscribeRequestType;
-    }
-    else {
-      requestFlexTime = requestTypes.find(rt => rt.name == "Flex Time");
-    }
-
     this.pto = {
       id: "",
       userId: "",
-      requestTypeId: requestFlexTime.id,
-      requestTypes: requestTypes,
+      requestTypeId: "",
+      requestTypes: [],
       description: "",
       hours: 0,
+      minutes: 0,
       allDay: false,
       startDate: this.toDateNgbDateStruct,
       startTime: "00:00",
@@ -126,21 +124,49 @@ export class PTOCalendarComponent implements OnInit {
       endTime: "00:00",
       isNewEvent: true
     };
+
+    this.readRequestTypes();
     this.readPTObyUserId();
+  }
+
+  //Read RequestType from DB
+  readRequestTypes() {
+    let response = this.requestTypeService.getRequestTypes();
+    response.then((data: RequestTypeFromDBEntity[]) => {
+      PTOCalendarComponent.setSubscribeRequestTypeFromDBEntity(data);
+      this.requestTypes = [];
+      data.forEach(val => this.requestTypes.push(Object.assign({}, val)));
+      this.pto.requestTypes = [];
+      this.requestTypes.forEach(val => this.pto.requestTypes.push(Object.assign({}, val)));
+    });
+
+    if (this.requestTypes == undefined || this.requestTypes.length == 0) {
+      console.log("requestTypes is undefined or length is 0");
+      console.log(this.requestTypes);
+      this.requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
+      let response = this.requestTypeService.getRequestTypeByName("Flex Time");
+      response.subscribe((data: RequestTypeFromDBEntity) => {
+              PTOCalendarComponent.setSubscribeRequestType(data);
+      });
+      this.requestFlexTime = PTOCalendarComponent.subscribeRequestType;
+    }
+    else {
+      this.requestFlexTime = this.requestTypes.find(rt => rt.name == "Flex Time");
+    }
+    this.pto.requestTypeId = (this.requestFlexTime != undefined && this.requestFlexTime != null) ? this.requestFlexTime.id : "";
   }
 
   //Read Quotas by Team Id
   readPTObyUserId() {
     let userId: string = this.datastorageService.getUserEntity().id;
     let response = this.ptoService.getPTOsByUserId(userId);
-    response.subscribe((data: PTOFromDBEntity[]) => {
+    response.then((data: PTOFromDBEntity[]) => {
       PTOCalendarComponent.setSubscribeData(data);
     });
     let ptoList = PTOCalendarComponent.subscribeData;
     if (ptoList == null) {
       return
     }
-    debugger;
     for (var i = 0; i < ptoList.length; ++i) {
       this.calendarEvents[i] =
       {
@@ -164,6 +190,8 @@ export class PTOCalendarComponent implements OnInit {
         }
       };
     }
+    this.pto.requestTypeId = (this.requestFlexTime != undefined && this.requestFlexTime != null) ? this.requestFlexTime.id : "";
+    this.pto.requestTypes = (this.requestTypes != undefined && this.requestTypes != null) ? this.requestTypes : [];
   }
 
   //eventRender function from Calendar
@@ -239,7 +267,7 @@ export class PTOCalendarComponent implements OnInit {
       dialogConfig.data.pto.startDate = startDate;
     }
     const dialogRef = this.dialog.open(PTOEditorComponent, dialogConfig);
-    let instance = dialogRef.componentInstance
+    let instance = dialogRef.componentInstance;
     instance.pto = this.pto;  //another way to pass quota to modal window
     instance.isNewEvent = this.pto.isNewEvent;
 
@@ -251,36 +279,46 @@ export class PTOCalendarComponent implements OnInit {
     });
   }
 
-  // Save PTO
+  //Function to convert Date Struct and Time String into a valid Date
+  toDateTime(date: NgbDateStruct, time: string): Date {
+    return new Date(
+      date.year,
+      date.month,
+      date.day,
+      parseInt(time.substr(0, 2)),
+      parseInt(time.substr(3, 2)));
+  }
+
+  // Save PTO when clicked Save button in popup modal window
   savePTO() {
     let userDetails: UserEntity = this.datastorageService.getUserEntity();
-    let waitListStatus: StatusEntity;
 
-    let startDateTime = new Date(
-      this.pto.startDate.year,
-      this.pto.startDate.month,
-      this.pto.startDate.day,
-      parseInt(this.pto.startTime.substr(0, 2)),
-      parseInt(this.pto.startTime.substr(3, 2)));
+    //Status Service
+    let statuses: StatusEntity[] 
+    let response = this.statusService.getStatuses()
+      .toPromise()
+      .then((statusData: StatusEntity[]) => {
+        PTOCalendarComponent.setSubscribeStatusData(statusData);
+      });
+    statuses = PTOCalendarComponent.subscribeStatusData;
+    let waitListStatus: StatusEntity = statuses.find(s => s.name == "WaitList");
+    let approvedStatus: StatusEntity = statuses.find(s => s.name == "Approved");
 
-    let endDateTime = new Date(
-      this.pto.endDate.year,
-      this.pto.endDate.month,
-      this.pto.endDate.day,
-      parseInt(this.pto.endTime.substr(0, 2)),
-      parseInt(this.pto.endTime.substr(3, 2)));
-        
+    let startDateTime = this.toDateTime(this.pto.startDate, this.pto.startTime);
+    let endDateTime = this.toDateTime(this.pto.endDate, this.pto.endTime);
+    let quota = this.findQuota();
+    
     const ptoEntity: PTOEntity = {
       id: (this.pto.id == "" && this.pto.isNewEvent) ? this.generateUUID() : this.pto.id,
       userId: userDetails.id,
       description: this.pto.description,
       requestTypeId: this.pto.requestTypeId,
-      hours: this.pto.hours,
+      hours: this.pto.hours + this.pto.minutes / 100,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
       allDay: this.pto.allDay,
-      statusId: waitListStatus.id,
-      quotaId: "",
+      statusId: (quota == null) ? waitListStatus.id : approvedStatus.id,
+      quotaId: (quota ==null) ? "" : quota.id,
       isActive: true,
       createdBy: userDetails.id,
       createdOn: this.toDate,
@@ -305,6 +343,23 @@ export class PTOCalendarComponent implements OnInit {
     if (calendarApi.needsRerender) {
       calendarApi.render();
     }
+  }
+
+  //Find Quota for this request to allot
+  findQuota(): QuotaEntity {
+    let entity: FindQuotaEntity;
+    entity.ptoId = this.pto.id;
+    entity.startDateTime = this.toDateTime(this.pto.startDate, this.pto.startTime);
+    entity.endDateTime = this.toDateTime(this.pto.endDate, this.pto.endTime);
+    entity.hours = this.pto.hours + this.pto.minutes / 100;
+    let response = this.quotaService.findQuota(entity);
+    let quotaToAllot: QuotaEntity;
+    response.then((quota: QuotaEntity) => {
+      console.log(quota); 
+      PTOCalendarComponent.setSubscribeQuotaData(quota);
+    });
+    quotaToAllot = PTOCalendarComponent.subscribeQuotaData;
+    return quotaToAllot;
   }
 
   //Generating GUID in Typescript
