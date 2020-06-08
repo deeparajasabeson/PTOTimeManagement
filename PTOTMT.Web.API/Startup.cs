@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
 using Microsoft.Net.Http.Headers;
+using PTOTMT.Repository.Abstraction.Web;
+using PTOTMT.Repository.Implementation.Web;
 
 namespace PTOTMT.Service
 {
@@ -40,6 +42,10 @@ namespace PTOTMT.Service
             services.AddTransient<IUnitOfWorkWebAPI, UnitOfWorkWebAPI>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                                            .AddControllersAsServices();
+
+            var emailConfig = Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+            services.AddSingleton<IEmailSender, EmailSender>();
             services.AddControllers();
         }
         

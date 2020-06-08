@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
-
+using PTOTMT.Repository.Implementation.Web;
+using System.Threading.Tasks;
+using PTOTMT.Repository.Abstraction.Web;
 
 namespace PTOTMT.Service.Controllers
 {
@@ -16,10 +18,11 @@ namespace PTOTMT.Service.Controllers
     public class RequestsController : ControllerBase
     {
         private readonly IUnitOfWorkWebAPI uow;
-
-        public RequestsController(IUnitOfWorkWebAPI _uow)
+        private IEmailSender emailSender;
+        public RequestsController(IUnitOfWorkWebAPI _uow, EmailSender _emailSender)
         {
             uow = _uow;
+            emailSender = _emailSender;
         }
 
         // GET: api/Requests
@@ -78,24 +81,32 @@ namespace PTOTMT.Service.Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<Request> PostRequest(Request request)
+        public async Task<ActionResult<Request>> PostRequest(Request request)
         {
             Quota quotaToAllot = FindQuota(request);
+            string emailBody = $"Your PTO request for { request.Hours} hours from { request.StartDateTime} to{request.EndDateTime} ";
             if (quotaToAllot != null  && uow.QuotaRepo.UpdateRemainingHours(quotaToAllot, request.Hours))
             {
                 request.QuotaId = quotaToAllot.Id;
                 var approvedStatus = uow.StatusRepo.GetAll().Where(status => status.Name == "Approved").FirstOrDefault();
                 request.StatusId = approvedStatus.Id;
+                emailBody +=  $"is approved under quota {quotaToAllot.Name}";
             }
             else
             {
                 request.QuotaId = null;
                 var waitlistStatus = uow.StatusRepo.GetAll().Where(status => status.Name == "WaitList").FirstOrDefault();
                 request.StatusId = waitlistStatus.Id;
+                emailBody += "is in Waiting List";
             }
             uow.RequestRepo.Post(request);
             uow.SaveChanges();
+
             //SendStatusEmails();
+            var message = new EmailMessage(new string[] { "deeparajasabeson@gmail.com" }, "Test email", emailBody);
+            //_emailSender.SendEmail(message);
+            await emailSender.SendEmailAsync(message);
+
             return CreatedAtAction(nameof(GetRequest), new { id = request.Id }, request);
         }
 
