@@ -2,5 +2,6 @@
 export interface ErrorDialogData {
   reason: string;
   error: string;
-  status: string;
+  statuscode: string;
+  title: string;
 }

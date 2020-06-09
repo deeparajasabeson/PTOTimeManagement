@@ -10,10 +10,10 @@ namespace PTOTMT.Common.Entities
         public string Description { get; set; }
         public DateTimeOffset StartDateTime { get; set; }
         public DateTimeOffset EndDateTime { get; set; }
-        public Decimal Hours { get; set; }
-        public Guid StatusId { get; set; }
+        public decimal Hours { get; set; }
+        public Guid? StatusId { get; set; }
         public Guid? QuotaId { get; set; }
-        public Boolean IsActive { get; set; }
+        public bool IsActive { get; set; }
         public Guid CreatedBy { get; set; }
         public DateTimeOffset CreatedOn { get; set; }
         public Guid UpdatedBy { get; set; }

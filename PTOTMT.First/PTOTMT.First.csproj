@@ -49,7 +49,7 @@
     <None Remove="ClientApp\src\app\_models\UserEntity.ts" />
     <None Remove="ClientApp\src\app\_interceptors\index.ts" />
     <None Remove="ClientApp\src\app\_services\team.service.ts" />
-    <None Remove="ClientApp\src\app\_validators\ValidateHours.ts" />
+    <None Remove="ClientApp\src\app\_validators\PTOHours.Validator.ts" />
     <None Remove="ClientApp\src\app\_validators\ValidateOriginalHours.ts" />
   </ItemGroup>
 
@@ -78,7 +78,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\_interceptors\index.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_services\pto.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_services\team.service.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\_validators\ValidateHours.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_validators\PTOHours.validator.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_validators\ValidateOriginalHours.ts" />
   </ItemGroup>
 

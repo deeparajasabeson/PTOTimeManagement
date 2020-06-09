@@ -29,10 +29,10 @@ import { QuotaEntity } from '../../_entities/QuotaEntity';
 })
 export class PTOCalendarComponent implements OnInit {
   // references the #calendar in the template
-  @ViewChild('calendar', null) calendarComponent: FullCalendarComponent; // the #calendar in the template
+  @ViewChild('calendar', null) calendarComponent: FullCalendarComponent; 
   eventColor: string[] = ["red", "green", "blue", "brown", "BlueViolet", "gray", "cyan", "CadetBlue", "DarkGoldenRod", "DarkKhaki", "DarkGreen", "DarkRed", "DarkOrange", "DarkSeaGreen", "DarkSlateGrey", "Indigo", "LightSeaGreen", "LightSalmon", "maroon", "MediumVioletRed", "Chocolate", "CornflowerBlue", "Black", "Coral"];
   calendarVisible = true;
-  calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin]; // important!
+  calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin];
   calendarWeekends = true;
   calendarEvents: EventInput[] = [];
   options: any;
@@ -115,7 +115,7 @@ export class PTOCalendarComponent implements OnInit {
       requestTypeId: "",
       requestTypes: [],
       description: "",
-      hours: 0,
+      hours: 8,
       minutes: 0,
       allDay: true,
       startDate: this.toDateNgbDateStruct,
@@ -183,6 +183,7 @@ export class PTOCalendarComponent implements OnInit {
           hours: ptoList[i].hours,
           userId: ptoList[i].userId,
           requestTypeId: ptoList[i].requestTypeId,
+          quotaId:ptoList[i].quotaId,
           statusId: ptoList[i].statusId,
           isActive: ptoList[i].isActive,
           createdBy: ptoList[i].createdBy,
@@ -192,8 +193,14 @@ export class PTOCalendarComponent implements OnInit {
         }
       };
     }
-    this.pto.requestTypeId = (this.requestFlexTime != undefined && this.requestFlexTime != null) ? this.requestFlexTime.id : "";
-    this.pto.requestTypes = (this.requestTypes != undefined && this.requestTypes != null) ? this.requestTypes : [];
+    if (this.requestTypes != undefined && this.requestTypes != null) {
+      this.pto.requestTypes = this.requestTypes;
+      this.pto.requestTypeId =  this.requestTypes.find(rt => rt.name == "Flex Time").id;
+    }
+    else {
+      this.pto.requestTypes = [];
+      this.pto.requestTypeId = "";
+    }
   }
 
   //eventRender function from Calendar
@@ -270,6 +277,9 @@ export class PTOCalendarComponent implements OnInit {
     if (startDate != null) {
       dialogConfig.data.pto.startDate = startDate;
     }
+
+    this.pto.requestTypeId = (this.requestFlexTime != undefined && this.requestFlexTime != null) ? this.requestFlexTime.id : "";
+
     const dialogRef = this.dialog.open(PTOEditorComponent, dialogConfig);
     let instance = dialogRef.componentInstance;
     instance.pto = this.pto;  //another way to pass quota to modal window

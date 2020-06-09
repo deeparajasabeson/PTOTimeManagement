@@ -14,37 +14,6 @@ namespace PTOTMT.Repository.Implementation.Web
         {
             _emailConfig = emailConfig;
         }
-
-        public async Task SendEmailAsync(EmailMessage message)
-        {
-            var mailMessage = CreateEmailMessage(message);
-            await SendAsync(mailMessage);
-        }
-
-        private async Task SendAsync(MimeMessage mailMessage)
-        {
-            using (var client = new SmtpClient())
-            {
-                try
-                {
-                    await client.ConnectAsync(_emailConfig.SmtpServer, _emailConfig.Port, true);
-                    client.AuthenticationMechanisms.Remove("XOAUTH2");
-                    await client.AuthenticateAsync(_emailConfig.UserName, _emailConfig.Password);
-
-                    await client.SendAsync(mailMessage);
-                }
-                catch
-                {
-                    //log an error message or throw an exception, or both.
-                    throw;
-                }
-                finally
-                {
-                    await client.DisconnectAsync(true);
-                    client.Dispose();
-                }
-            }
-        }
         public void SendEmail(EmailMessage message)
         {
             var emailMessage = CreateEmailMessage(message);

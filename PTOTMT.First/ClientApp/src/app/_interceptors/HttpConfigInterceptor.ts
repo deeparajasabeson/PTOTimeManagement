@@ -27,19 +27,13 @@ export class HttpConfigInterceptor implements HttpInterceptor {
     if (!authToken) {
       return next.handle(req);
     }
-    // If we have a token, we append it to our new headers
     newHeaders = newHeaders.append('Content-Type', 'application/json')
                                                   .append('Authorization', 'Bearer ${authToken}')
                                                   .append('Accept', 'application/json');
-    // Clone the request and replace the original headers with
-    // cloned headers, updated with the authorization.
     const clonedAuthRequest = req.clone({
       headers: newHeaders
     });
 
-    // send cloned request with header to the next handler.
-    // we return an Observable that will run the request
-    // or pass it to the next interceptor if any
     return next.handle(clonedAuthRequest).pipe(
       map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
@@ -54,43 +48,26 @@ export class HttpConfigInterceptor implements HttpInterceptor {
       }),
       retry(3),
       catchError((error: any) => {
-        if (error instanceof HttpErrorResponse) {
-          try {
-            this.toasterService.error(
-              error.error.message,
-              error.error.title,
-              { positionClass: 'toast-bottom-center' });
-          }
-          catch (e) {
-            this.toasterService.error(
-              'An error occurred', '',
-              { positionClass: 'toast-bottom-center' });
-          }
+        //if (error instanceof HttpErrorResponse) {
+        //    this.toasterService.error(
+        //      error.message,
+        //      error.error.title,
+        //      { positionClass: 'toast-bottom-center' });
+        //}
+        let data = {
+          reason: error.error.errors["$.id"][0],
+          error: error.message,
+          statuscode: error.status,
+          title: error.error.title
+        };
+        if (error.status == 401 || error.status == 403) {
+          this.router.navigateByUrl("/login");
         }
-        let data;
-        if (error.error instanceof ErrorEvent) {
-          // A client-side or network error occurred. Handle it accordingly.
-          data = {
-            reason: error && error.error && error.error.message ? error.error.message : '',
-            status: error.status
-          };
-        } else {
-          // The backend returned an unsuccessful response code.
-          // The response body may contain clues as to what went wrong,
-          data = {
-            reason: error && error.error && error.error.reason ? error.error.reason : '',
-            error: 'Error body was: ${error.error}',
-            status: 'Backend returned code : ' + error.status 
-          };
-          if (error.status == 401 || error.status == 403) {
-            this.router.navigateByUrl("/login");
-          }
-          if (data.status != '' || data.reason != '') {
-            this.errorDialogService.openDialog(data);
-          }
-          // return an observable with a user-facing error message
-          return throwError(error);
+        if (error.status != '' || data.reason != '') {
+          this.errorDialogService.openDialog(data);
         }
-      })) as Observable<HttpEvent<any>>;
+        return throwError(error);
+      })
+    ) as Observable<HttpEvent<any>>;
  }
 }

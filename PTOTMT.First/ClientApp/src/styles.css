@@ -175,6 +175,10 @@ input[type="text"], textarea {
   outline-color: chartreuse;
 }
 
+input.ng-invalid.ng-touched {
+  border: 2px solid red;
+}
+
 .modal-box {
   padding: 10px;
   background-color: #f2f2f2;

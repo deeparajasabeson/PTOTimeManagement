@@ -1,13 +1,16 @@
 <div>
   <h2>Error Occurred !</h2>
+  <p style="color:red" *ngIf="dialogdata.statuscode">
+    Status: {{dialogdata.statuscode}}
+  </p>
+  <p style="color:green" *ngIf="dialogdata.title">
+    Message: {{dialogdata.title}}
+  </p>
   <p style="color:blue" *ngIf="dialogdata.error">
     Error: {{dialogdata.error}}
   </p>
-  <p style="color:green" *ngIf="dialogdata.reason">
+  <p style="color:saddlebrown" *ngIf="dialogdata.reason">
     Reason: {{dialogdata.reason}}
-  </p>
-  <p style="color:red" *ngIf="dialogdata.status">
-    Status: {{dialogdata.status}}
   </p>
 </div>
 <button type="button"

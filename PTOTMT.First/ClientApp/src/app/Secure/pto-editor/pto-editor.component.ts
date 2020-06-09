@@ -6,9 +6,10 @@ import { MaterialModule } from '../material.module';
 
 import { PTOService } from '../../_services/pto.service';
 import { PTODialogData } from '../../_models/PTODialogData';
-import { ValidateHours } from '../../_validators/ValidateHours';
+import { PTOCustomValidators } from '../../_validators/PTOHours.Validator';
 import { ValidateMinutes } from '../../_validators/ValidateMinutes';
 import { RequestTypeFromDBEntity } from '../../_entities/RequestTypeFromDBEntity';
+
 
 @Component({
   selector: 'app-pto-editor',
@@ -38,21 +39,27 @@ export class PTOEditorComponent implements OnInit {
     this.isNewEvent = true;
     //this.isNewEvent = this.dataDialog.isNewEvent;
     //this.isNewEvent = this.pto.isNewEvent;
+    if (this.pto.requestTypeId == "" && this.pto.requestTypes.length > 0) {
+      this.pto.requestTypeId = this.pto.requestTypes.find(rt => rt.name == "Flex Time").id;
+    }
     this.ptoeditorForm = this.fb.group({
       id: [this.pto.id],
-      userId: [this.pto.userId, Validators.required],
+      userId: [this.pto.userId],
       requestTypeId: [this.pto.requestTypeId, Validators.required],
       description: [this.pto.description, Validators.maxLength(50)],
-      hours: [this.pto.hours, [Validators.required,
-            ValidateHours(this.pto.allDay, this.pto.startDate, this.pto.startTime, this.pto.endDate, this.pto.endTime)]],
-      minutes: [this.pto.hours - Math.floor(this.pto.hours),  ValidateMinutes],
-      allDay: [this.pto.allDay, Validators.required ],
+      hours: [Math.floor(this.pto.hours), [Validators.required, Validators.min(0)]],
+      minutes: [(this.pto.hours - Math.floor(this.pto.hours))*100,  [Validators.min(0), Validators.max(30), ValidateMinutes]],
+      allDay: [this.pto.allDay],
       startDate: [this.pto.startDate, Validators.required],
-      startTime: [this.pto.startTime, [Validators.required, Validators.min(0.01), Validators.max(12.59)]],
+      startTime: [this.pto.startTime],
       endDate: [this.pto.endDate, Validators.required],
-      endTime: [this.pto.endTime, [Validators.required, Validators.min(0.01), Validators.max(12.59)]]
+      endTime: [this.pto.endTime],
+      quotaId: [this.pto.quotaId],
+      statusId: [this.pto.statusId],
+      isNewEvent: [this.pto.isNewEvent]
+    }, {
+        validator: PTOCustomValidators.ValidateHours()
     });
-
     this.requestTypes = [];
     this.pto.requestTypes.forEach(val => this.requestTypes.push(Object.assign({}, val)));
 
@@ -62,14 +69,7 @@ export class PTOEditorComponent implements OnInit {
   onChanges() {
     this.ptoeditorForm.get('allDay').valueChanges
       .subscribe(allDay => {
-        if (allDay) {
-          this.ptoeditorForm.get('startTime').disable();
-          this.ptoeditorForm.get('endTime').disable();
-        }
-        else {
-          this.ptoeditorForm.get('startTime').enable();
-          this.ptoeditorForm.get('endTime').enable();
-        }
+        this.onAllDayChanges(allDay);
       });
   }
 
@@ -77,6 +77,8 @@ export class PTOEditorComponent implements OnInit {
     if (isAllDay) {
       this.ptoeditorForm.get('startTime').disable();
       this.ptoeditorForm.get('endTime').disable();
+      this.ptoeditorForm.get('hours').setValue(8);
+      this.ptoeditorForm.get('minutes').setValue(0);
     }
     else {
       this.ptoeditorForm.get('startTime').enable();
@@ -88,9 +90,12 @@ export class PTOEditorComponent implements OnInit {
   }
 
   savePTO(ptoForm: NgForm): void {  //quotaForm also has the form value as thisquotaeditorForm.value
-    this.dialogRef.close(this.ptoeditorForm.value);
+    debugger;
     if (this.ptoeditorForm.valid) {
-      this.pto = this.ptoeditorForm.value;
+      this.dialogRef.close(this.ptoeditorForm.value);
+      if (this.ptoeditorForm.valid) {
+        this.pto = this.ptoeditorForm.value;
+      }
     }
   }
 

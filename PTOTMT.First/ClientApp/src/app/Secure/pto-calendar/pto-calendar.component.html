@@ -1,7 +1,4 @@
-  <h3>PTO Request Calendar</h3>
-  <div class="text-right">
-    <button (click)='toggleWeekends()'>toggle weekends</button>
-</div>
+<div class="text-right"><button (click)='toggleWeekends()'>toggle weekends</button></div>
 <div class='app-calendar' *ngIf="calendarVisible">
   <full-calendar #calendar
                  deepChangeDetection="true"

@@ -8,7 +8,7 @@
     [EndDateTime] DATETIMEOFFSET NOT NULL, 
     [Hours] DECIMAL(1, 0) NOT NULL, 
     [StatusId] UNIQUEIDENTIFIER NOT NULL, 
-    [QuotaId] UNIQUEIDENTIFIER NOT NULL, 
+    [QuotaId] UNIQUEIDENTIFIER NULL, 
      [IsActive]    BIT                NOT NULL,
     [CreatedBy]   UNIQUEIDENTIFIER   NOT NULL,
     [CreatedOn]   DATETIMEOFFSET (7) DEFAULT (getutcdate()) NOT NULL,

@@ -7,7 +7,7 @@ import { ErrorDialogData } from '../_models/ErrorDialogData';
   templateUrl: './error-dialog.component.html'
 })
 export class ErrorDialogComponent {
-  constructor(private dialogRef: MatDialogRef<ErrorDialogComponent>, @Inject(MAT_DIALOG_DATA) public dialogdata: ErrorDialogData) {  }
+  constructor(private dialogRef: MatDialogRef<ErrorDialogComponent>, @Inject(MAT_DIALOG_DATA) public dialogdata: ErrorDialogData) { }
 
   public closeMe(event: any): void {
     event.stopPropogation();

@@ -32,8 +32,9 @@ export class PTOService {
 
   public savePTO(pto: PTOEntity) {
     const ptoData = JSON.stringify(pto);
-    this.http.post(this.ptoUrl, ptoData, httpOptions)
-      .subscribe((data: PTOEntity) => {
+    debugger;
+    this.http.post(this.ptoUrl, ptoData, httpOptions).toPromise()
+      .then((data: PTOEntity) => {
         return data;
       })
   }

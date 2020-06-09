@@ -77,11 +77,9 @@ namespace PTOTMT.Service.Controllers
         }
 
         // POST: api/Requests
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Request>> PostRequest(Request request)
+        public IActionResult PostRequest(Request request)
         {
             Quota quotaToAllot = FindQuota(request);
             string emailBody = $"Your PTO request for { request.Hours} hours from { request.StartDateTime} to{request.EndDateTime} ";
@@ -104,8 +102,7 @@ namespace PTOTMT.Service.Controllers
 
             //SendStatusEmails();
             var message = new EmailMessage(new string[] { "deeparajasabeson@gmail.com" }, "Test email", emailBody);
-            //_emailSender.SendEmail(message);
-            await emailSender.SendEmailAsync(message);
+            emailSender.SendEmail(message);
 
             return CreatedAtAction(nameof(GetRequest), new { id = request.Id }, request);
         }

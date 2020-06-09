@@ -87,7 +87,7 @@ Values
 Insert into Security.Team 
 (Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(@TeamId, 'Sales Order Entry (SOE)', 'Sales Order Entry Team', 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(@TeamId, 'Sales Order Entry (SOE)', 'Sales Order Entry Team', 3, 9, 5, 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
 Insert into Security.Team 
 (Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
