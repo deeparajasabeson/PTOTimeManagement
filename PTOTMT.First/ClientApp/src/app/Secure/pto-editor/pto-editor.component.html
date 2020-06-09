@@ -34,7 +34,11 @@
                  max="30"
                  style="width:15%"> Minutes
         </div>
-      </div><br />
+      </div>
+      <div style="color:red;" *ngIf="ptoeditorForm.hasError('invalidHours')">
+        PTO Request Hours with Minutes should match difference between Start and End Time periods.
+      </div>
+      <br *ngIf="!ptoeditorForm.hasError('invalidHours')" />
       <b>PTO Request Details</b>
       <div class="row">
         <div class="col-2">
@@ -101,10 +105,7 @@
           </span>
         </div>
       </div>
-      <div style="color:red;" *ngIf="ptoeditorForm.hasError('invalidHours')">
-            Hours should match the difference between Start and End Time periods.
-      </div>
-      <br *ngIf="!ptoeditorForm.hasError('invalidHours')" />
+      <br />
       Description
       <input type="text"
              formControlName="description"

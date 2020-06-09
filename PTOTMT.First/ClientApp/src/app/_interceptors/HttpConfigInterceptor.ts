@@ -55,7 +55,9 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         //      { positionClass: 'toast-bottom-center' });
         //}
         let data = {
-          reason: error.error.errors["$.id"][0],
+          reason:  (error.error.errors["$.id"]) ? error.error.errors["$.id"][0] 
+                      : (error.error.errors["$.statusId"]) ? error.error.errors["$.statusId"][0]
+                      : "",
           error: error.message,
           statuscode: error.status,
           title: error.error.title

@@ -90,7 +90,6 @@ export class PTOEditorComponent implements OnInit {
   }
 
   savePTO(ptoForm: NgForm): void {  //quotaForm also has the form value as thisquotaeditorForm.value
-    debugger;
     if (this.ptoeditorForm.valid) {
       this.dialogRef.close(this.ptoeditorForm.value);
       if (this.ptoeditorForm.valid) {

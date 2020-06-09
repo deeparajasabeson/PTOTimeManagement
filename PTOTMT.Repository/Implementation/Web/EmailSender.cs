@@ -2,7 +2,8 @@
 using PTOTMT.Common.Entities;
 using MailKit.Net.Smtp;
 using MimeKit;
-using System.Threading.Tasks;
+using MailKit.Security;
+using System.Security.Authentication;
 
 namespace PTOTMT.Repository.Implementation.Web
 {
@@ -37,10 +38,11 @@ namespace PTOTMT.Repository.Implementation.Web
             {
                 try
                 {
-                    client.Connect(_emailConfig.SmtpServer, _emailConfig.Port, true);
+                    client.CheckCertificateRevocation = false;
+                    client.SslProtocols = SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Tls13;    // Allow all versions of TLS
+                    client.Connect(_emailConfig.SmtpServer, _emailConfig.Port, SecureSocketOptions.Auto);
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
                     client.Authenticate(_emailConfig.UserName, _emailConfig.Password);
-
                     client.Send(mailMessage);
                 }
                 catch

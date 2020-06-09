@@ -123,8 +123,8 @@ export class PTOCalendarComponent implements OnInit {
       endDate: this.toDateNgbDateStruct,
       endTime: "00:00",
       isNewEvent: true,
-      quotaId: "",
-      statusId: ""
+      quotaId: null,
+      statusId: null
     };
 
     this.readRequestTypes();
