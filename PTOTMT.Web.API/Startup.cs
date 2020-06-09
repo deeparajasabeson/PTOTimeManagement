@@ -44,7 +44,8 @@ namespace PTOTMT.Service
                                            .AddControllersAsServices();
 
             var emailConfig = Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
-            services.AddSingleton(emailConfig);
+            services.AddSingleton<EmailConfiguration>(emailConfig);
+           // services.AddSingleton<EmailConfiguration>();
             services.AddSingleton<IEmailSender, EmailSender>();
             services.AddControllers();
         }

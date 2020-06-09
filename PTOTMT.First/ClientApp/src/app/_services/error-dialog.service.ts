@@ -17,8 +17,5 @@ export class ErrorDialogService {
       autoFocus: true,
        data: dialogdata
      });
-     setTimeout(() => {
-      dialogRef.close();
-     }, 10000);
   }
 }

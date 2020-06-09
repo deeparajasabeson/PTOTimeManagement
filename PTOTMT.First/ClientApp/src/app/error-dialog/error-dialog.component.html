@@ -1,18 +1,20 @@
 <div>
-  <p style="color:blue">
+  <h2>Error Occurred !</h2>
+  <p style="color:blue" *ngIf="dialogdata.error">
     Error: {{dialogdata.error}}
   </p>
-  <p style="color:green">
+  <p style="color:green" *ngIf="dialogdata.reason">
     Reason: {{dialogdata.reason}}
   </p>
-  <p style="color:red">
+  <p style="color:red" *ngIf="dialogdata.status">
     Status: {{dialogdata.status}}
   </p>
 </div>
 <button type="button"
-        [mat-dialog-close]="true" 
+        [mat-dialog-close]="true"
         class="btn btn-warning"
         (click)="closeMe($event)">
   Close
 </button>
+
 

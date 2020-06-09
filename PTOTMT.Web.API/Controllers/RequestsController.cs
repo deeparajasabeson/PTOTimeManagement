@@ -19,7 +19,7 @@ namespace PTOTMT.Service.Controllers
     {
         private readonly IUnitOfWorkWebAPI uow;
         private IEmailSender emailSender;
-        public RequestsController(IUnitOfWorkWebAPI _uow, EmailSender _emailSender)
+        public RequestsController(IUnitOfWorkWebAPI _uow, IEmailSender _emailSender)
         {
             uow = _uow;
             emailSender = _emailSender;

@@ -16,4 +16,6 @@ export interface PTODialogData {
   endDate: NgbDateStruct;
   endTime: string;
   isNewEvent: boolean;
+  quotaId: string;
+  statusId: string;
 }

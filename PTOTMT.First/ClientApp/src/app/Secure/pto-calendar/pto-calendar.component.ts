@@ -117,12 +117,14 @@ export class PTOCalendarComponent implements OnInit {
       description: "",
       hours: 0,
       minutes: 0,
-      allDay: false,
+      allDay: true,
       startDate: this.toDateNgbDateStruct,
       startTime: "00:00",
       endDate: this.toDateNgbDateStruct,
       endTime: "00:00",
-      isNewEvent: true
+      isNewEvent: true,
+      quotaId: "",
+      statusId: ""
     };
 
     this.readRequestTypes();
@@ -170,7 +172,7 @@ export class PTOCalendarComponent implements OnInit {
     for (var i = 0; i < ptoList.length; ++i) {
       this.calendarEvents[i] =
       {
-        allDay: false,
+        allDay: ptoList[i].allDay,
         backgroundColor: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
         textColor: "white",
         title: ptoList[i].description,
@@ -248,6 +250,8 @@ export class PTOCalendarComponent implements OnInit {
     this.pto.endDate = ptoEndDate;
     this.pto.endTime = ptoToEdit.endDateTime.substr(11, 5);
     this.pto.isNewEvent = false;
+    this.pto.quotaId = ptoToEdit.quotaId;
+    this.pto.statusId = ptoToEdit.statusId;
     this.getPTO(null);
   }
 
@@ -294,19 +298,20 @@ export class PTOCalendarComponent implements OnInit {
     let userDetails: UserEntity = this.datastorageService.getUserEntity();
 
     //Status Service
-    let statuses: StatusEntity[] 
-    let response = this.statusService.getStatuses()
-      .toPromise()
-      .then((statusData: StatusEntity[]) => {
-        PTOCalendarComponent.setSubscribeStatusData(statusData);
-      });
-    statuses = PTOCalendarComponent.subscribeStatusData;
-    let waitListStatus: StatusEntity = statuses.find(s => s.name == "WaitList");
-    let approvedStatus: StatusEntity = statuses.find(s => s.name == "Approved");
+    //let statuses: StatusEntity[] 
+    //this.statusService.getStatuses()
+    //  .toPromise()
+    //  .then((statusData: StatusEntity[]) => {
+    //    PTOCalendarComponent.setSubscribeStatusData(statusData);
+    //  });
+    //statuses = PTOCalendarComponent.subscribeStatusData;
+    //let waitListStatus: StatusEntity = statuses.find(s => s.name == "WaitList");
+    //let approvedStatus: StatusEntity = statuses.find(s => s.name == "Approved");
 
     let startDateTime = this.toDateTime(this.pto.startDate, this.pto.startTime);
     let endDateTime = this.toDateTime(this.pto.endDate, this.pto.endTime);
-    let quota = this.findQuota();
+
+    //let quota = this.findQuota();
     
     const ptoEntity: PTOEntity = {
       id: (this.pto.id == "" && this.pto.isNewEvent) ? this.generateUUID() : this.pto.id,
@@ -317,8 +322,10 @@ export class PTOCalendarComponent implements OnInit {
       startDateTime: startDateTime,
       endDateTime: endDateTime,
       allDay: this.pto.allDay,
-      statusId: (quota == null) ? waitListStatus.id : approvedStatus.id,
-      quotaId: (quota ==null) ? "" : quota.id,
+      statusId: this.pto.statusId,
+      quotaId: this.pto.quotaId,
+      //statusId: (quota == null) ? waitListStatus.id : approvedStatus.id,
+      //quotaId: (quota ==null) ? "" : quota.id,
       isActive: true,
       createdBy: userDetails.id,
       createdOn: this.toDate,
@@ -345,22 +352,22 @@ export class PTOCalendarComponent implements OnInit {
     }
   }
 
-  //Find Quota for this request to allot
-  findQuota(): QuotaEntity {
-    let entity: FindQuotaEntity;
-    entity.ptoId = this.pto.id;
-    entity.startDateTime = this.toDateTime(this.pto.startDate, this.pto.startTime);
-    entity.endDateTime = this.toDateTime(this.pto.endDate, this.pto.endTime);
-    entity.hours = this.pto.hours + this.pto.minutes / 100;
-    let response = this.quotaService.findQuota(entity);
-    let quotaToAllot: QuotaEntity;
-    response.then((quota: QuotaEntity) => {
-      console.log(quota); 
-      PTOCalendarComponent.setSubscribeQuotaData(quota);
-    });
-    quotaToAllot = PTOCalendarComponent.subscribeQuotaData;
-    return quotaToAllot;
-  }
+  ////Find Quota for this request to allot
+  //findQuota(): QuotaEntity {
+  //  let entity: FindQuotaEntity;
+  //  entity.ptoId = this.pto.id;
+  //  entity.startDateTime = this.toDateTime(this.pto.startDate, this.pto.startTime);
+  //  entity.endDateTime = this.toDateTime(this.pto.endDate, this.pto.endTime);
+  //  entity.hours = this.pto.hours + this.pto.minutes / 100;
+  //  let response = this.quotaService.findQuota(entity);
+  //  let quotaToAllot: QuotaEntity;
+  //  response.then((quota: QuotaEntity) => {
+  //    console.log(quota); 
+  //    PTOCalendarComponent.setSubscribeQuotaData(quota);
+  //  });
+  //  quotaToAllot = PTOCalendarComponent.subscribeQuotaData;
+  //  return quotaToAllot;
+  //}
 
   //Generating GUID in Typescript
   generateUUID() {

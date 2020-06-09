@@ -35,6 +35,7 @@
         <div class="col-2">
           <input type="checkbox"
                  formControlName="allDay"
+                 [value]="true"
                  name="allDay"
                  (change)="onAllDayChanges($event.target.checked)" />&nbsp;AllDay
         </div>
@@ -55,7 +56,7 @@
               </div>
             </div>
         <div class="col-2">
-          <span *ngIf="ptoeditorForm.value.allDay">
+          <span *ngIf="!ptoeditorForm.value.allDay">
             Start Time
             <input type="time"
                    formControlName="startTime"
@@ -82,7 +83,7 @@
               </div>
             </div>
             <div class="col-2">
-              <span *ngIf="ptoeditorForm.value.allDay">
+              <span *ngIf="!ptoeditorForm.value.allDay">
                 End Time
                 <input type="time"
                        formControlName="endTime"
