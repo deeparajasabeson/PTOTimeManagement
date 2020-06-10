@@ -73,18 +73,7 @@ namespace PTOTMT.Repository
                 return _RoleRepo;
             }
         }
-        private IShiftSlideRepository _ShiftSlideRepo;
-        public IShiftSlideRepository ShiftSlideRepo
-        {
-            get
-            {
-                if (_ShiftSlideRepo == null)
-                {
-                    _ShiftSlideRepo = new ShiftSlideRepository(context);
-                }
-                return _ShiftSlideRepo;
-            }
-        }
+
         private IStatusRepository _StatusRepo;
         public IStatusRepository StatusRepo
         {

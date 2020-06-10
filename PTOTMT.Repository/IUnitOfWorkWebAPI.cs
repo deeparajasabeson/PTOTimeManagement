@@ -9,7 +9,6 @@ namespace PTOTMT.Repository
         IRequestRepository RequestRepo { get; }
         IRequestTypeRepository RequestTypeRepo { get; }
         IRoleRepository RoleRepo { get; }
-        IShiftSlideRepository ShiftSlideRepo { get; }
         IStatusRepository StatusRepo { get; }
         ITeamRepository TeamRepo { get; }
         ITeamUserRepository TeamUserRepo { get; }
