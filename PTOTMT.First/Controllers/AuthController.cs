@@ -55,7 +55,7 @@ namespace PTOTMT.First.Controllers
                 {
                     throw new HttpRequestException("Http Web API call response from UsersController Service is not successful");
                 }
-                var content = await response.Content.ReadAsStringAsync();
+                string content = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<User>(content);
             }
             catch (HttpRequestException httpRequestException)
@@ -66,9 +66,9 @@ namespace PTOTMT.First.Controllers
 
         private async Task<string> GenerateJWTToken(User user, HttpClient httpclient)
         {
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
-            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-            var claims = new List<Claim>();
+            SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
+            SigningCredentials signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            List<Claim> claims = new List<Claim>();
             if (user != null)
             {
                 Role role = await GetUserRole(user.RoleId, httpclient);
@@ -78,7 +78,7 @@ namespace PTOTMT.First.Controllers
                 new Claim(ClaimTypes.Role, role.Name)
             });
             }
-            var tokenOptions = new JwtSecurityToken(
+            JwtSecurityToken tokenOptions = new JwtSecurityToken(
                 issuer: "http://localhost:5000",
                 audience: "http://localhost:5000",
                 claims: claims,
@@ -98,7 +98,7 @@ namespace PTOTMT.First.Controllers
                 {
                     throw new HttpRequestException("Http Web API call response from RolesController Service is not successful");
                 }
-                var content = await response.Content.ReadAsStringAsync();
+                string content = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<Role>(content);
             }
             catch (HttpRequestException httpRequestException)

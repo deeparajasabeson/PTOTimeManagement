@@ -17,6 +17,7 @@ namespace PTOTMT.Service.Controllers
     [Route("api/[controller]")]
     [EnableCors("CrossOrigin")]
     [Authorize]
+
     public class QuotasController : Microsoft.AspNetCore.Mvc.ControllerBase
     {
         private readonly IUnitOfWorkWebAPI uow;
@@ -72,10 +73,7 @@ namespace PTOTMT.Service.Controllers
             return NotFound();
         }
 
-        // findQuota
         // POST: api/Quotas
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public ActionResult<Quota> FindQuota(FindQuotaEntity entity)
         {
@@ -88,9 +86,7 @@ namespace PTOTMT.Service.Controllers
         }
 
         // POST: api/Quotas
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Manager")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult PostQuota(Quota quota)
         {
@@ -111,7 +107,7 @@ namespace PTOTMT.Service.Controllers
         }
 
         // DELETE: api/Quotas/5
-        [HttpDelete("quotabyid/{id}")]
+        [HttpDelete("quotabyid/{id}"), Authorize(Roles = "Manager")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult DeleteQuotaById(Guid? id)
         {
@@ -125,7 +121,7 @@ namespace PTOTMT.Service.Controllers
         }
 
         // DELETE: api/Quotas
-        [HttpDelete]
+        [HttpDelete, Authorize(Roles = "Manager")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteQuota(Quota quota)
         {
