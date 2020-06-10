@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
 
+
 namespace PTOTMT.Service.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
+
     public class TitlesController : ControllerBase
     {
         private readonly IUnitOfWorkWebAPI uow;

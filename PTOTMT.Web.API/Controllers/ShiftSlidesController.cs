@@ -7,8 +7,8 @@ using PTOTMT.Repository;
 
 namespace PTOTMT.Service.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ShiftSlidesController : ControllerBase
     {
         private readonly IUnitOfWorkWebAPI uow;

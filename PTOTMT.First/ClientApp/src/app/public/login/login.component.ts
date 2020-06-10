@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
-import {  NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthService } from '../../_services/auth.service';
 import { DataStorageService } from '../../_services/datastorage.service';
 
@@ -11,7 +12,8 @@ import { DataStorageService } from '../../_services/datastorage.service';
 export class LoginComponent  {
   invalidLogin: boolean = false;
 
-  constructor( private router: Router,
+  constructor(private router: Router,
+                        private jwtHelper: JwtHelperService,
                         private auth: AuthService,
                         private datastorageService: DataStorageService) { }
 
@@ -31,5 +33,10 @@ export class LoginComponent  {
               console.log(err);
               this.invalidLogin = true;
       });
+  }
+
+  public isUserAuthenticated() {
+    let token: string = localStorage.getItem("jwt");
+    return (token && !this.jwtHelper.isTokenExpired(token));
   }
 }

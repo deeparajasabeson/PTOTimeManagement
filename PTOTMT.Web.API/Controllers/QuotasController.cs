@@ -5,15 +5,18 @@ using Microsoft.AspNetCore.Cors;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using PTOTMT.Repository;
 using PTOTMT.Common.Entities;
 using PTOTMT.Common.Models;
 
+
 namespace PTOTMT.Service.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
-    [Microsoft.AspNetCore.Mvc.ApiController]
     [EnableCors("CrossOrigin")]
+    [Authorize]
     public class QuotasController : Microsoft.AspNetCore.Mvc.ControllerBase
     {
         private readonly IUnitOfWorkWebAPI uow;
@@ -24,7 +27,7 @@ namespace PTOTMT.Service.Controllers
         }
 
         // GET: api/Quotas
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IEnumerable<Quota> GetQuota()
         {
             return uow.QuotaRepo.GetAll();
@@ -97,10 +100,7 @@ namespace PTOTMT.Service.Controllers
                     uow.QuotaRepo.Put(quota, quota.Id);
                     uow.SaveChanges();
                 }
-                catch(DbUpdateConcurrencyException)
-                {
-                    throw;
-                }
+                catch(DbUpdateConcurrencyException) { throw;  }
                 return Ok();
             }
             else { 

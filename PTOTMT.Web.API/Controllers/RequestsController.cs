@@ -4,22 +4,26 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
 using PTOTMT.Repository.Abstraction.Web;
-using PTOTMT.Repository.Implementation.Web;
+
 
 namespace PTOTMT.Service.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     [EnableCors("CrossOrigin")]
+    [Authorize]
     public class RequestsController : ControllerBase
     {
         private readonly IUnitOfWorkWebAPI uow;
-        private IEmailSender emailSender;
-        private IQuotaService quotaService;
-        public RequestsController(IUnitOfWorkWebAPI _uow, IEmailSender _emailSender, IQuotaService _quotaService)
+        private readonly IEmailSender emailSender;
+        private readonly IQuotaService quotaService;
+        public RequestsController(IUnitOfWorkWebAPI _uow, 
+                                                     IEmailSender _emailSender, 
+                                                     IQuotaService _quotaService)
         {
             uow = _uow;
             emailSender = _emailSender;
@@ -82,13 +86,11 @@ namespace PTOTMT.Service.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult PostRequest(Request request)
         {
+            var userId = User.Identity;
             Quota quotaToAllot = quotaService.FindQuota(request);
-            request = quotaService.SendEmails(request);
-            uow.RequestRepo.Post(request);
+            Request savedRequest = uow.RequestRepo.Post(request);
             uow.SaveChanges();
-
-
-
+            request = quotaService.SendEmails(request, quotaToAllot);
             return CreatedAtAction(nameof(GetRequest), new { id = request.Id }, request);
         }
 

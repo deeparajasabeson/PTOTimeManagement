@@ -7,9 +7,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
-using Microsoft.Net.Http.Headers;
 using PTOTMT.Repository.Abstraction.Web;
 using PTOTMT.Repository.Implementation.Web;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace PTOTMT.Service
 {
@@ -39,6 +41,23 @@ namespace PTOTMT.Service
             {
                 options.UseSqlServer(Configuration.GetConnectionString("PTOTMTWebAPIContext"));
             });
+            services.AddAuthentication(opt => {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "http://localhost:5000",
+                    ValidAudience = "http://localhost:5000",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@123"))
+                };
+            });
             services.AddTransient<IUnitOfWorkWebAPI, UnitOfWorkWebAPI>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                                            .AddControllersAsServices();
@@ -56,7 +75,8 @@ namespace PTOTMT.Service
             if (env.IsDevelopment())  {  app.UseDeveloperExceptionPage(); }
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseCors(options => options.AllowAnyOrigin());
+            app.UseCors("CrossOrigin");
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>  { endpoints.MapControllers(); });
         }
