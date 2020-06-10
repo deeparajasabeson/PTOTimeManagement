@@ -19,57 +19,91 @@ namespace PTOTMT.First.Controllers
     public class AuthController : ControllerBase
     {
         [HttpPost, Route("login")]
-        public async Task<IActionResult> Login([FromBody]LoginViewModel user)
+        public async Task<IActionResult> Login([FromBody]LoginViewModel credentials)
         {
-            if (user == null)
+            if (credentials == null)
             {
                 return BadRequest("Invalid client request");
             }
-            using (HttpClient httpclient = new HttpClient())
+            using HttpClient httpclient = new HttpClient();
+            try
             {
-                User userDetails = null;
-                try
-                {
-                    httpclient.DefaultRequestHeaders.Accept.Clear();
-                    httpclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    string tokenString = generateJWTToken();
-                    httpclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenString);
-                   string uri = $"https://localhost:44382/api/users/userdetails?username={user.username}&password={user.password}";
+                httpclient.DefaultRequestHeaders.Accept.Clear();
+                httpclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                string tokenString = await GenerateJWTToken(null, httpclient);
+                httpclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenString);
 
-                    HttpResponseMessage response = await httpclient.GetAsync(uri);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var content = await response.Content.ReadAsStringAsync();
-                        userDetails = JsonConvert.DeserializeObject<User>(content);
-                    }
-                    else
-                    { 
-                        throw new HttpRequestException("Http Web API call response from UsersController Service is not successful");
-                    }
-                    tokenString = (userDetails != null) ? generateJWTToken() : null;
-                    if (tokenString != null) { 
-                        return Ok(new { Token = tokenString, User = userDetails });
-                    }  else { return Unauthorized(); }
-                }
-                catch (HttpRequestException httpRequestException)
+                User user = await GetUser(credentials, httpclient);
+                if (user == null)
                 {
-                    return BadRequest($"Error getting user details from User ==>> {httpRequestException.Message}");
+                    return Unauthorized();
                 }
+
+                tokenString = await GenerateJWTToken(user, httpclient);
+                return Ok(new { Token = tokenString, User = user });
             }
+            catch (Exception ex) { throw ex; }
+        }
 
-            string generateJWTToken()
+        private async Task<User> GetUser(LoginViewModel user, HttpClient httpclient)
+        {
+            try
             {
-                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
-                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-                var tokenOptions = new JwtSecurityToken(
-                    issuer: "http://localhost:5000",
-                    audience: "http://localhost:5000",
-                    claims: new List<Claim>(),
-                    expires: DateTime.Now.AddMinutes(10),
-                    signingCredentials: signinCredentials
-                );
-               return  new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+                string uri = $"https://localhost:44382/api/users/userdetails?username={user.username}&password={user.password}";
+                HttpResponseMessage response = await httpclient.GetAsync(uri);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException("Http Web API call response from UsersController Service is not successful");
+                }
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<User>(content);
+            }
+            catch (HttpRequestException httpRequestException)
+            {
+                throw new HttpRequestException($"Error getting user details from User ==>> {httpRequestException.Message}");
+            }
+        }
+
+        private async Task<string> GenerateJWTToken(User user, HttpClient httpclient)
+        {
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
+            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            var claims = new List<Claim>();
+            if (user != null)
+            {
+                Role role = await GetUserRole(user.RoleId, httpclient);
+                claims.AddRange(new[]
+                {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, role.Name)
+            });
+            }
+            var tokenOptions = new JwtSecurityToken(
+                issuer: "http://localhost:5000",
+                audience: "http://localhost:5000",
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(10),
+                signingCredentials: signinCredentials
+            );
+            return  new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+        }
+
+        private async Task<Role> GetUserRole(Guid roleId, HttpClient httpclient)
+        {
+            try
+            {
+                string uri = $"https://localhost:44382/api/roles/userdetails?Id={roleId}";
+                HttpResponseMessage response = await httpclient.GetAsync(uri);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException("Http Web API call response from RolesController Service is not successful");
+                }
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<Role>(content);
+            }
+            catch (HttpRequestException httpRequestException)
+            {
+                throw new HttpRequestException($"Error getting role details of User ==>> {httpRequestException.Message}");
             }
         }
     }
