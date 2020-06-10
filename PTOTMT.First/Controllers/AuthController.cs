@@ -11,6 +11,7 @@ using PTOTMT.Common.Entities;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PTOTMT.First.Controllers
 {
@@ -18,12 +19,13 @@ namespace PTOTMT.First.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        [AllowAnonymous]
         [HttpPost, Route("login")]
         public async Task<IActionResult> Login([FromBody]LoginViewModel credentials)
         {
             if (credentials == null)
             {
-                return BadRequest("Invalid client request");
+                return Unauthorized();
             }
             using HttpClient httpclient = new HttpClient();
             try
@@ -82,7 +84,7 @@ namespace PTOTMT.First.Controllers
                 issuer: "http://localhost:5000",
                 audience: "http://localhost:5000",
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(10),
+                expires: DateTime.Now.AddMinutes(15),
                 signingCredentials: signinCredentials
             );
             return  new JwtSecurityTokenHandler().WriteToken(tokenOptions);
@@ -92,7 +94,7 @@ namespace PTOTMT.First.Controllers
         {
             try
             {
-                string uri = $"https://localhost:44382/api/roles/userdetails?Id={roleId}";
+                string uri = $"https://localhost:44382/api/roles/{roleId}";
                 HttpResponseMessage response = await httpclient.GetAsync(uri);
                 if (!response.IsSuccessStatusCode)
                 {
