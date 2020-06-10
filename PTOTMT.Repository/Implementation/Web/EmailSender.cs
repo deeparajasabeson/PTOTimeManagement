@@ -45,11 +45,7 @@ namespace PTOTMT.Repository.Implementation.Web
                     client.Authenticate(_emailConfig.UserName, _emailConfig.Password);
                     client.Send(mailMessage);
                 }
-                catch
-                {
-                    //log an error message or throw an exception or both.
-                    throw;
-                }
+                catch { throw; }
                 finally
                 {
                     client.Disconnect(true);

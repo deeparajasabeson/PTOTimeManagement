@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
-using PTOTMT.Repository.Implementation.Web;
-using System.Threading.Tasks;
 using PTOTMT.Repository.Abstraction.Web;
+using PTOTMT.Repository.Implementation.Web;
 
 namespace PTOTMT.Service.Controllers
 {
@@ -19,10 +18,12 @@ namespace PTOTMT.Service.Controllers
     {
         private readonly IUnitOfWorkWebAPI uow;
         private IEmailSender emailSender;
-        public RequestsController(IUnitOfWorkWebAPI _uow, IEmailSender _emailSender)
+        private IQuotaService quotaService;
+        public RequestsController(IUnitOfWorkWebAPI _uow, IEmailSender _emailSender, IQuotaService _quotaService)
         {
             uow = _uow;
             emailSender = _emailSender;
+            quotaService = _quotaService;
         }
 
         // GET: api/Requests
@@ -81,28 +82,12 @@ namespace PTOTMT.Service.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult PostRequest(Request request)
         {
-            Quota quotaToAllot = FindQuota(request);
-            string emailBody = $"Your PTO request for { request.Hours} hours from { request.StartDateTime} to{request.EndDateTime} ";
-            if (quotaToAllot != null  && uow.QuotaRepo.UpdateRemainingHours(quotaToAllot, request.Hours))
-            {
-                request.QuotaId = quotaToAllot.Id;
-                var approvedStatus = uow.StatusRepo.GetAll().Where(status => status.Name == "Approved").FirstOrDefault();
-                request.StatusId = approvedStatus.Id;
-                emailBody +=  $"is approved under quota {quotaToAllot.Name}";
-            }
-            else
-            {
-                request.QuotaId = null;
-                var waitlistStatus = uow.StatusRepo.GetAll().Where(status => status.Name == "WaitList").FirstOrDefault();
-                request.StatusId = waitlistStatus.Id;
-                emailBody += "is in Waiting List";
-            }
+            Quota quotaToAllot = quotaService.FindQuota(request);
+            request = quotaService.SendEmails(request);
             uow.RequestRepo.Post(request);
             uow.SaveChanges();
 
-            //SendStatusEmails();
-            var message = new EmailMessage(new string[] { "deeparajasabeson@gmail.com" }, "Test email", emailBody);
-            emailSender.SendEmail(message);
+
 
             return CreatedAtAction(nameof(GetRequest), new { id = request.Id }, request);
         }
@@ -138,15 +123,6 @@ namespace PTOTMT.Service.Controllers
         public bool RequestExists(Guid? id)
         {
             return uow.RequestRepo.Exists(id);
-        }
-
-        private Quota FindQuota(Request request)
-        {
-            return uow.QuotaRepo.GetAll()
-                               .Where(quota => quota.StartDateTime <= request.StartDateTime
-                                                       && quota.EndDateTime >= request.EndDateTime
-                                                       && quota.RemainingHours >= request.Hours)
-                               .FirstOrDefault();
         }
     }
 }
