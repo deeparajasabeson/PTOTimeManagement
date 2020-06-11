@@ -208,7 +208,7 @@ export class PTOCalendarComponent implements OnInit {
     var attr_tooltip = document.createAttribute("data-tooltip");
     var attr_title = document.createAttribute("title");
     attr_tooltip.value = "";
-    attr_title.value = info.event.extendedProps.description.trim()
+    attr_title.value = info.event.extendedProps.description
       + "  PTO Hours : " + info.event.extendedProps.hours
       + "  Status : " + info.event.extendedProps.statusId;
     info.el.setAttributeNode(attr_tooltip);

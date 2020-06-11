@@ -1,9 +1,10 @@
 ﻿using PTOTMT.Common.Entities;
+using PTOTMT.Common.ViewModels;
 
 namespace PTOTMT.Repository.Abstraction.WebAPI
 {
     public interface IUserRepository : IRepository<User>
     {
-        User GetUserDetails(string userName, string password);
+        User GetUserDetails(LoginViewModel credentials);
     }
 }

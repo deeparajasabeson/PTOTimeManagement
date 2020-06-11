@@ -4,7 +4,7 @@ using PTOTMT.Common.Entities;
 
 namespace PTOTMT.Repository.Implementation.Web
 {
-    class QuotaService : IQuotaService
+    public class QuotaService : IQuotaService
     {
         private readonly IUnitOfWorkWebAPI uow;
         private IEmailSender emailSender;

@@ -1,6 +1,7 @@
-﻿using PTOTMT.Common.Entities;
+﻿using System.Linq;
+using PTOTMT.Common.Entities;
 using PTOTMT.Repository.Abstraction.WebAPI;
-using System.Linq;
+using PTOTMT.Common.ViewModels;
 
 namespace PTOTMT.Repository.Implementation.WebAPI
 {
@@ -19,9 +20,9 @@ namespace PTOTMT.Repository.Implementation.WebAPI
             this._context = context;
         }
 
-        public User GetUserDetails(string userName, string password) 
+        public User GetUserDetails(LoginViewModel credentials) 
         {
-            return context.User.Where(user => user.UserName == userName && user.Password == password).FirstOrDefault();
+            return context.User.Where(user => user.UserName == credentials.username && user.Password == credentials.password).SingleOrDefault();
         }
     }
 }

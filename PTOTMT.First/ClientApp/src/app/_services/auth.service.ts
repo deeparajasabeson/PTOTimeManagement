@@ -11,7 +11,8 @@ export class AuthService {
   loginUrl: string;
 
   constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    this.loginUrl = baseUrl + "api/auth/login";
+    this.loginUrl = "https://localhost:44382/api/users/login";
+    //this.loginUrl = baseUrl + "api/users/login";
   }
 
   public login(loginForm: NgForm) {

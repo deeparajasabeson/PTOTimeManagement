@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -12,8 +12,8 @@ using PTOTMT.Repository.Implementation.Web;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace PTOTMT.Service
 {
@@ -53,9 +53,6 @@ namespace PTOTMT.Service
             {
                 options.RequireHttpsMetadata = false;
                 options.Authority = Configuration["Jwt:Issuer"];
-                options.Audience = Configuration["Jwt:Audience"];
-                options.SaveToken = true;
-                options.Configuration = new OpenIdConnectConfiguration();
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = false,
@@ -67,6 +64,13 @@ namespace PTOTMT.Service
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                 };
             });
+            services.AddAuthorization(options =>
+            {
+                options.DefaultPolicy =
+                     new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
             services.AddTransient<IUnitOfWorkWebAPI, UnitOfWorkWebAPI>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                                          .AddControllersAsServices();
@@ -77,17 +81,17 @@ namespace PTOTMT.Service
             services.AddScoped<IQuotaService, QuotaService>();
             services.AddControllers();
         }
-        
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())  {  app.UseDeveloperExceptionPage(); }
+            if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors("CrossOrigin");
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints =>  { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

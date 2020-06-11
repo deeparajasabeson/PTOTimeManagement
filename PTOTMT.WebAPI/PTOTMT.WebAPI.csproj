@@ -5,18 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Cors" Version="2.2.0" />
     <PackageReference Include="NETCore.MailKit" Version="2.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PTOTMT.Domain\PTOTMT.Domain.csproj" />
+    <ProjectReference Include="..\PTOTMT.Common\PTOTMT.Common.csproj" />
     <ProjectReference Include="..\PTOTMT.Repository\PTOTMT.Repository.csproj" />
   </ItemGroup>
-
-  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="http://json.schemastore.org/imageoptimizer" /></VisualStudio></ProjectExtensions>
 
 
 </Project>

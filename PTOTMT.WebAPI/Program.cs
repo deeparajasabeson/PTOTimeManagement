@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace PTOTMT.Service
+namespace PTOTMT.WebAPI
 {
     public class Program
     {

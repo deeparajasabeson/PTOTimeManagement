@@ -28,7 +28,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
       return next.handle(req);
     }
     newHeaders = newHeaders.append('Content-Type', 'application/json')
-                                                  .append('Authorization', 'Bearer ${authToken}')
+                                                  .append('Authorization', 'Bearer ' +  authToken)
                                                   .append('Accept', 'application/json');
     const clonedAuthRequest = req.clone({
       headers: newHeaders
@@ -55,7 +55,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         //      { positionClass: 'toast-bottom-center' });
         //}
         let data = {
-          reason:  (error.error.errors["$.id"]) ? error.error.errors["$.id"][0] 
+          reason:  (error.error.errors && error.error.errors["$.id"]) ? error.error.errors["$.id"][0] 
                       : (error.error.errors["$.statusId"]) ? error.error.errors["$.statusId"][0]
                       : "",
           error: error.message,
