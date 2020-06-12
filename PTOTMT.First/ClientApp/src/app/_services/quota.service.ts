@@ -34,9 +34,9 @@ export class QuotaService {
 
   public saveQuota(quota: QuotaEntity) {
     const quotaData = JSON.stringify(quota);
+    let response = this.http.post(this.quotaUrl, quotaData, httpOptions).toPromise();
     debugger;
-    this.http.post(this.quotaUrl, quotaData, httpOptions)
-      .subscribe((data: QuotaEntity) => {
+      response.then((data: QuotaEntity) => {
         return data;
     })
   }

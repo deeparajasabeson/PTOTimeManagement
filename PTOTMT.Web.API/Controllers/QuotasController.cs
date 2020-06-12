@@ -86,7 +86,8 @@ namespace PTOTMT.Service.Controllers
         }
 
         // POST: api/Quotas
-        [HttpPost, Authorize(Roles = "Manager")]
+        //[HttpPost, Authorize(Roles = "Manager")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult PostQuota(Quota quota)
         {
