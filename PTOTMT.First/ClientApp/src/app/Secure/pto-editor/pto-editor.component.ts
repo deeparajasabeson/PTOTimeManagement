@@ -18,7 +18,6 @@ import { RequestTypeFromDBEntity } from '../../_entities/RequestTypeFromDBEntity
 export class PTOEditorComponent implements OnInit {
   @ViewChild('dp', null) dp: NgbDatepicker;
   @Input() public pto: PTODialogData;  //Input from Calendar through @Input() property
-  isNewEvent: boolean;
   requestTypes: RequestTypeFromDBEntity[];
 
   ptoeditorForm: FormGroup;
@@ -36,9 +35,6 @@ export class PTOEditorComponent implements OnInit {
         private ptoService: PTOService) { }
 
   ngOnInit() {
-    this.isNewEvent = true;
-    //this.isNewEvent = this.dataDialog.isNewEvent;
-    //this.isNewEvent = this.pto.isNewEvent;
     if (this.pto.requestTypeId == "" && this.pto.requestTypes.length > 0) {
       this.pto.requestTypeId = this.pto.requestTypes.find(rt => rt.name == "Flex Time").id;
     }

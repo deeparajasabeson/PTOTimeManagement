@@ -25,7 +25,6 @@ export class QuotaCalendarComponent implements OnInit {
   @ViewChild('calendar', null) calendarComponent: FullCalendarComponent; // references #calendar in the template
   eventColor: string[] = ["red", "green", "blue", "brown", "BlueViolet", "gray", "cyan", "CadetBlue", "DarkGoldenRod", "DarkKhaki", "DarkGreen", "DarkRed", "DarkOrange", "DarkSeaGreen", "DarkSlateGrey", "Indigo", "LightSeaGreen", "LightSalmon", "maroon", "MediumVioletRed", "Chocolate", "CornflowerBlue", "Black", "Coral"];
   originalHours = 0;
-  isNewEvent = true;
   calendarVisible = true;
   calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin]; // important!
   calendarWeekends = true;
@@ -44,12 +43,14 @@ export class QuotaCalendarComponent implements OnInit {
     id: "",
     quotaName: "",
     originalHours: 0,
+    minutes: 0,
     remainingHours: 0,
     startDate: this.toDateNgbDateStruct,
     startTime: "00:00",
     endDate: this.toDateNgbDateStruct,
     endTime: "00:00",
-    description: ""
+    description: "",
+    isNewEvent: true
   }
   static subscribeData: any;
   static setSubscribeData(data): any {
@@ -174,11 +175,9 @@ export class QuotaCalendarComponent implements OnInit {
     this.quota.endDate = quotaEndDate;
     this.quota.endTime = quotaToEdit.endDateTime.substr(11, 5);
     this.quota.description = quotaToEdit.description;
-
-    this.isNewEvent = false;
+    this.quota.isNewEvent = false;
     this.originalHours = quotaToEdit.originalHours;
     this.getQuota(null);
-    this.isNewEvent = true;
     this.originalHours = 0;
   }
 
@@ -190,7 +189,7 @@ export class QuotaCalendarComponent implements OnInit {
     dialogConfig.id = "quota-editor";
     dialogConfig.height = "60%";
     dialogConfig.width = "70%";
-    dialogConfig.data = { quota: this.quota, isNewEvent: this.isNewEvent };  // One way to pass data to modal window
+    dialogConfig.data = { quota: this.quota };  // One way to pass data to modal window
     if (startDate != null) {
       dialogConfig.data.quota.startDate = startDate;
     }
@@ -223,7 +222,7 @@ export class QuotaCalendarComponent implements OnInit {
       parseInt(this.quota.endTime.substr(3, 2)));
 
     let id, remainingHours;
-    if (this.quota.id == "" && this.isNewEvent) {
+    if (this.quota.id == "" && this.quota.isNewEvent) {
       id = this.generateUUID();
       remainingHours = this.quota.originalHours;
     }
@@ -235,7 +234,7 @@ export class QuotaCalendarComponent implements OnInit {
       id: id,
       name: this.quota.quotaName,
       description: this.quota.description,
-      originalHours: this.quota.originalHours,
+      originalHours: this.quota.originalHours + this.quota.minutes / 100,
       remainingHours: remainingHours,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
@@ -247,7 +246,7 @@ export class QuotaCalendarComponent implements OnInit {
       updatedOn: this.toDate
     };
     let quota = this.quotaService.saveQuota(quotaEntity);
-    if (quota == null) {
+    if (quota == null || quota == undefined) {
       return;
     }
 

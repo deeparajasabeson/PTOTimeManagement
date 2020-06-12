@@ -50,7 +50,7 @@
     <None Remove="ClientApp\src\app\_interceptors\index.ts" />
     <None Remove="ClientApp\src\app\_services\team.service.ts" />
     <None Remove="ClientApp\src\app\_validators\PTOHours.Validator.ts" />
-    <None Remove="ClientApp\src\app\_validators\ValidateOriginalHours.ts" />
+    <None Remove="ClientApp\src\app\_validators\QuotaRemainingHours.Validator.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -80,7 +80,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\_services\pto.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_services\team.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_validators\PTOHours.validator.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\_validators\ValidateOriginalHours.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_validators\QuotaRemainingHours.Validator.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

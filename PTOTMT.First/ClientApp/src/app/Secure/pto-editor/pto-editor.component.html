@@ -120,7 +120,8 @@
               [mat-dialog-close]="data">
         Submit PTO Request
       </button>
-      <span *ngIf="!isNewEvent">
+      <!--<span *ngIf="!isNewEvent">-->
+      <span *ngIf="!ptoeditorForm.get('isNewEvent').value">
         <button class="btn btn-danger deletebutton"
                 (click)="deletePTO(ptoeditorForm.value)"
                 [mat-dialog-close]="data">

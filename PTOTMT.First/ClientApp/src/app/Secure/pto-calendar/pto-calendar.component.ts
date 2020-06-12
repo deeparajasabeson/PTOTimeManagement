@@ -143,8 +143,6 @@ export class PTOCalendarComponent implements OnInit {
     });
 
     if (this.requestTypes == undefined || this.requestTypes.length == 0) {
-      console.log("requestTypes is undefined or length is 0");
-      console.log(this.requestTypes);
       this.requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
       let response = this.requestTypeService.getRequestTypeByName("Flex Time");
       response.subscribe((data: RequestTypeFromDBEntity) => {
@@ -283,7 +281,6 @@ export class PTOCalendarComponent implements OnInit {
     const dialogRef = this.dialog.open(PTOEditorComponent, dialogConfig);
     let instance = dialogRef.componentInstance;
     instance.pto = this.pto;  //another way to pass quota to modal window
-    instance.isNewEvent = this.pto.isNewEvent;
 
     dialogRef.afterClosed().subscribe(resultData => {
       if (resultData != null && resultData != undefined) {

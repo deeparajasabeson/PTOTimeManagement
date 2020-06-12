@@ -1,4 +1,4 @@
-import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl,  ValidatorFn } from '@angular/forms';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 export class PTOCustomValidators {
@@ -12,10 +12,11 @@ export class PTOCustomValidators {
       const endDate = control.get('endDate').value;
       const endTime = control.get('endTime').value;
       const hours = control.get('hours').value;
+      const minutes = control.get('minutes').value;
 
       let calchours = this.calculateHours(allDay, startDate, startTime, endDate, endTime);
 
-      if (hours != null && calchours != hours) {
+      if (hours != null && minutes != null && calchours != hours+minutes/100) {
         return { 'invalidHours': true };
       }
       return null;

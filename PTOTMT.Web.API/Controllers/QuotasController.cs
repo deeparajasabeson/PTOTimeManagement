@@ -73,8 +73,8 @@ namespace PTOTMT.Service.Controllers
             return NotFound();
         }
 
-        // POST: api/Quotas
-        [HttpPost]
+        // POST: api/Quotas/find
+        [HttpGet("find")]
         public ActionResult<Quota> FindQuota(FindQuotaEntity entity)
         {
             var quota = uow.QuotaRepo.GetAll()

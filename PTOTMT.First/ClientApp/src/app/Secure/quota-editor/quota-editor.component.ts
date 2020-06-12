@@ -4,8 +4,9 @@ import { FormGroup, FormBuilder,  Validators, NgForm, AbstractControl } from '@a
 import { NgbDateStruct, NgbDatepicker  } from '@ng-bootstrap/ng-bootstrap';
 import { QuotaDialogData } from '../../_models/QuotaDialogData';
 import { MaterialModule } from '../material.module';
-import { ValidateOriginalHours } from '../../_validators/ValidateOriginalHours';
+import { QuotaCustomValidators } from '../../_validators/QuotaRemainingHours.Validator';
 import { QuotaService } from '../../_services/quota.service';
+import { ValidateMinutes } from '../../_validators/ValidateMinutes';
 
 @Component({
   selector: 'app-quota-editor',
@@ -14,7 +15,6 @@ import { QuotaService } from '../../_services/quota.service';
 export class QuotaEditorComponent implements OnInit {
   @ViewChild('dp', null) dp: NgbDatepicker;
   @Input() public quota: QuotaDialogData;  //Input from Calendar through @Input() property
-
   quotaeditorForm: FormGroup;
   private toDate = new Date();  //used in endDate filter in calendar template
   toDateNgbDateStruct: NgbDateStruct = {
@@ -33,13 +33,17 @@ export class QuotaEditorComponent implements OnInit {
     this.quotaeditorForm = this.fb.group({
       id: [this.quota.id],
       quotaName: [this.quota.quotaName, Validators.maxLength(30)],
-      originalHours: [this.quota.originalHours, [Validators.required, ValidateOriginalHours(this.quota.remainingHours)]],
+      originalHours: [Math.floor(this.quota.originalHours), [Validators.required, Validators.min(0)]],
+      minutes: [(this.quota.originalHours - Math.floor(this.quota.originalHours)) * 100, [Validators.min(0), Validators.max(30), ValidateMinutes]],
       remainingHours: [this.quota.remainingHours],
       startDate: [this.quota.startDate, Validators.required],
-      startTime: [this.quota.startTime, [Validators.required, Validators.min(0.01), Validators.max(12.59)]],
+      startTime: [this.quota.startTime, [Validators.required, Validators.min(0.01), Validators.max(24)]],
       endDate: [this.quota.endDate, Validators.required],
-      endTime: [this.quota.endTime, [Validators.required, Validators.min(0.01), Validators.max(12.59)]],
-      description: [this.quota.description, Validators.maxLength(50)]
+      endTime: [this.quota.endTime, [Validators.required, Validators.min(0.01), Validators.max(24)]],
+      description: [this.quota.description, Validators.maxLength(50)],
+      isNewEvent: [this.quota.isNewEvent]
+    }, {
+      validator: QuotaCustomValidators.ValidateOriginalHours()
     });
   }
 
@@ -63,7 +67,6 @@ export class QuotaEditorComponent implements OnInit {
   }
 
   onNoClick(event: any): void {
-    event.stopPropogation();
     this.dialogRef.close();
     this.quota = null;
   }
