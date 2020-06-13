@@ -36,14 +36,6 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
     return next.handle(clonedAuthRequest).pipe(
       map((event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-            if (event.body && event.body.success) {
-              this.toasterService.success(
-                event.body.success.message,
-                event.body.success.title,
-                { positionClass: 'toast-bottom-center' });
-            }
-        }
         return event;
       }),
       retry(3),
@@ -62,11 +54,15 @@ export class HttpConfigInterceptor implements HttpInterceptor {
           statuscode: error.status,
           title: error.error.title
         };
-        if (error.status == 401 || error.status == 403) {
-          this.router.navigateByUrl("/login");
-        }
         if (error.status != '' || data.reason != '') {
           this.errorDialogService.openDialog(data);
+        }
+        if (error.status == 401 || error.status == 403) {
+           this.toasterService.error(
+              error.message,
+              error.error.title,
+              { positionClass: 'toast-bottom-center' });
+          this.router.navigateByUrl("/login");
         }
         return throwError(error);
       })

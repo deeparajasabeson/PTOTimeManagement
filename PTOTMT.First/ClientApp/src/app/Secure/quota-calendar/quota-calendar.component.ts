@@ -7,6 +7,9 @@ import timeGrigPlugin from '@fullcalendar/timegrid';
 import { MatDialog } from '@angular/material';
 import { MatDialogConfig } from '@angular/material/dialog';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { map } from 'rxjs/operators';
+import {   HttpResponse } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 import { QuotaEditorComponent } from '../quota-editor/quota-editor.component';
 import { QuotaDialogData } from '../../_models/QuotaDialogData';
@@ -33,7 +36,7 @@ export class QuotaCalendarComponent implements OnInit {
   user = null;
   previousDate = null;
   toDate = new Date();
-  toDateNgbDateStruct: NgbDateStruct= {
+  toDateNgbDateStruct: NgbDateStruct = {
     year: this.toDate.getFullYear(),
     month: this.toDate.getMonth() + 1,
     day: this.toDate.getDate()
@@ -52,21 +55,20 @@ export class QuotaCalendarComponent implements OnInit {
     description: "",
     isNewEvent: true
   }
-  static subscribeData: any;
-  static setSubscribeData(data): any {
+  static subscribeData: QuotaFromDBEntity[];
+  static setSubscribeData(data: QuotaFromDBEntity[]) {
     QuotaCalendarComponent.subscribeData = data;
-    return data;
   }
 
   static subscribeQuotaFromDBEntity: QuotaFromDBEntity;
-  static setSubscribeQuotaFromDBEntity(quota): QuotaFromDBEntity {
+  static setSubscribeQuotaFromDBEntity(quota) {
     QuotaCalendarComponent.subscribeQuotaFromDBEntity = quota;
-    return quota;
   }
   // Constructor - executes when component is created first
   constructor(public dialog: MatDialog,
-                       private quotaService: QuotaService,
-                       private datastorageService: DataStorageService) { }
+    private quotaService: QuotaService,
+    public toasterService: ToastrService,
+    private datastorageService: DataStorageService) { }
 
   // Execute after constructor when component is initialized
   ngOnInit() {
@@ -90,37 +92,33 @@ export class QuotaCalendarComponent implements OnInit {
   readQuotasbyTeamId() {
     let teamId: string = this.datastorageService.getUserEntity().teamFunctionId;
     let response = this.quotaService.getQuotasByTeamId(teamId);
-    response .then((data: QuotaFromDBEntity[]) => {
-        QuotaCalendarComponent.setSubscribeData(data);
-      });
-
-    let quotaList = QuotaCalendarComponent.subscribeData;
-    if (quotaList == null) {
-      return
-    }
-    for (var i = 0; i < quotaList.length; ++i) {
-      this.calendarEvents[i] =
-      {
-        allDay: false,
-        backgroundColor: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
-        textColor: "white",
-        title: quotaList[i].name,
-        start: quotaList[i].startDateTime,
-        end: quotaList[i].endDateTime,
-        id: quotaList[i].id,
-        extendedProps: {
-          description: quotaList[i].description,
-          originalHours: quotaList[i].originalHours,
-          remainingHours: quotaList[i].remainingHours,
-          teamId: quotaList[i].teamId,
-          isActive: quotaList[i].isActive,
-          createdBy: quotaList[i].createdBy,
-          createdOn: quotaList[i].createdOn,
-          updatedBy: quotaList[i].updatedBy,
-          updatedOn: quotaList[i].updatedOn
-         }
-      };
-    }
+    response.toPromise().then((data: QuotaFromDBEntity[]) => {
+      QuotaCalendarComponent.setSubscribeData(data);
+      let quotaList = QuotaCalendarComponent.subscribeData;
+      for (var i = 0; i < quotaList.length; ++i) {
+        this.calendarEvents[i] =
+        {
+          allDay: false,
+          backgroundColor: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
+          textColor: "white",
+          title: quotaList[i].name,
+          start: quotaList[i].startDateTime,
+          end: quotaList[i].endDateTime,
+          id: quotaList[i].id,
+          extendedProps: {
+            description: quotaList[i].description,
+            originalHours: quotaList[i].originalHours,
+            remainingHours: quotaList[i].remainingHours,
+            teamId: quotaList[i].teamId,
+            isActive: quotaList[i].isActive,
+            createdBy: quotaList[i].createdBy,
+            createdOn: quotaList[i].createdOn,
+            updatedBy: quotaList[i].updatedBy,
+            updatedOn: quotaList[i].updatedOn
+          }
+        };
+      }
+    });
   }
 
   //eventRender function from Calendar
@@ -133,7 +131,7 @@ export class QuotaCalendarComponent implements OnInit {
       + "  Remaining Hours : " + info.event.extendedProps.remainingHours;
     info.el.setAttributeNode(attr_tooltip);
     info.el.setAttributeNode(attr_title);
-}
+  }
 
   // Edit Quota when event is clicked
   handleEventClick(info) {
@@ -168,7 +166,7 @@ export class QuotaCalendarComponent implements OnInit {
 
     this.quota.id = quotaToEdit.id;
     this.quota.quotaName = quotaToEdit.name,
-    this.quota.originalHours = quotaToEdit.originalHours;
+      this.quota.originalHours = quotaToEdit.originalHours;
     this.quota.remainingHours = quotaToEdit.remainingHours;
     this.quota.startDate = quotaStartDate;
     this.quota.startTime = quotaToEdit.startDateTime.substr(11, 5);
@@ -182,7 +180,7 @@ export class QuotaCalendarComponent implements OnInit {
   }
 
   // Get New Quota and set start date
-  getQuota(startDate: Date): void {
+  getQuota(startDate: NgbDateStruct): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;   // User can't close the dialog by clicking outside its body
     dialogConfig.autoFocus = true;
@@ -209,14 +207,14 @@ export class QuotaCalendarComponent implements OnInit {
     let userDetails: UserEntity = this.datastorageService.getUserEntity();
     let startDateTime = new Date(
       this.quota.startDate.year,
-      this.quota.startDate.month,
+      this.quota.startDate.month - 1,
       this.quota.startDate.day,
       parseInt(this.quota.startTime.substr(0, 2)),
       parseInt(this.quota.startTime.substr(3, 2)));
 
     let endDateTime = new Date(
       this.quota.endDate.year,
-      this.quota.endDate.month,
+      this.quota.endDate.month - 1,
       this.quota.endDate.day,
       parseInt(this.quota.endTime.substr(0, 2)),
       parseInt(this.quota.endTime.substr(3, 2)));
@@ -245,24 +243,33 @@ export class QuotaCalendarComponent implements OnInit {
       updatedBy: userDetails.id,
       updatedOn: this.toDate
     };
-    let quota = this.quotaService.saveQuota(quotaEntity);
-    if (quota == null || quota == undefined) {
-      return;
-    }
-
-    this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
-      title: quotaEntity.name,
-      start: startDateTime,
-      end: endDateTime,
-      id: quotaEntity.id,
-      allDay: false,
-      color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
-      textColor: "white"
-    })
-    let calendarApi = this.calendarComponent.getApi();
-    if (calendarApi.needsRerender) {
-      calendarApi.render();
-    }
+    let response = this.quotaService.saveQuota(quotaEntity);
+    let quota;
+    response.toPromise().then((data: QuotaEntity) => {
+      debugger;
+      response.pipe(map((res: HttpResponse<any>) => {
+         this.toasterService.success(
+            "Status Code : " + res.status.toString(),
+            " - " + res.statusText,
+            { positionClass: 'toast-bottom-center' });
+        }
+      ));
+      quota = data;
+      if (quota == null || quota == undefined) { return; }
+      this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
+        title: quotaEntity.name,
+        start: startDateTime,
+        end: endDateTime,
+        id: quotaEntity.id,
+        allDay: false,
+        color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
+        textColor: "white"
+      })
+      let calendarApi = this.calendarComponent.getApi();
+      if (calendarApi.needsRerender) {
+        calendarApi.render();
+      }
+   });
   }
 
   //Generating GUID in Typescript
@@ -307,7 +314,12 @@ export class QuotaCalendarComponent implements OnInit {
 
   // Execute when date cell is clicked
   handleDateClick(arg) {
-    this.getQuota(arg.date);
+    let quotaStartDate: NgbDateStruct = {
+      year: arg.date.getFullYear(),
+      month: arg.date.getMonth() + 1,
+      day: arg.date.getDate()
+    }
+    this.getQuota(quotaStartDate);
   }
 }
 

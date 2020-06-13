@@ -37,7 +37,7 @@
         </div>
         <div class="col-3">
           Unused PTO<br />
-          <label size="5" style="font-size: large;">{{quota.remainingHours}}</label>
+          <label size="5" style="font-size: large;">{{this.quota.remainingHours}}</label>
           &nbsp;Hours
         </div>
       </div>
@@ -52,7 +52,7 @@
       </div>
       <br *ngIf="!quotaeditorForm.hasError('remainingHoursGreater')
                  && !quotaeditorForm.hasError('hoursNotMatching')
-                 && !quotaeditorForm.hasError('invalidHours')" />
+                 && !(quotaeditorForm.hasError('invalidHours') && quotaeditorForm.get('originalHours').touched)" />
       <b>PTO Quota Details</b>
       <div class="row">
         <div class="col-3">
