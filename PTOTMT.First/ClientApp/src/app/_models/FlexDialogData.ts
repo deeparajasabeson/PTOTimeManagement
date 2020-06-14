@@ -1,15 +1,15 @@
+import { NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
+
 // FlexDialogData.ts
 export interface FlexDialogData {
   id: string;
   userId: string;
-  requestTypeId: string;
+  flexId: string;
+  name: string;
   description: string;
   hours: number;
-  minutes: number;
-  allDay: boolean;
+  onDate: NgbDateStruct;
   startTime: string;
   endTime: string;
-  quotaId: string;
-  statusId: string;
   isNewEvent: boolean;
 }

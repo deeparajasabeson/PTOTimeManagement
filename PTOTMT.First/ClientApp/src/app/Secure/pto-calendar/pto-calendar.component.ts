@@ -14,6 +14,7 @@ import { CommonLibrary } from '../../_library/common.library';
 import { PTOEditorComponent } from '../pto-editor/pto-editor.component';
 import { FlexDialogData } from '../../_models/FlexDialogData';
 import { PTODialogData } from '../../_models/PTODialogData';
+import { FlexEntity } from '../../_entities/FlexEntity';
 import { PTOEntity } from '../../_entities/PTOEntity';
 import { StatusEntity } from '../../_entities/StatusEntity';
 import { PTOFromDBEntity } from '../../_entities/PTOFromDBEntity';
@@ -335,8 +336,45 @@ export class PTOCalendarComponent implements OnInit {
     });
   }
 
-  //Save Schedule Flexibility
-  saveFlex() { }
+  //Save Schedule Flexibility when clicked Save button in popup modal window
+  saveFlex() {
+    let userDetails: UserEntity = this.datastorageService.getUserEntity();
+    let startDateTime = CommonLibrary.NgbDateStruct2DateTime(this.flex.onDate, this.flex.startTime);
+    let endDateTime = CommonLibrary.NgbDateStruct2DateTime(this.flex.onDate, this.flex.endTime);
+
+    const flexEntity: FlexEntity = {
+      id: (this.flex.id == "" && this.flex.isNewEvent) ? CommonLibrary.GenerateUUID() : this.flex.id,
+      userId: userDetails.id,
+      description: this.flex.description,
+      flexId: this.flex.flexId,
+      hours: this.flex.hours,
+      startDateTime: startDateTime,
+      endDateTime: endDateTime,
+      isActive: true,
+      createdBy: userDetails.id,
+      createdOn: this.toDate,
+      updatedBy: userDetails.id,
+      updatedOn: this.toDate
+    };
+    let flex = this.flexService.saveFlex(flexEntity);
+    if (flex == null) {
+      return;
+    }
+
+    this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
+      title: ptoEntity.description,
+      start: startDateTime,
+      end: endDateTime,
+      id: ptoEntity.id,
+      allDay: ptoEntity.allDay,
+      color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
+      textColor: "white"
+    })
+    let calendarApi = this.calendarComponent.getApi();
+    if (calendarApi.needsRerender) {
+      calendarApi.render();
+    }
+  }
 
   // Toggle calendar visibility
   toggleVisible() {

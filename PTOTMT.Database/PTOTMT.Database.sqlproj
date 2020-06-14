@@ -81,6 +81,7 @@
     <Build Include="Config\Tables\RequestType.sql" />
     <Build Include="PTO\Tables\Request.sql" />
     <Build Include="PTO\Tables\Quota.sql" />
+    <Build Include="PTO\Tables\Flex.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="PTOTMT.Database.refactorlog" />
