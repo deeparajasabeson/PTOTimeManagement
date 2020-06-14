@@ -328,12 +328,6 @@ export class PTOCalendarComponent implements OnInit {
     }
   }
 
-  // Check whether User is authenticated
-  isUserAuthenticated(): boolean {
-    let token: string = localStorage.getItem("jwt");
-    return (token) ? true : false;
-  }
-
   // Toggle calendar visibility
   toggleVisible() {
     this.calendarVisible = !this.calendarVisible;

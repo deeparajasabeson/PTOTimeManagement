@@ -45,4 +45,10 @@ export class CommonLibrary
       return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
   }
+
+  // Check whether User is authenticated
+  isUserAuthenticated(): boolean {
+    let token: string = localStorage.getItem("jwt");
+    return (token) ? true : false;
+  }
 }
