@@ -1,27 +1,32 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { map } from 'rxjs/operators';
+import { HttpResponse } from '@angular/common/http';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import interactionPlugin from '@fullcalendar/interaction'; // for dateClick
 import { EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGrigPlugin from '@fullcalendar/timegrid';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { MatDialogConfig } from '@angular/material/dialog';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 
+import { CommonLibrary } from '../../_library/common.library';
 import { PTOEditorComponent } from '../pto-editor/pto-editor.component';
 import { PTODialogData } from '../../_models/PTODialogData';
 import { PTOEntity } from '../../_entities/PTOEntity';
 import { StatusEntity } from '../../_entities/StatusEntity';
 import { PTOFromDBEntity } from '../../_entities/PTOFromDBEntity';
 import { RequestTypeFromDBEntity } from '../../_entities/RequestTypeFromDBEntity';
+import { UserEntity } from '../../_entities/UserEntity';
+import { FindQuotaEntity } from '../../_entities/FindQuotaEntity';
+import { QuotaEntity } from '../../_entities/QuotaEntity';
 import { PTOService } from '../../_services/pto.service';
 import { StatusService } from '../../_services/status.service';
 import { DataStorageService } from '../../_services/datastorage.service';
 import { RequestTypeService } from '../../_services/requesttype.service';
-import { UserEntity } from '../../_entities/UserEntity';
 import { QuotaService } from '../../_services/quota.service';
-import { FindQuotaEntity } from '../../_entities/FindQuotaEntity';
-import { QuotaEntity } from '../../_entities/QuotaEntity';
+
 
 @Component({
   selector: 'app-pto-calendar',
@@ -44,26 +49,22 @@ export class PTOCalendarComponent implements OnInit {
 
   previousDate = null;
   toDate = new Date();
-  toDateNgbDateStruct: NgbDateStruct = {
-    year: this.toDate.getFullYear(),
-    month: this.toDate.getMonth() + 1,
-    day: this.toDate.getDate()
+  toDateNgbDateStruct: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(this.toDate);
+
+  //Static Subscribe Variables and Functions
+  static subscribeData: PTOFromDBEntity[];
+  static setSubscribeData(data: PTOFromDBEntity[]) {
+    PTOCalendarComponent.subscribeData = data;
   }
   
-  static subscribeData: any;
-  static setSubscribeData(data): any {
-    PTOCalendarComponent.subscribeData = data;
-    return data;
-  }
-
-  static subscribePTOFromDBEntity: any;
-  static setSubscribePTOFromDBEntity(pto) {
+  static subscribePTOFromDBEntity: PTOFromDBEntity;
+  static setSubscribePTOFromDBEntity(pto: PTOFromDBEntity) {
     PTOCalendarComponent.subscribePTOFromDBEntity = pto;
   }
 
   static subscribeRequestType: RequestTypeFromDBEntity;
   static setSubscribeRequestType(requestType: RequestTypeFromDBEntity) {
-    PTOCalendarComponent.subscribePTOFromDBEntity = requestType;
+    PTOCalendarComponent.subscribeRequestType = requestType;
   }
 
   static subscribeRequestTypeFromDBEntity: RequestTypeFromDBEntity[];
@@ -84,8 +85,7 @@ export class PTOCalendarComponent implements OnInit {
   // Constructor - executes when component is created first
   constructor(public dialog: MatDialog,
     private ptoService: PTOService,
-    private quotaService: QuotaService,
-    private statusService: StatusService,
+    private toasterService: ToastrService,
     private datastorageService: DataStorageService,
     private requestTypeService: RequestTypeService) {  }
 
@@ -122,9 +122,9 @@ export class PTOCalendarComponent implements OnInit {
       startTime: "00:00",
       endDate: this.toDateNgbDateStruct,
       endTime: "00:00",
-      isNewEvent: true,
       quotaId: null,
-      statusId: null
+      statusId: null,
+      isNewEvent: true
     };
 
     this.readRequestTypes();
@@ -170,7 +170,7 @@ export class PTOCalendarComponent implements OnInit {
     for (var i = 0; i < ptoList.length; ++i) {
       this.calendarEvents[i] =
       {
-        allDay: ptoList[i].allDay,
+        allDay: (ptoList[i].hours == 8 && ptoList[i].startDateTime == ptoList[i].endDateTime),
         backgroundColor: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
         textColor: "white",
         title: ptoList[i].description,
@@ -231,18 +231,9 @@ export class PTOCalendarComponent implements OnInit {
     }
 
     let startDateTime = new Date(ptoToEdit.startDateTime);
-    let ptoStartDate: NgbDateStruct = {
-      year: startDateTime.getFullYear(),
-      month: startDateTime.getMonth() + 1,
-      day: startDateTime.getDate()
-    }
-
+    let ptoStartDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(startDateTime);
     let endDateTime = new Date(ptoToEdit.endDateTime);
-    let ptoEndDate: NgbDateStruct = {
-      year: endDateTime.getFullYear(),
-      month: endDateTime.getMonth() + 1,
-      day: endDateTime.getDate()
-    }
+    let ptoEndDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(endDateTime);
 
     this.pto.id = ptoToEdit.id;
     this.pto.userId = ptoToEdit.userId;
@@ -254,9 +245,9 @@ export class PTOCalendarComponent implements OnInit {
     this.pto.startTime = ptoToEdit.startDateTime.substr(11, 5);
     this.pto.endDate = ptoEndDate;
     this.pto.endTime = ptoToEdit.endDateTime.substr(11, 5);
-    this.pto.isNewEvent = false;
     this.pto.quotaId = ptoToEdit.quotaId;
     this.pto.statusId = ptoToEdit.statusId;
+    this.pto.isNewEvent = false;
     this.getPTO(null);
   }
 
@@ -264,7 +255,7 @@ export class PTOCalendarComponent implements OnInit {
   scheduleFlex(): void { }
 
   // Get New PTO and set start date
-  getPTO(startDate: Date): void {
+  getPTO(startDate: NgbDateStruct): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;   // User can't close the dialog by clicking outside its body
     dialogConfig.autoFocus = true;
@@ -272,15 +263,17 @@ export class PTOCalendarComponent implements OnInit {
     dialogConfig.height = "65%";
     dialogConfig.width = "70%";
     dialogConfig.data = { pto: this.pto };  // One way to pass data to modal window
+
     if (startDate != null) {
       dialogConfig.data.pto.startDate = startDate;
+      if (CommonLibrary.NgbDateStruct2Date(startDate) > CommonLibrary.NgbDateStruct2Date(this.pto.endDate)) {
+        dialogConfig.data.pto.endDate = startDate;
+      }
     }
-
     this.pto.requestTypeId = (this.requestFlexTime != undefined && this.requestFlexTime != null) ? this.requestFlexTime.id : "";
 
     const dialogRef = this.dialog.open(PTOEditorComponent, dialogConfig);
-    let instance = dialogRef.componentInstance;
-    instance.pto = this.pto;  //another way to pass quota to modal window
+    dialogRef.componentInstance.pto = this.pto;  //another way to pass quota to modal window
 
     dialogRef.afterClosed().subscribe(resultData => {
       if (resultData != null && resultData != undefined) {
@@ -290,38 +283,16 @@ export class PTOCalendarComponent implements OnInit {
     });
   }
 
-  //Function to convert Date Struct and Time String into a valid Date
-  toDateTime(date: NgbDateStruct, time: string): Date {
-    return new Date(
-      date.year,
-      date.month,
-      date.day,
-      parseInt(time.substr(0, 2)),
-      parseInt(time.substr(3, 2)));
-  }
-
   // Save PTO when clicked Save button in popup modal window
   savePTO() {
     let userDetails: UserEntity = this.datastorageService.getUserEntity();
-
-    //Status Service
-    //let statuses: StatusEntity[] 
-    //this.statusService.getStatuses()
-    //  .toPromise()
-    //  .then((statusData: StatusEntity[]) => {
-    //    PTOCalendarComponent.setSubscribeStatusData(statusData);
-    //  });
-    //statuses = PTOCalendarComponent.subscribeStatusData;
-    //let waitListStatus: StatusEntity = statuses.find(s => s.name == "WaitList");
-    //let approvedStatus: StatusEntity = statuses.find(s => s.name == "Approved");
-
-    let startDateTime = this.toDateTime(this.pto.startDate, this.pto.startTime);
-    let endDateTime = this.toDateTime(this.pto.endDate, this.pto.endTime);
+    let startDateTime = CommonLibrary.NgbDateStruct2DateTime(this.pto.startDate, this.pto.startTime);
+    let endDateTime = CommonLibrary.NgbDateStruct2DateTime(this.pto.endDate, this.pto.endTime);
 
     //let quota = this.findQuota();
     
     const ptoEntity: PTOEntity = {
-      id: (this.pto.id == "" && this.pto.isNewEvent) ? this.generateUUID() : this.pto.id,
+      id: (this.pto.id == "" && this.pto.isNewEvent) ? CommonLibrary.generateUUID() : this.pto.id,
       userId: userDetails.id,
       description: this.pto.description,
       requestTypeId: this.pto.requestTypeId,
@@ -331,8 +302,6 @@ export class PTOCalendarComponent implements OnInit {
       allDay: this.pto.allDay,
       statusId: this.pto.statusId,
       quotaId: this.pto.quotaId,
-      //statusId: (quota == null) ? waitListStatus.id : approvedStatus.id,
-      //quotaId: (quota ==null) ? "" : quota.id,
       isActive: true,
       createdBy: userDetails.id,
       createdOn: this.toDate,
@@ -359,42 +328,6 @@ export class PTOCalendarComponent implements OnInit {
     }
   }
 
-  ////Find Quota for this request to allot
-  //findQuota(): QuotaEntity {
-  //  let entity: FindQuotaEntity;
-  //  entity.ptoId = this.pto.id;
-  //  entity.startDateTime = this.toDateTime(this.pto.startDate, this.pto.startTime);
-  //  entity.endDateTime = this.toDateTime(this.pto.endDate, this.pto.endTime);
-  //  entity.hours = this.pto.hours + this.pto.minutes / 100;
-  //  let response = this.quotaService.findQuota(entity);
-  //  let quotaToAllot: QuotaEntity;
-  //  response.then((quota: QuotaEntity) => {
-  //    console.log(quota); 
-  //    PTOCalendarComponent.setSubscribeQuotaData(quota);
-  //  });
-  //  quotaToAllot = PTOCalendarComponent.subscribeQuotaData;
-  //  return quotaToAllot;
-  //}
-
-  //Generating GUID in Typescript
-  generateUUID() {
-    var d = new Date().getTime();
-    var d2 = (performance && performance.now && (performance.now() * 1000)) || 0;
-    //Time in microseconds since page-load or 0 if unsupported
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      var r = Math.random() * 16; //random number between 0 and 16
-      if (d > 0) {  //Use timestamp until depleted
-        r = (d + r) % 16 | 0;
-        d = Math.floor(d / 16);
-      } else {  //Use microseconds since page-load if supported
-        r = (d2 + r) % 16 | 0;
-        d2 = Math.floor(d2 / 16);
-      }
-      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-  }
-
-
   // Check whether User is authenticated
   isUserAuthenticated(): boolean {
     let token: string = localStorage.getItem("jwt");
@@ -419,6 +352,7 @@ export class PTOCalendarComponent implements OnInit {
 
   // Execute when date cell is clicked
   handleDateClick(arg) {
-    this.getPTO(arg.date);
+    let ptoStartDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(arg.date)
+    this.getPTO(ptoStartDate);
   }
 }

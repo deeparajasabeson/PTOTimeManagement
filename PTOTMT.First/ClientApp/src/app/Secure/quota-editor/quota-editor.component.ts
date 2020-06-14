@@ -17,6 +17,7 @@ export class QuotaEditorComponent implements OnInit {
   @Input() public quota: QuotaDialogData;  //Input from Calendar through @Input() property
   quotaeditorForm: FormGroup;
   private toDate = new Date();  //used in endDate filter in calendar template
+
   toDateNgbDateStruct: NgbDateStruct = {
     year: this.toDate.getFullYear(),
     month: this.toDate.getMonth(),
