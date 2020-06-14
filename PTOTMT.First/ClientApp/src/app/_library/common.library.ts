@@ -1,4 +1,6 @@
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { MatDialogConfig } from '@angular/material/dialog';
+
 
 export class CommonLibrary
 {
@@ -29,7 +31,7 @@ export class CommonLibrary
   }
 
   //Generating GUID in Typescript
-  static generateUUID() {
+  static GenerateUUID() {
     var d = new Date().getTime();
     var d2 = (performance && performance.now && (performance.now() * 1000)) || 0;
     //Time in microseconds since page-load or 0 if unsupported
@@ -47,8 +49,16 @@ export class CommonLibrary
   }
 
   // Check whether User is authenticated
-  isUserAuthenticated(): boolean {
+  static IsUserAuthenticated(): boolean {
     let token: string = localStorage.getItem("jwt");
     return (token) ? true : false;
+  }
+
+  static CreateDialog() : MatDialogConfig{
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;   // User can't close the dialog by clicking outside its body
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "70%";
+    return dialogConfig;
   }
 }

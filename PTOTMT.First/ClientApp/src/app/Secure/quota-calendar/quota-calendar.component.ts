@@ -2,14 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { MatDialog } from '@angular/material';
+import { ToastrService } from 'ngx-toastr';
+
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import interactionPlugin from '@fullcalendar/interaction'; // for dateClick
 import { EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGrigPlugin from '@fullcalendar/timegrid';
-import { MatDialog } from '@angular/material';
-import { MatDialogConfig } from '@angular/material/dialog';
-import { ToastrService } from 'ngx-toastr';
 
 import { CommonLibrary } from '../../_library/common.library';
 import { QuotaEditorComponent } from '../quota-editor/quota-editor.component';
@@ -170,14 +170,10 @@ export class QuotaCalendarComponent implements OnInit {
 
   // Get New Quota and set start date
   getQuota(startDate: NgbDateStruct): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;   // User can't close the dialog by clicking outside its body
-    dialogConfig.autoFocus = true;
+    let dialogConfig = CommonLibrary.CreateDialog();
     dialogConfig.id = "quota-editor";
     dialogConfig.height = "60%";
-    dialogConfig.width = "70%";
     dialogConfig.data = { quota: this.quota };  // One way to pass data to modal window
-
     if (startDate != null) {
       dialogConfig.data.quota.startDate = startDate;
       if (CommonLibrary.NgbDateStruct2Date(startDate) > CommonLibrary.NgbDateStruct2Date(this.quota.endDate)) {
@@ -203,7 +199,7 @@ export class QuotaCalendarComponent implements OnInit {
 
     let id, remainingHours;
     if (this.quota.id == "" && this.quota.isNewEvent) {
-      id = CommonLibrary.generateUUID();
+      id = CommonLibrary.GenerateUUID();
       remainingHours = this.quota.originalHours;
     }
     else {

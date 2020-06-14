@@ -1,31 +1,28 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { HttpResponse } from '@angular/common/http';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { MatDialog } from '@angular/material';
+import { ToastrService } from 'ngx-toastr';
+
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import interactionPlugin from '@fullcalendar/interaction'; // for dateClick
 import { EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGrigPlugin from '@fullcalendar/timegrid';
-import { MatDialog } from '@angular/material';
-import { MatDialogConfig } from '@angular/material/dialog';
-import { ToastrService } from 'ngx-toastr';
+
 
 import { CommonLibrary } from '../../_library/common.library';
 import { PTOEditorComponent } from '../pto-editor/pto-editor.component';
+import { FlexDialogData } from '../../_models/FlexDialogData';
 import { PTODialogData } from '../../_models/PTODialogData';
 import { PTOEntity } from '../../_entities/PTOEntity';
 import { StatusEntity } from '../../_entities/StatusEntity';
 import { PTOFromDBEntity } from '../../_entities/PTOFromDBEntity';
 import { RequestTypeFromDBEntity } from '../../_entities/RequestTypeFromDBEntity';
 import { UserEntity } from '../../_entities/UserEntity';
-import { FindQuotaEntity } from '../../_entities/FindQuotaEntity';
 import { QuotaEntity } from '../../_entities/QuotaEntity';
 import { PTOService } from '../../_services/pto.service';
-import { StatusService } from '../../_services/status.service';
 import { DataStorageService } from '../../_services/datastorage.service';
 import { RequestTypeService } from '../../_services/requesttype.service';
-import { QuotaService } from '../../_services/quota.service';
 
 
 @Component({
@@ -46,6 +43,7 @@ export class PTOCalendarComponent implements OnInit {
   requestTypes: RequestTypeFromDBEntity[] = null;
   requestFlexTime: RequestTypeFromDBEntity = null;
   pto: PTODialogData;
+  flex: FlexDialogData;
 
   previousDate = null;
   toDate = new Date();
@@ -251,17 +249,11 @@ export class PTOCalendarComponent implements OnInit {
     this.getPTO(null);
   }
 
-  //
-  scheduleFlex(): void { }
-
   // Get New PTO and set start date
   getPTO(startDate: NgbDateStruct): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;   // User can't close the dialog by clicking outside its body
-    dialogConfig.autoFocus = true;
+    let dialogConfig = CommonLibrary.CreateDialog();
     dialogConfig.id = "pto-editor";
     dialogConfig.height = "65%";
-    dialogConfig.width = "70%";
     dialogConfig.data = { pto: this.pto };  // One way to pass data to modal window
 
     if (startDate != null) {
@@ -270,8 +262,8 @@ export class PTOCalendarComponent implements OnInit {
         dialogConfig.data.pto.endDate = startDate;
       }
     }
-    this.pto.requestTypeId = (this.requestFlexTime != undefined && this.requestFlexTime != null) ? this.requestFlexTime.id : "";
-
+    this.pto.requestTypeId = (this.requestFlexTime != undefined && this.requestFlexTime != null) ?
+                                               this.requestFlexTime.id : "";
     const dialogRef = this.dialog.open(PTOEditorComponent, dialogConfig);
     dialogRef.componentInstance.pto = this.pto;  //another way to pass quota to modal window
 
@@ -288,11 +280,9 @@ export class PTOCalendarComponent implements OnInit {
     let userDetails: UserEntity = this.datastorageService.getUserEntity();
     let startDateTime = CommonLibrary.NgbDateStruct2DateTime(this.pto.startDate, this.pto.startTime);
     let endDateTime = CommonLibrary.NgbDateStruct2DateTime(this.pto.endDate, this.pto.endTime);
-
-    //let quota = this.findQuota();
     
     const ptoEntity: PTOEntity = {
-      id: (this.pto.id == "" && this.pto.isNewEvent) ? CommonLibrary.generateUUID() : this.pto.id,
+      id: (this.pto.id == "" && this.pto.isNewEvent) ? CommonLibrary.GenerateUUID() : this.pto.id,
       userId: userDetails.id,
       description: this.pto.description,
       requestTypeId: this.pto.requestTypeId,
@@ -327,6 +317,26 @@ export class PTOCalendarComponent implements OnInit {
       calendarApi.render();
     }
   }
+
+  //Get New Schedule Flexibility
+  scheduleFlex(): void {
+    let dialogConfig = CommonLibrary.CreateDialog();
+    dialogConfig.id = "flex-editor";
+    dialogConfig.height = "65%";
+    dialogConfig.data = { flex: this.flex };
+    const dialogRef = this.dialog.open(PTOEditorComponent, dialogConfig);
+    dialogRef.componentInstance.pto = this.pto;  //another way to pass quota to modal window
+
+    dialogRef.afterClosed().subscribe(resultData => {
+      if (resultData != null && resultData != undefined) {
+        this.flex = resultData;
+        this.saveFlex();
+      }
+    });
+  }
+
+  //Save Schedule Flexibility
+  saveFlex() { }
 
   // Toggle calendar visibility
   toggleVisible() {

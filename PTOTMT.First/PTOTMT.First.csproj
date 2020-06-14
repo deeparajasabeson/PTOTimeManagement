@@ -37,7 +37,6 @@
     <None Remove="ClientApp\src\app\public\alert\alert.model.ts" />
     <None Remove="ClientApp\src\app\public\alert\index.ts" />
     <None Remove="ClientApp\src\app\public\DialogData.ts" />
-    <None Remove="ClientApp\src\app\_entities\FindQuotaEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\PTOEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\PTOFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\QuotaEntity.ts" />
@@ -45,6 +44,7 @@
     <None Remove="ClientApp\src\app\_entities\RequestTypeFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\StatusEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\TeamFromDBEntity.ts" />
+    <None Remove="ClientApp\src\app\_models\FlexDialogData.ts" />
     <None Remove="ClientApp\src\app\_models\PTODialogData.ts" />
     <None Remove="ClientApp\src\app\_models\UserEntity.ts" />
     <None Remove="ClientApp\src\app\_interceptors\index.ts" />
@@ -65,7 +65,6 @@
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\public\alert\alert.model.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\public\alert\index.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\_entities\FindQuotaEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\PTOEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\PTOFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\QuotaEntity.ts" />
@@ -73,6 +72,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\_entities\RequestTypeFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\StatusEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\TeamFromDBEntity.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_models\FlexDialogData.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_models\PTODialogData.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_models\QuotaDialogData.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\UserEntity.ts" />
