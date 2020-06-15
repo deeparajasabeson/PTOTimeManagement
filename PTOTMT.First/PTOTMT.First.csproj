@@ -38,6 +38,7 @@
     <None Remove="ClientApp\src\app\public\alert\index.ts" />
     <None Remove="ClientApp\src\app\public\DialogData.ts" />
     <None Remove="ClientApp\src\app\_entities\FlexEntity.ts" />
+    <None Remove="ClientApp\src\app\_entities\FlexTypeFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\PTOEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\PTOFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\QuotaEntity.ts" />
@@ -45,14 +46,15 @@
     <None Remove="ClientApp\src\app\_entities\RequestTypeFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\StatusEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\TeamFromDBEntity.ts" />
-    <None Remove="ClientApp\src\app\_models\FlexDialogData.ts" />
-    <None Remove="ClientApp\src\app\_models\PTODialogData.ts" />
-    <None Remove="ClientApp\src\app\_models\UserEntity.ts" />
+    <None Remove="ClientApp\src\app\_validators\FlexCustomValidators.validator.ts" />
+    <None Remove="ClientApp\src\app\_validators\PTOCustomValidators.validator.ts" />
+    <None Remove="ClientApp\src\app\_validators\QuotaCustomValidators.Validator.ts" />
+    <None Remove="ClientApp\src\app\_viewmodels\FlexDialogData.ts" />
+    <None Remove="ClientApp\src\app\_viewmodels\PTODialogData.ts" />
+    <None Remove="ClientApp\src\app\_viewmodels\UserEntity.ts" />
     <None Remove="ClientApp\src\app\_interceptors\index.ts" />
     <None Remove="ClientApp\src\app\_services\flex.service.ts" />
     <None Remove="ClientApp\src\app\_services\team.service.ts" />
-    <None Remove="ClientApp\src\app\_validators\PTOHours.Validator.ts" />
-    <None Remove="ClientApp\src\app\_validators\QuotaRemainingHours.Validator.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,6 +70,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\public\alert\alert.model.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\public\alert\index.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\FlexEntity.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_entities\FlexTypeFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\PTOEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\PTOFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\QuotaEntity.ts" />
@@ -75,16 +78,17 @@
     <TypeScriptCompile Include="ClientApp\src\app\_entities\RequestTypeFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\StatusEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\TeamFromDBEntity.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\_models\FlexDialogData.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\_models\PTODialogData.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\_models\QuotaDialogData.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_validators\FlexCustomValidators.validator.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_viewmodels\FlexDialogData.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_viewmodels\PTODialogData.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_viewmodels\QuotaDialogData.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\UserEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_interceptors\index.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_services\flex.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_services\pto.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_services\team.service.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\_validators\PTOHours.validator.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\_validators\QuotaRemainingHours.Validator.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_validators\PTOCustomValidators.validator.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_validators\QuotaCustomValidators.Validator.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

@@ -1,5 +1,5 @@
 import { AbstractControl,   ValidatorFn } from '@angular/forms';
-import { PTOCustomValidators } from './PTOHours.Validator';
+import { PTOCustomValidators } from './PTOCustomValidators.Validator';
 
 export class QuotaCustomValidators {
 

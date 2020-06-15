@@ -13,7 +13,7 @@ import timeGrigPlugin from '@fullcalendar/timegrid';
 
 import { CommonLibrary } from '../../_library/common.library';
 import { QuotaEditorComponent } from '../quota-editor/quota-editor.component';
-import { QuotaDialogData } from '../../_models/QuotaDialogData';
+import { QuotaDialogData } from '../../_viewmodels/QuotaDialogData';
 import { QuotaEntity } from '../../_entities/QuotaEntity';
 import { QuotaFromDBEntity } from '../../_entities/QuotaFromDBEntity';
 import { UserEntity } from '../../_entities/UserEntity';

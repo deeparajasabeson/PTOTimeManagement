@@ -10,8 +10,8 @@ import timeGrigPlugin from '@fullcalendar/timegrid';
 
 import { CommonLibrary } from '../../_library/common.library';
 import { PTOEditorComponent } from '../pto-editor/pto-editor.component';
-import { FlexDialogData } from '../../_models/FlexDialogData';
-import { PTODialogData } from '../../_models/PTODialogData';
+import { FlexDialogData } from '../../_viewmodels/FlexDialogData';
+import { PTODialogData } from '../../_viewmodels/PTODialogData';
 import { FlexEntity } from '../../_entities/FlexEntity';
 import { PTOEntity } from '../../_entities/PTOEntity';
 import { StatusEntity } from '../../_entities/StatusEntity';
@@ -324,8 +324,8 @@ export class PTOCalendarComponent implements OnInit {
     dialogConfig.id = "flex-editor";
     dialogConfig.height = "65%";
     dialogConfig.data = { flex: this.flex };
-    const dialogRef = this.dialog.open(PTOEditorComponent, dialogConfig);
-    dialogRef.componentInstance.pto = this.pto;  //another way to pass quota to modal window
+    const dialogRef = this.dialog.open(FlexEditorComponent, dialogConfig);
+    dialogRef.componentInstance.flex = this.flex;  //another way to pass quota to modal window
 
     dialogRef.afterClosed().subscribe(resultData => {
       if (resultData != null && resultData != undefined) {

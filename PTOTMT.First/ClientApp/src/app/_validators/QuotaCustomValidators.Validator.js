@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var PTOHours_Validator_1 = require("./PTOHours.Validator");
+var PTOCustomValidators_Validator_1 = require("./PTOCustomValidators.Validator");
 var QuotaCustomValidators = /** @class */ (function () {
     function QuotaCustomValidators() {
     }
@@ -12,7 +12,7 @@ var QuotaCustomValidators = /** @class */ (function () {
             var endTime = control.get('endTime').value;
             var remainingHours = control.get('remainingHours').value;
             var originalHours = control.get('originalHours').value;
-            var calchours = PTOHours_Validator_1.PTOCustomValidators.calculateHours(false, startDate, startTime, endDate, endTime);
+            var calchours = PTOCustomValidators_Validator_1.PTOCustomValidators.calculateHours(false, startDate, startTime, endDate, endTime);
             if (originalHours != null && originalHours <= 0) {
                 return { 'invalidHours': true };
             }
@@ -28,4 +28,4 @@ var QuotaCustomValidators = /** @class */ (function () {
     return QuotaCustomValidators;
 }());
 exports.QuotaCustomValidators = QuotaCustomValidators;
-//# sourceMappingURL=QuotaRemainingHours.Validator.js.map
+//# sourceMappingURL=QuotaCustomValidators.Validator.js.map

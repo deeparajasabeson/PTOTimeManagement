@@ -2,9 +2,9 @@ import { Component, Inject, OnInit, ViewChild, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder,  Validators, NgForm, AbstractControl } from '@angular/forms';
 import { NgbDateStruct, NgbDatepicker  } from '@ng-bootstrap/ng-bootstrap';
-import { QuotaDialogData } from '../../_models/QuotaDialogData';
+import { QuotaDialogData } from '../../_viewmodels/QuotaDialogData';
 import { MaterialModule } from '../material.module';
-import { QuotaCustomValidators } from '../../_validators/QuotaRemainingHours.Validator';
+import { QuotaCustomValidators } from '../../_validators/QuotaCustomValidators.Validator';
 import { QuotaService } from '../../_services/quota.service';
 import { ValidateMinutes } from '../../_validators/ValidateMinutes';
 
