@@ -1,14 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialog } from '@angular/material';
-import { ToastrService } from 'ngx-toastr';
 
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import interactionPlugin from '@fullcalendar/interaction'; // for dateClick
 import { EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGrigPlugin from '@fullcalendar/timegrid';
-
 
 import { CommonLibrary } from '../../_library/common.library';
 import { PTOEditorComponent } from '../pto-editor/pto-editor.component';
@@ -24,6 +22,7 @@ import { QuotaEntity } from '../../_entities/QuotaEntity';
 import { PTOService } from '../../_services/pto.service';
 import { DataStorageService } from '../../_services/datastorage.service';
 import { RequestTypeService } from '../../_services/requesttype.service';
+import { FlexService } from '../../_services/flex.service';
 
 
 @Component({
@@ -84,9 +83,9 @@ export class PTOCalendarComponent implements OnInit {
   // Constructor - executes when component is created first
   constructor(public dialog: MatDialog,
     private ptoService: PTOService,
-    private toasterService: ToastrService,
     private datastorageService: DataStorageService,
-    private requestTypeService: RequestTypeService) {  }
+    private requestTypeService: RequestTypeService,
+    private flexService: FlexService) { }
 
   // Execute after constructor when component is initialized
   ngOnInit() {
@@ -362,11 +361,11 @@ export class PTOCalendarComponent implements OnInit {
     }
 
     this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
-      title: ptoEntity.description,
+      title: flexEntity.description,
       start: startDateTime,
       end: endDateTime,
-      id: ptoEntity.id,
-      allDay: ptoEntity.allDay,
+      id: flexEntity.id,
+      allDay: false,
       color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
       textColor: "white"
     })

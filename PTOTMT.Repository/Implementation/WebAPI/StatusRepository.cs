@@ -24,5 +24,10 @@ namespace PTOTMT.Repository.Implementation.WebAPI
         {
             return this._context.Status.Where(entity => entity.Name == name).Any();
         }
+
+        public Status GetByName(string name)
+        {
+            return this._context.Status.Where(entity => entity.Name == name).FirstOrDefault();
+        }
     }
 }

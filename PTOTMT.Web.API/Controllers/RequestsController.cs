@@ -19,14 +19,11 @@ namespace PTOTMT.Service.Controllers
     public class RequestsController : ControllerBase
     {
         private readonly IUnitOfWorkWebAPI uow;
-        private readonly IEmailSender emailSender;
         private readonly IQuotaService quotaService;
         public RequestsController(IUnitOfWorkWebAPI _uow, 
-                                                     IEmailSender _emailSender, 
                                                      IQuotaService _quotaService)
         {
             uow = _uow;
-            emailSender = _emailSender;
             quotaService = _quotaService;
         }
 
@@ -86,9 +83,8 @@ namespace PTOTMT.Service.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult PostRequest(Request request)
         {
-            var userId = User.Identity;
             Quota quotaToAllot = quotaService.FindQuota(request);
-            Request savedRequest = uow.RequestRepo.Post(request);
+            uow.RequestRepo.Post(request);
             uow.SaveChanges();
             request = quotaService.SendEmails(request, quotaToAllot);
             return CreatedAtAction(nameof(GetRequest), new { id = request.Id }, request);
