@@ -85,7 +85,7 @@ namespace PTOTMT.Repository.Implementation.Web
             string emailBody2User = $"Hi {user.FirstName} {user.LastName}, <br/>Your PTO request{msgContent}";
             string emailBody2Leadership = $"Hi {leadership.FirstName} {leadership.LastName},<br/>PTO request submitted by {user.FirstName} {user.LastName} ({user.NTLogin})  of your team {msgContent} ";
 
-            if (quotaToAllot != null && uow.QuotaRepo.UpdateRemainingHours(quotaToAllot, request.Hours))
+            if (quotaToAllot != null && UpdateRemainingHours(quotaToAllot, request.Hours))
             {
                 request.QuotaId = quotaToAllot.Id;
                 var approvedStatus = uow.StatusRepo.GetAll().Where(status => status.Name == "Approved").FirstOrDefault();
