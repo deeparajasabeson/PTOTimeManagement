@@ -11,7 +11,7 @@ namespace PTOTMT.Repository.Implementation.Web
         private readonly IUnitOfWorkWebAPI uow;
         private IEmailSender emailSender;
 
-        public QuotaService(IUnitOfWorkWebAPI _uow, 
+        public QuotaService(IUnitOfWorkWebAPI _uow,
                                            IEmailSender _emailSender)
         {
             uow = _uow;
@@ -40,10 +40,8 @@ namespace PTOTMT.Repository.Implementation.Web
             {
                 decimal remaininghours = uow.QuotaRepo.GetById(quota.Id).RemainingHours;
                 Guid? statusOld = request.StatusId;
-                if (remaininghours >= request.Hours)
+                if (UpdateRemainingHours(quota, request.Hours))
                 {
-                    quota.RemainingHours -= request.Hours;
-                    uow.QuotaRepo.Put(quota, quota.Id);
                     request.QuotaId = quota.Id;
                     request.StatusId = approved.Id;
                 }
@@ -54,7 +52,7 @@ namespace PTOTMT.Repository.Implementation.Web
                 }
                 uow.RequestRepo.Put(request, request.Id);
                 uow.SaveChanges();
-                if(statusOld != request.StatusId)
+                if (statusOld != request.StatusId)
                 {
                     SendStatusChangeEmails(statusOld, request, quota);
                 }
@@ -68,25 +66,25 @@ namespace PTOTMT.Repository.Implementation.Web
             uow.SaveChanges();
             return SendEmails(request, quotaToAllot);
         }
-        
+
         public Quota FindQuota(Request request)
         {
-                return uow.QuotaRepo.GetAll()
-                                   .Where(quota => quota.StartDateTime <= request.StartDateTime
-                                                           && quota.EndDateTime >= request.EndDateTime
-                                                           && quota.RemainingHours >= request.Hours)
-                                   .FirstOrDefault();
+            return uow.QuotaRepo.GetAll()
+                               .Where(quota => quota.StartDateTime <= request.StartDateTime
+                                                       && quota.EndDateTime >= request.EndDateTime
+                                                       && quota.RemainingHours >= request.Hours)
+                               .FirstOrDefault();
         }
 
         public Request SendEmails(Request request, Quota quotaToAllot)
-        { 
+        {
             User user = uow.UserRepo.GetById(request.UserId);
             User leadership = uow.UserRepo.GetById(user.ReportToUserId);
 
             string msgContent = $" for { request.Hours} hours <br/>from { request.StartDateTime} < br /> to{ request.EndDateTime}";
             string emailBody2User = $"Hi {user.FirstName} {user.LastName}, <br/>Your PTO request{msgContent}";
             string emailBody2Leadership = $"Hi {leadership.FirstName} {leadership.LastName},<br/>PTO request submitted by {user.FirstName} {user.LastName} ({user.NTLogin})  of your team {msgContent} ";
-            
+
             if (quotaToAllot != null && uow.QuotaRepo.UpdateRemainingHours(quotaToAllot, request.Hours))
             {
                 request.QuotaId = quotaToAllot.Id;
@@ -103,13 +101,50 @@ namespace PTOTMT.Repository.Implementation.Web
             }
             emailBody2User += msgContent;
             emailBody2Leadership += msgContent;
-            //SendStatusEmails();
             var message = new EmailMessage(new string[] { user.EmailAddress }, "Email to User who applied PTO", emailBody2User);
             emailSender.SendEmail(message);
             message = new EmailMessage(new string[] { leadership.EmailAddress }, "Email to Leadership of User", emailBody2Leadership);
             emailSender.SendEmail(message);
 
             return request;
+        }
+
+        public void SendStatusChangeEmails(Guid? statusOld, Request request, Quota quotaToAllot)
+        {
+            User user = uow.UserRepo.GetById(request.UserId);
+            User leadership = uow.UserRepo.GetById(user.ReportToUserId);
+
+            string reason = "Due to quota updates, PTO request status is changed";
+            string msgContent = $" for { request.Hours} hours <br/>from { request.StartDateTime} < br /> to{ request.EndDateTime}";
+
+            string emailBody2User = $"Hi {user.FirstName} {user.LastName}, <br/>{reason}.<br/><br/>Your PTO request{msgContent}";
+            string emailBody2Leadership = $"Hi {leadership.FirstName} {leadership.LastName},<br/>{reason}. <br/><br/>PTO request submitted by {user.FirstName} {user.LastName} ({user.NTLogin})  of your team {msgContent} ";
+
+            Status approved = uow.StatusRepo.GetByName("Approved");
+            Status waitlist = uow.StatusRepo.GetByName("WaitList");
+            if (request.StatusId == approved.Id && statusOld == waitlist.Id) {
+                msgContent = $"is changed from Waiting List status to <b>Approved under quota {quotaToAllot.Name}</b>."; 
+            } else if (request.StatusId == waitlist.Id && statusOld == approved.Id) {
+                msgContent = "is changed from Approved to <b>Waiting List Status</b>.";
+            }
+            emailBody2User += msgContent;
+            emailBody2Leadership += msgContent;
+
+            var message = new EmailMessage(new string[] { user.EmailAddress }, "Email to User who applied PTO", emailBody2User);
+            emailSender.SendEmail(message);
+            message = new EmailMessage(new string[] { leadership.EmailAddress }, "Email to Leadership of User", emailBody2Leadership);
+            emailSender.SendEmail(message);
+        }
+
+        public bool UpdateRemainingHours(Quota quotaToAllot, decimal hoursToDeduct)
+        {
+            if (quotaToAllot.RemainingHours <= hoursToDeduct)
+            {
+                quotaToAllot.RemainingHours -= hoursToDeduct;
+                uow.QuotaRepo.Put(quotaToAllot, quotaToAllot.Id);
+                return true;
+            }
+            else { return false; }
         }
     }
 }
