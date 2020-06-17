@@ -2,9 +2,9 @@
 
 namespace PTOTMT.Repository.Abstraction.WebAPI
 {
-    public interface IRepositoryGetByName
+    public interface IRepositoryGetByName<TEntity> where TEntity : class
     {
-        FlexType GetByName(string name);
+        TEntity GetByName(string name);
     }
 }
 

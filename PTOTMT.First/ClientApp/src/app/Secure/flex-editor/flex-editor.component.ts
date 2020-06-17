@@ -46,38 +46,17 @@ export class FlexEditorComponent implements OnInit {
       endTime: [this.flex.endTime],
       isNewEvent: [this.flex.isNewEvent]
     }, {
-      validator: flexCustomValidators.ValidateHours()
+        validator: FlexCustomValidators.ValidateHours()
     });
     this.flexTypes = [];
     this.flex.flexTypes.forEach(val => this.flexTypes.push(Object.assign({}, val)));
-
-    this.onChanges();
   }
 
-  onChanges() {
-    this.flexeditorForm.get('allDay').valueChanges
-      .subscribe(allDay => {
-        this.onAllDayChanges(allDay);
-      });
-  }
-
-  onAllDayChanges(isAllDay: boolean) {
-    if (isAllDay) {
-      this.flexeditorForm.get('startTime').disable();
-      this.flexeditorForm.get('endTime').disable();
-      this.flexeditorForm.get('hours').setValue(8);
-      this.flexeditorForm.get('minutes').setValue(0);
-    }
-    else {
-      this.flexeditorForm.get('startTime').enable();
-      this.flexeditorForm.get('endTime').enable();
-    }
-  }
   navigateEvent(event) {
-    this.flex.startDate = event.next;
+    this.flex.onDate = event.next;
   }
 
-  saveflex(flexForm: NgForm): void {  //quotaForm also has the form value as thisquotaeditorForm.value
+  saveFlex(flexForm: NgForm): void {  //quotaForm also has the form value as thisquotaeditorForm.value
     if (this.flexeditorForm.valid) {
       this.dialogRef.close(this.flexeditorForm.value);
       if (this.flexeditorForm.valid) {
@@ -86,11 +65,11 @@ export class FlexEditorComponent implements OnInit {
     }
   }
 
-  deleteflex(flexForm: NgForm): void {
+  deleteFlex(flexForm: NgForm): void {
     this.dialogRef.close();
     this.flex = this.flexeditorForm.value;
     if (confirm("Want to delete this flex -- " + this.flex.description + " ?")) {
-      this.flexService.deleteflex(this.flex.id);
+      this.flexService.deleteFlex(this.flex.id);
     }
   }
 

@@ -134,7 +134,30 @@ namespace PTOTMT.Repository
                 return _UserRepo;
             }
         }
-
+        private IFlexRepository _FlexRepo;
+        public IFlexRepository FlexRepo
+        {
+            get
+            {
+                if (_FlexRepo == null)
+                {
+                    _FlexRepo = new FlexRepository(context);
+                }
+                return _FlexRepo;
+            }
+        }
+        private IFlexTypeRepository _FlexTypeRepo;
+        public IFlexTypeRepository FlexTypeRepo
+        {
+            get
+            {
+                if (_FlexTypeRepo == null)
+                {
+                    _FlexTypeRepo = new FlexTypeRepository(context);
+                }
+                return _FlexTypeRepo;
+            }
+        }
         public int SaveChanges()
         {
             return context.SaveChanges();

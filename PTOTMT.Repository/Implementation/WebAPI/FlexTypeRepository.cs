@@ -29,11 +29,6 @@ namespace PTOTMT.Repository.Implementation.WebAPI
         {
             return this._context.RequestType.Where(entity => entity.Name == name).Any();
         }
-
-        public bool ExistsName(string name)
-        {
-            return this._context.RequestType.Where(entity => entity.Name == name).Any();
-        }
     }
 }
 

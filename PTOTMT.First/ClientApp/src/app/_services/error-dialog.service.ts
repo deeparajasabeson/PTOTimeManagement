@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
-import { ErrorDialogData } from '../_models/ErrorDialogData';
+import { ErrorDialogData } from '../_viewmodels/ErrorDialogData';
 
 
 @Injectable({

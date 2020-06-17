@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { QuotaEntity } from '../_entities/QuotaEntity';
-import { FindQuotaEntity } from '../_entities/FindQuotaEntity';
 import { ToastrService } from 'ngx-toastr';
 
 
@@ -43,11 +42,6 @@ export class QuotaService {
     let requestUrl: string = this.quotaUrl + "/quotabyid/" + quotaId;
     let response = this.http.delete(requestUrl, httpOptions);
     response.subscribe(data => { return data });
-  }
-
-  public findQuota(entity: FindQuotaEntity) : Promise<any>{
-    let requestUrl: string = this.quotaUrl + "/findQuota"
-    return this.http.post(requestUrl, entity, httpOptions).toPromise();
   }
 } 
 

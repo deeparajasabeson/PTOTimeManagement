@@ -8,6 +8,7 @@ namespace PTOTMT.Common.Entities
         public Guid UserId { get; set; }
         public Guid FlexTypeId { get; set; }
         public string Description { get; set; }
+        public bool IsForward { get; set; }
         public DateTimeOffset StartDateTime { get; set; }
         public DateTimeOffset EndDateTime { get; set; }
         public decimal Hours { get; set; }

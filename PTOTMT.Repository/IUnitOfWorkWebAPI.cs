@@ -14,6 +14,8 @@ namespace PTOTMT.Repository
         ITeamUserRepository TeamUserRepo { get; }
         ITitleRepository TitleRepo { get; }
         IUserRepository UserRepo { get; }
+        IFlexRepository FlexRepo { get; }
+        IFlexTypeRepository FlexTypeRepo { get; }
         int SaveChanges();
     }
 }

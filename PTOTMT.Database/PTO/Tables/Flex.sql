@@ -5,6 +5,7 @@
     [FlexId] UNIQUEIDENTIFIER NOT NULL,
     [Name] NCHAR(30) NULL, 
     [Description] NCHAR(50) NULL, 
+    [IsForward] BIT NOT NULL,
     [StartDateTime] DATETIMEOFFSET NOT NULL, 
     [EndDateTime] DATETIMEOFFSET NOT NULL, 
     [OriginalHours] DECIMAL(1) NOT NULL, 

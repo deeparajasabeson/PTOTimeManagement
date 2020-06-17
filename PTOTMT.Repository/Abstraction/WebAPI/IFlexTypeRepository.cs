@@ -2,6 +2,6 @@
 
 namespace PTOTMT.Repository.Abstraction.WebAPI
 {
-    public interface IFlexTypeRepository : IRepository<FlexType>, IRepositoryExistsName, IRepositoryGetByName   {    }
+    public interface IFlexTypeRepository : IRepository<FlexType>, IRepositoryExistsName, IRepositoryGetByName<FlexType>   {    }
 }
 

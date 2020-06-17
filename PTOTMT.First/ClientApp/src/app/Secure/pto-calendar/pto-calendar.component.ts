@@ -23,6 +23,7 @@ import { PTOService } from '../../_services/pto.service';
 import { DataStorageService } from '../../_services/datastorage.service';
 import { RequestTypeService } from '../../_services/requesttype.service';
 import { FlexService } from '../../_services/flex.service';
+import { FlexEditorComponent } from '../flex-editor/flex-editor.component';
 
 
 @Component({
@@ -345,7 +346,7 @@ export class PTOCalendarComponent implements OnInit {
       id: (this.flex.id == "" && this.flex.isNewEvent) ? CommonLibrary.GenerateUUID() : this.flex.id,
       userId: userDetails.id,
       description: this.flex.description,
-      flexId: this.flex.flexId,
+      flexId: this.flex.id,
       hours: this.flex.hours,
       startDateTime: startDateTime,
       endDateTime: endDateTime,

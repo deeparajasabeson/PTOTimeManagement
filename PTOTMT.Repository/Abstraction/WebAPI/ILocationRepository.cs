@@ -2,5 +2,5 @@
 
 namespace PTOTMT.Repository.Abstraction.WebAPI
 {
-    public interface ILocationRepository : IRepository<Location>, IRepositoryExistsName, IRepositoryGetByName     {    }
+    public interface ILocationRepository : IRepository<Location>, IRepositoryExistsName, IRepositoryGetByName<Location>     {    }
 }

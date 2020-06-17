@@ -19,10 +19,13 @@ namespace PTOTMT.Repository.Implementation.WebAPI
         {
             this._context = context;
         }
-
         public bool ExistsName(string name)
         {
             return this._context.Location.Where(entity => entity.Name == name).Any();
+        }
+        public Location GetByName(string name)
+        {
+            return this._context.Location.Where(l => l.Name == name).FirstOrDefault();
         }
     }
 }

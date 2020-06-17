@@ -1,7 +1,7 @@
 import { AbstractControl,  ValidatorFn } from '@angular/forms';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
-export class flexCustomValidators {
+export class FlexCustomValidators {
 
   static ValidateHours(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {

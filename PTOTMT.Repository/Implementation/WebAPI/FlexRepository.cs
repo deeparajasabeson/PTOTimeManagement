@@ -17,6 +17,6 @@ namespace PTOTMT.Repository.Implementation.WebAPI
             {
                 this._context = context;
             }
-        }
     }
+}
 
