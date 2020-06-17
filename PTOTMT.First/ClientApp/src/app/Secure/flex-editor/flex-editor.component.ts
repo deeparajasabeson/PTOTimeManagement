@@ -31,9 +31,10 @@ export class FlexEditorComponent implements OnInit {
     private flexService: FlexService) { }
 
   ngOnInit() {
-    if (this.flex.id == "" && this.flex.flexTypes.length > 0) {
+    if (this.flex.flexTypeId == "" && this.flex.flexTypes.length > 0) {
       this.flex.flexTypeId = this.flex.flexTypes.find(rt => rt.name == "Flex Time").id;
     }
+    debugger;
     this.flexeditorForm = this.fb.group({
       id: [this.flex.id],
       userId: [this.flex.userId],

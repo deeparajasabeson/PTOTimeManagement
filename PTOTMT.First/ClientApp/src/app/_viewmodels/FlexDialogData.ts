@@ -9,9 +9,10 @@ export interface FlexDialogData {
   flexTypes: FlexTypeFromDBEntity[];
   name: string;
   description: string;
-  hours: number;
   onDate: NgbDateStruct;
   startTime: string;
   endTime: string;
+  hours: number;
+  minutes: number;
   isNewEvent: boolean;
 }

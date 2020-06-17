@@ -23,6 +23,7 @@ import { PTOService } from '../../_services/pto.service';
 import { DataStorageService } from '../../_services/datastorage.service';
 import { RequestTypeService } from '../../_services/requesttype.service';
 import { FlexService } from '../../_services/flex.service';
+import { FlexTypeService } from '../../_services/flextype.service';
 import { FlexEditorComponent } from '../flex-editor/flex-editor.component';
 
 
@@ -86,7 +87,8 @@ export class PTOCalendarComponent implements OnInit {
     private ptoService: PTOService,
     private datastorageService: DataStorageService,
     private requestTypeService: RequestTypeService,
-    private flexService: FlexService) { }
+    private flexService: FlexService,
+    private flexTypeService: FlexTypeService) { }
 
   // Execute after constructor when component is initialized
   ngOnInit() {
@@ -107,7 +109,14 @@ export class PTOCalendarComponent implements OnInit {
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       }
     };
+    this.InitializeDialogData();
+    this.readRequestTypes();
+    this.readFlexTypes();
+    this.readPTObyUserId();
+  }
 
+  //Function to initialize Dialog Data
+  InitializeDialogData() {
     this.pto = {
       id: "",
       userId: "",
@@ -125,10 +134,21 @@ export class PTOCalendarComponent implements OnInit {
       statusId: null,
       isNewEvent: true
     };
-
-    this.readRequestTypes();
-    this.readPTObyUserId();
-  }
+    this.flex = {
+      id: "",
+      userId: "",
+      flexTypeId: "",
+      flexTypes: [],
+      name: "",
+      description: "",
+      hours: 2,
+      minutes: 0,
+      onDate: this.toDateNgbDateStruct,
+      startTime: "00:00",
+      endTime: "00:00",
+      isNewEvent: true
+    };
+}
 
   //Read RequestType from DB
   readRequestTypes() {
@@ -146,6 +166,31 @@ export class PTOCalendarComponent implements OnInit {
       let response = this.requestTypeService.getRequestTypeByName("Flex Time");
       response.subscribe((data: RequestTypeFromDBEntity) => {
               PTOCalendarComponent.setSubscribeRequestType(data);
+      });
+      this.requestFlexTime = PTOCalendarComponent.subscribeRequestType;
+    }
+    else {
+      this.requestFlexTime = this.requestTypes.find(rt => rt.name == "Flex Time");
+    }
+    this.pto.requestTypeId = (this.requestFlexTime != undefined && this.requestFlexTime != null) ? this.requestFlexTime.id : "";
+  }
+
+  //Read RequestType from DB
+  readFlexTypes() {
+    let response = this.flexTypeService.getFlexTypes();
+    response.then((data: RequestTypeFromDBEntity[]) => {
+      PTOCalendarComponent.setSubscribeRequestTypeFromDBEntity(data);
+      this.requestTypes = [];
+      data.forEach(val => this.requestTypes.push(Object.assign({}, val)));
+      this.pto.requestTypes = [];
+      this.requestTypes.forEach(val => this.pto.requestTypes.push(Object.assign({}, val)));
+    });
+
+    if (this.requestTypes == undefined || this.requestTypes.length == 0) {
+      this.requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
+      let response = this.requestTypeService.getRequestTypeByName("Flex Time");
+      response.subscribe((data: RequestTypeFromDBEntity) => {
+        PTOCalendarComponent.setSubscribeRequestType(data);
       });
       this.requestFlexTime = PTOCalendarComponent.subscribeRequestType;
     }
@@ -325,6 +370,7 @@ export class PTOCalendarComponent implements OnInit {
     dialogConfig.id = "flex-editor";
     dialogConfig.height = "65%";
     dialogConfig.data = { flex: this.flex };
+    debugger;
     const dialogRef = this.dialog.open(FlexEditorComponent, dialogConfig);
     dialogRef.componentInstance.flex = this.flex;  //another way to pass quota to modal window
 

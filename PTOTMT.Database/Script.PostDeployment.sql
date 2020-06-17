@@ -36,114 +36,132 @@ Declare @UserId uniqueidentifier = NEWID(),
              @LocationId uniqueidentifier = NEWID(),
              @TeamId uniqueidentifier = NEWID(),
              @RequestTypeId uniqueidentifier = NEWID(),
-             @StatusId uniqueidentifier = NEWID()
+             @StatusId uniqueidentifier = NEWID(),
+             @FlexTypeId uniqueidentifier = NEWID()
 
  -- Security.User TABLE
 Insert into Security.[User]
 (Id, FirstName, LastName, UserName, Password, TitleId, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamFunctionId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(@UserId, 'Deepa', 'Rajasabeson', 'deeparajasabeson@gmail.com', 'deepa', @TitleId, 'drajas401', 'deeparajasabeson@gmail.com', @RoleId, @ReportToUserId, @LocationId,  @TeamId, 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(@UserId, 'Deepa', 'Rajasabeson', 'deeparajasabeson@gmail.com', 'deepa', @TitleId, 'drajas401', 'deeparajasabeson@gmail.com', @RoleId, @ReportToUserId, @LocationId,  @TeamId, 1, @UserId, GETDATE(), @UserId, GETDATE())
 
 
 Insert into Security.[User]
 (Id, FirstName, LastName, UserName, Password,TitleId, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamFunctionId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(@ReportToUserId, 'Harold', 'Gulube', 'haroldgulube@gmail.com', 'harold' , @TitleId , 'hgulub400', 'haroldgulube@gmail.com',@RoleId, @UserId,@LocationId, @TeamId, 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(@ReportToUserId, 'Harold', 'Gulube', 'haroldgulube@gmail.com', 'harold' , @TitleId , 'hgulub400', 'haroldgulube@gmail.com',@RoleId, @UserId,@LocationId, @TeamId, 1, @UserId, GETDATE(), @UserId, GETDATE())
 
 -- Security.Role TABLE
 Insert into Security.Role 
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn) 
 Values  
-(NEWID(), 'Manager', 'Team Manager', 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Manager', 'Team Manager', 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Security.Role 
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn) 
 Values  
-(NEWID(), 'Developer 1', 'Developer 1', 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Developer 1', 'Developer 1', 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Security.Role 
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn) 
 Values  
-(@RoleId, 'Developer 2', 'Developer 2', 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(@RoleId, 'Developer 2', 'Developer 2', 1, @UserId, GETDATE(), @UserId, GETDATE())
 
 --Config.Location TABLE
 Insert into Config.Location 
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn) 
 Values 
-(@LocationId, 'Nashville', 'Branch Office in Nashville DownTown',1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(@LocationId, 'Nashville', 'Branch Office in Nashville DownTown',1,@UserId, GETDATE(), @UserId, GETDATE())
 Insert into Config.Location 
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn) 
 Values 
-(NEWID(), 'Schaumburg', 'Main Office in Schaumburg City',1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Schaumburg', 'Main Office in Schaumburg City',1,@UserId, GETDATE(), @UserId, GETDATE())
 
 
 --Security.Team TABLE
 Insert into Security.Team 
 (Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(NEWID(), 'Help Desk', 'Team of Help Desk Associates', 3,  8, 9, 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Help Desk', 'Team of Help Desk Associates', 3,  8, 9, 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Security.Team 
 (Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(NEWID(), 'OnBoarding / Recovery (OBR)', 'OnBoarding, Recovery Team', 3,  9, 6, 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'OnBoarding / Recovery (OBR)', 'OnBoarding, Recovery Team', 3,  9, 6, 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Security.Team 
 (Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(@TeamId, 'Sales Order Entry (SOE)', 'Sales Order Entry Team', 3, 9, 5, 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(@TeamId, 'Sales Order Entry (SOE)', 'Sales Order Entry Team', 3, 9, 5, 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Security.Team 
 (Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(NEWID(), 'Leadership / Admin', 'Leadership, Admin Team', 3,  8, 6, 1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Leadership / Admin', 'Leadership, Admin Team', 3,  8, 6, 1,@UserId, GETDATE(), @UserId, GETDATE())
 
 
 --Security.Title TABLE
 Insert into Security.Title
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-( @TitleId, 'SomeTitle', 'Some Title',1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+( @TitleId, 'SomeTitle', 'Some Title',1,@UserId, GETDATE(), @UserId, GETDATE())
 
 --Config.RequestType TABLE
 Insert into Config.RequestType 
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(@RequestTypeId, 'Vacation', 'Vacation Holidays', 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(@RequestTypeId, 'Vacation', 'Vacation Holidays', 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Config.RequestType
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(NEWID(), 'Personnel Swap', 'Trade a day or a shift with a co-worker', 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Personnel Swap', 'Trade a day or a shift with a co-worker', 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Config.RequestType
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(NEWID(), 'Flex Time', 'Self-Shift Swap-Swap own off day with a work day', 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Flex Time', 'Self-Shift Swap-Swap own off day with a work day', 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Config.RequestType 
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(NEWID(), 'Float', 'Float', 1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Float', 'Float', 1,@UserId, GETDATE(), @UserId, GETDATE())
 Insert into Config.RequestType 
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(NEWID(), 'Bereavement', 'Leave for family members Death', 1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Bereavement', 'Leave for family members Death', 1,@UserId, GETDATE(), @UserId, GETDATE())
 Insert into Config.RequestType 
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(NEWID(), 'Shift Slide', 'Shift start and end time', 1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Shift Slide', 'Shift start and end time', 1,@UserId, GETDATE(), @UserId, GETDATE())
 Insert into Config.RequestType 
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(NEWID(), 'Jury Duty', 'Jury Duty', 1,@UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Jury Duty', 'Jury Duty', 1,@UserId, GETDATE(), @UserId, GETDATE())
 
 --Config.Status TABLE
 Insert into Config.Status
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(@StatusId, 'WaitList', 'Entry is in Waiting List queue', 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(@StatusId, 'WaitList', 'Entry is in Waiting List queue', 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Config.Status
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(NEWID(), 'Approved', 'Entry is approved already', 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Approved', 'Entry is approved already', 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Config.Status
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(NEWID(), 'Cancelled', 'Entry is cancelled by Leadership / Applier', 1, @UserId, GETUTCDATE(), @UserId, GETUTCDATE())
+(NEWID(), 'Cancelled', 'Entry is cancelled by Leadership / Applier', 1, @UserId, GETDATE(), @UserId, GETDATE())
 
+--Config.FlexType TABLE
+Insert into Config.FlexType 
+(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+Values
+(@FlexTypeId, 'Shift Swap', 'Shift Swap', 1, @UserId, GETDATE(), @UserId, GETDATE())
+Insert into Config.RequestType
+(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+Values 
+(NEWID(), 'Self-Shift Swap', 'Self-Shift Swap', 1, @UserId, GETDATE(), @UserId, GETDATE())
+Insert into Config.RequestType
+(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+Values 
+(NEWID(), 'Shift Slide', 'Shift Slide', 1, @UserId, GETDATE(), @UserId, GETDATE())
+Insert into Config.RequestType
+(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+Values 
+(NEWID(), 'Pre-Arranged Shift Slide', 'Pre-Arranged Shift Slide', 1, @UserId, GETDATE(), @UserId, GETDATE())
 
 --Add keys back in Security.User TABLE
 Alter Table Security.[User]

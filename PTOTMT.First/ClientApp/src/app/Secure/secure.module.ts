@@ -20,6 +20,7 @@ import { PTOCalendarComponent } from './pto-calendar/pto-calendar.component';
 import { QuotaCalendarComponent } from './quota-calendar/quota-calendar.component';
 import { PTOEditorComponent } from './pto-editor/pto-editor.component';
 import { QuotaEditorComponent } from './quota-editor/quota-editor.component';
+import { FlexEditorComponent } from './flex-editor/flex-editor.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'calendar', pathMatch: 'full' },
@@ -47,11 +48,13 @@ const routes: Routes = [
     LogoutComponent,
     QuotaCalendarComponent,
     QuotaEditorComponent,
-    PTOEditorComponent
+    PTOEditorComponent,
+    FlexEditorComponent
   ],
   entryComponents: [
     QuotaEditorComponent,
-    PTOEditorComponent
+    PTOEditorComponent,
+    FlexEditorComponent
   ],
   imports: [
     CommonModule,
