@@ -29,7 +29,6 @@ namespace PTOTMT.Service.Controllers
             public IEnumerable<FlexType> GetFlexTypes()
             {
                 return uow.FlexTypeRepo.GetAll();
-
             }
 
             // GET: api/FlexTypes/5

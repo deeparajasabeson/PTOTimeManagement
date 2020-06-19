@@ -125,7 +125,7 @@
               [mat-dialog-close]="data">
         Submit Quota
       </button>
-      <span *ngIf="!isNewEvent">
+      <span *ngIf="!quotaeditorForm.get('isNewEvent').value">
         <button class="btn btn-danger deletebutton"
                 (click)="deleteQuota(quotaeditorForm.value)"
                 [mat-dialog-close]="data">

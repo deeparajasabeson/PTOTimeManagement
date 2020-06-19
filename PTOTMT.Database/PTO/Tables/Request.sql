@@ -6,7 +6,7 @@
     [Description] NVARCHAR(50) NULL, 
     [StartDateTime] DATETIMEOFFSET NOT NULL, 
     [EndDateTime] DATETIMEOFFSET NOT NULL, 
-    [Hours] DECIMAL(1, 0) NOT NULL, 
+    [Hours] DECIMAL(4, 1) NOT NULL, 
     [StatusId] UNIQUEIDENTIFIER NOT NULL, 
     [QuotaId] UNIQUEIDENTIFIER NULL, 
      [IsActive]    BIT                NOT NULL,

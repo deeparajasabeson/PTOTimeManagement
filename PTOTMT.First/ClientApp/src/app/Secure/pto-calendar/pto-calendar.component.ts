@@ -13,6 +13,8 @@ import { PTOEditorComponent } from '../pto-editor/pto-editor.component';
 import { FlexDialogData } from '../../_viewmodels/FlexDialogData';
 import { PTODialogData } from '../../_viewmodels/PTODialogData';
 import { FlexEntity } from '../../_entities/FlexEntity';
+import { FlexFromDBEntity } from '../../_entities/FlexFromDBEntity';
+import { FlexTypeFromDBEntity } from '../../_entities/FlexTypeFromDBEntity';
 import { PTOEntity } from '../../_entities/PTOEntity';
 import { StatusEntity } from '../../_entities/StatusEntity';
 import { PTOFromDBEntity } from '../../_entities/PTOFromDBEntity';
@@ -45,6 +47,8 @@ export class PTOCalendarComponent implements OnInit {
   requestTypes: RequestTypeFromDBEntity[] = null;
   requestFlexTime: RequestTypeFromDBEntity = null;
   pto: PTODialogData;
+  flexTypes: FlexTypeFromDBEntity[] = null;
+  flexShiftSlide: FlexTypeFromDBEntity = null;
   flex: FlexDialogData;
 
   previousDate = null;
@@ -60,6 +64,21 @@ export class PTOCalendarComponent implements OnInit {
   static subscribePTOFromDBEntity: PTOFromDBEntity;
   static setSubscribePTOFromDBEntity(pto: PTOFromDBEntity) {
     PTOCalendarComponent.subscribePTOFromDBEntity = pto;
+  }
+
+  static subscribeFlexType: FlexTypeFromDBEntity;
+  static setSubscribeFlexType(flexType: FlexTypeFromDBEntity) {
+    PTOCalendarComponent.subscribeFlexType = flexType;
+  }
+
+  static subscribeFlexTypeFromDBEntity: FlexTypeFromDBEntity[];
+  static setSubscribeFlexTypeFromDBEntity(flexTypes: FlexTypeFromDBEntity[]) {
+    PTOCalendarComponent.subscribeFlexTypeFromDBEntity =flexTypes;
+  }
+
+  static subscribeFlexFromDBEntity: FlexFromDBEntity[];
+  static setSubscribeFlexFromDBEntity(flexs: FlexFromDBEntity[]) {
+    PTOCalendarComponent.subscribeFlexFromDBEntity = flexs;
   }
 
   static subscribeRequestType: RequestTypeFromDBEntity;
@@ -111,8 +130,9 @@ export class PTOCalendarComponent implements OnInit {
     };
     this.InitializeDialogData();
     this.readRequestTypes();
-    this.readFlexTypes();
     this.readPTObyUserId();
+    this.readFlexTypes();
+    this.readFlexbyUserId();
   }
 
   //Function to initialize Dialog Data
@@ -146,6 +166,7 @@ export class PTOCalendarComponent implements OnInit {
       onDate: this.toDateNgbDateStruct,
       startTime: "00:00",
       endTime: "00:00",
+      isForward: true,
       isNewEvent: true
     };
 }
@@ -160,7 +181,6 @@ export class PTOCalendarComponent implements OnInit {
       this.pto.requestTypes = [];
       this.requestTypes.forEach(val => this.pto.requestTypes.push(Object.assign({}, val)));
     });
-
     if (this.requestTypes == undefined || this.requestTypes.length == 0) {
       this.requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
       let response = this.requestTypeService.getRequestTypeByName("Flex Time");
@@ -175,32 +195,41 @@ export class PTOCalendarComponent implements OnInit {
     this.pto.requestTypeId = (this.requestFlexTime != undefined && this.requestFlexTime != null) ? this.requestFlexTime.id : "";
   }
 
-  //Read RequestType from DB
+  //ReadFlexType from DB
   readFlexTypes() {
     let response = this.flexTypeService.getFlexTypes();
-    response.then((data: RequestTypeFromDBEntity[]) => {
-      PTOCalendarComponent.setSubscribeRequestTypeFromDBEntity(data);
-      this.requestTypes = [];
-      data.forEach(val => this.requestTypes.push(Object.assign({}, val)));
-      this.pto.requestTypes = [];
-      this.requestTypes.forEach(val => this.pto.requestTypes.push(Object.assign({}, val)));
+    response.then((data: FlexTypeFromDBEntity[]) => {
+      PTOCalendarComponent.setSubscribeFlexTypeFromDBEntity(data);
+      this.flexTypes = [];
+      data.forEach(val => this.flexTypes.push(Object.assign({}, val)));
+      this.flex.flexTypes = [];
+      this.flexTypes.forEach(val => this.flex.flexTypes.push(Object.assign({}, val)));
     });
-
-    if (this.requestTypes == undefined || this.requestTypes.length == 0) {
-      this.requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
-      let response = this.requestTypeService.getRequestTypeByName("Flex Time");
-      response.subscribe((data: RequestTypeFromDBEntity) => {
-        PTOCalendarComponent.setSubscribeRequestType(data);
+    if (this.flexTypes == undefined || this.flexTypes.length == 0) {
+      this.flexTypes = PTOCalendarComponent.subscribeFlexTypeFromDBEntity;
+      let response = this.flexTypeService.getFlexTypeByName("Shift Slide");
+      response.subscribe((data:FlexTypeFromDBEntity) => {
+        PTOCalendarComponent.setSubscribeFlexType(data);
       });
-      this.requestFlexTime = PTOCalendarComponent.subscribeRequestType;
+      this.flexShiftSlide = PTOCalendarComponent.subscribeFlexType;
+      if (this.flexTypes == null || this.flexTypes == undefined) {
+        this.flexTypes = [
+          { id: "", name: "Shift Swap", description: "", isActive: true, createdBy: "", createdOn: "", updatedBy: "", updatedOn: "" },
+          { id: "", name: "Self-Shift Swap", description: "", isActive: true, createdBy: "", createdOn: "", updatedBy: "", updatedOn: "" },
+          { id: "", name: "Shift Slide", description: "", isActive: true, createdBy: "", createdOn: "", updatedBy: "", updatedOn: "" },
+          { id: "", name: "Pre-Arranged Shift Slide", description: "", isActive: true, createdBy: "", createdOn: "", updatedBy: "", updatedOn: "" }];
+      }
+      if (this.flexShiftSlide == null || this.flexShiftSlide == undefined) {
+        this.flexShiftSlide = { id: "", name: "Shift Slide", description: "", isActive: true, createdBy: "", createdOn: "", updatedBy: "", updatedOn: "" };
+      }
     }
     else {
-      this.requestFlexTime = this.requestTypes.find(rt => rt.name == "Flex Time");
+      this.flexShiftSlide = this.flexTypes.find(ft => ft.name == "Shift Slide");
     }
-    this.pto.requestTypeId = (this.requestFlexTime != undefined && this.requestFlexTime != null) ? this.requestFlexTime.id : "";
+    this.flex.flexTypeId = (this.flexShiftSlide != undefined && this.flexShiftSlide != null) ? this.flexShiftSlide.id : "";
   }
 
-  //Read Quotas by Team Id
+  //Read PTOs by Team Id
   readPTObyUserId() {
     let userId: string = this.datastorageService.getUserEntity().id;
     let response = this.ptoService.getPTOsByUserId(userId);
@@ -208,7 +237,7 @@ export class PTOCalendarComponent implements OnInit {
       PTOCalendarComponent.setSubscribeData(data);
     });
     let ptoList = PTOCalendarComponent.subscribeData;
-    if (ptoList == null) {
+    if (ptoList == null || ptoList == undefined) {
       return
     }
     for (var i = 0; i < ptoList.length; ++i) {
@@ -245,6 +274,52 @@ export class PTOCalendarComponent implements OnInit {
     }
   }
 
+  //Read Flexs by User Id
+  readFlexbyUserId() {
+    let userId: string = this.datastorageService.getUserEntity().id;
+    let response = this.flexService.getFlexsByUserId(userId);
+    response.then((data: FlexFromDBEntity[]) => {
+      PTOCalendarComponent.setSubscribeFlexFromDBEntity(data);
+    });
+    let flexList = PTOCalendarComponent.subscribeFlexFromDBEntity;
+    if (flexList == null || flexList == undefined) {
+      return
+    }
+    var length = this.calendarEvents.length;
+    debugger;
+    for (var i = 0; i < flexList.length; ++i) {
+      this.calendarEvents[length + i] =
+      {
+        allDay: false,
+        backgroundColor: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
+        textColor: "white",
+        title: flexList[i].description,
+        start: flexList[i].startDateTime,
+        end: flexList[i].endDateTime,
+        id: flexList[i].id,
+        extendedProps: {
+          hours: flexList[i].hours,
+          userId: flexList[i].userId,
+          flexTypeId: flexList[i].flexTypeId,
+          isForward: flexList[i].isForward,
+          isActive: flexList[i].isActive,
+          createdBy: flexList[i].createdBy,
+          createdOn: flexList[i].createdOn,
+          updatedBy: flexList[i].updatedBy,
+          updatedOn: flexList[i].updatedOn
+        }
+      };
+    }
+    if (this.flexTypes != undefined && this.flexTypes != null) {
+      this.flex.flexTypes = this.flexTypes;
+      this.flex.flexTypeId = this.flexTypes.find(ft => ft.name == "Shift Slide").id;
+    }
+    else {
+      this.flex.flexTypes = [];
+      this.flex.flexTypeId = "";
+    }
+  }
+
   //eventRender function from Calendar
   eventRender(info) {
     var attr_tooltip = document.createAttribute("data-tooltip");
@@ -270,7 +345,7 @@ export class PTOCalendarComponent implements OnInit {
     });
 
     let ptoToEdit = PTOCalendarComponent.subscribePTOFromDBEntity;
-    if (ptoToEdit == null) {
+    if (ptoToEdit == null || ptoToEdit == undefined) {
       return
     }
 
@@ -345,7 +420,7 @@ export class PTOCalendarComponent implements OnInit {
       updatedOn: this.toDate
     };
     let pto = this.ptoService.savePTO(ptoEntity);
-    if (pto == null) {
+    if (pto == null || pto == undefined) {
       return;
     }
 
@@ -368,9 +443,8 @@ export class PTOCalendarComponent implements OnInit {
   scheduleFlex(): void {
     let dialogConfig = CommonLibrary.CreateDialog();
     dialogConfig.id = "flex-editor";
-    dialogConfig.height = "65%";
+    dialogConfig.height = "75%";
     dialogConfig.data = { flex: this.flex };
-    debugger;
     const dialogRef = this.dialog.open(FlexEditorComponent, dialogConfig);
     dialogRef.componentInstance.flex = this.flex;  //another way to pass quota to modal window
 
@@ -396,6 +470,7 @@ export class PTOCalendarComponent implements OnInit {
       hours: this.flex.hours,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
+      isForward: this.flex.isForward,
       isActive: true,
       createdBy: userDetails.id,
       createdOn: this.toDate,
@@ -403,7 +478,7 @@ export class PTOCalendarComponent implements OnInit {
       updatedOn: this.toDate
     };
     let flex = this.flexService.saveFlex(flexEntity);
-    if (flex == null) {
+    if (flex == null || flex == undefined) {
       return;
     }
 

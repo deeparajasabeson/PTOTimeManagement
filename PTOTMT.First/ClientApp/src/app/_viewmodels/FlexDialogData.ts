@@ -12,6 +12,7 @@ export interface FlexDialogData {
   onDate: NgbDateStruct;
   startTime: string;
   endTime: string;
+  isForward: boolean;
   hours: number;
   minutes: number;
   isNewEvent: boolean;

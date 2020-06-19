@@ -7,6 +7,7 @@ export interface FlexEntity {
   startDateTime: Date,
   endDateTime: Date,
   hours: number,
+  isForward: boolean,
   isActive: boolean,
   createdBy: string,
   createdOn: Date,

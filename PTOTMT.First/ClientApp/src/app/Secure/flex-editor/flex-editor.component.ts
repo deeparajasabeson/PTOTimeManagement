@@ -9,6 +9,10 @@ import { FlexDialogData } from '../../_viewmodels/FlexDialogData';
 import { FlexTypeFromDBEntity } from '../../_entities/FlexTypeFromDBEntity';
 import { CommonLibrary } from '../../_library/common.library';
 import { ValidateMinutes } from '../../_validators/ValidateMinutes';
+import { TeamService } from '../../_services/team.service';
+import { DataStorageService } from '../../_services/datastorage.service';
+import { TeamFromDBEntity } from '../../_entities/TeamFromDBEntity';
+
 
 @Component({
   selector: 'app-flex-editor',
@@ -28,19 +32,21 @@ export class FlexEditorComponent implements OnInit {
     private dialogRef: MatDialogRef<FlexEditorComponent>,
     @Inject(MAT_DIALOG_DATA) public dataDialog: FlexDialogData,  
     private fb: FormBuilder,
-    private flexService: FlexService) { }
+    private flexService: FlexService,
+    private datastorageService: DataStorageService,
+    private teamService: TeamService) { }
 
   ngOnInit() {
     if (this.flex.flexTypeId == "" && this.flex.flexTypes.length > 0) {
-      this.flex.flexTypeId = this.flex.flexTypes.find(rt => rt.name == "Flex Time").id;
+      this.flex.flexTypeId = this.flex.flexTypes.find(rt => rt.name == "Shift Slide").id;
     }
-    debugger;
     this.flexeditorForm = this.fb.group({
       id: [this.flex.id],
       userId: [this.flex.userId],
       flexTypeId: [this.flex.flexTypeId, Validators.required],
       description: [this.flex.description, Validators.maxLength(50)],
-      hours: [Math.floor(this.flex.hours), [Validators.required, Validators.min(0)]],
+      isForward: [this.flex.isForward, Validators.required],
+      hours: [Math.floor(this.flex.hours), [Validators.required, Validators.min(0), Validators.max(3)]],
       minutes: [(this.flex.hours - Math.floor(this.flex.hours)) * 100, [Validators.min(0), Validators.max(30), ValidateMinutes]],
       onDate: [this.flex.onDate, Validators.required],
       startTime: [this.flex.startTime],
@@ -57,11 +63,12 @@ export class FlexEditorComponent implements OnInit {
     this.flex.onDate = event.next;
   }
 
-  saveFlex(flexForm: NgForm): void {  //quotaForm also has the form value as thisquotaeditorForm.value
+  saveFlex(flexForm: NgForm): void {  
     if (this.flexeditorForm.valid) {
       this.dialogRef.close(this.flexeditorForm.value);
       if (this.flexeditorForm.valid) {
         this.flex = this.flexeditorForm.value;
+        debugger;
       }
     }
   }

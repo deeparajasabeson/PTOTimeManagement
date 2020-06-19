@@ -2,8 +2,8 @@
   <div class="navbar modal-title">
     <h2 mat-dialog-title>
       &nbsp;&nbsp;
-      <span *ngIf="quotaeditorForm.get('isNewEvent').value">New</span>
-      <span *ngIf="!quotaeditorForm.get('isNewEvent').value">Edit</span>
+      <span *ngIf="ptoeditorForm.get('isNewEvent').value">New</span>
+      <span *ngIf="!ptoeditorForm.get('isNewEvent').value">Edit</span>
       &nbsp;PTO Request
     </h2>
   </div>
@@ -67,7 +67,7 @@
           </div>
         </div>
         <div class="col-2">
-          <span *ngIf="!ptoeditorForm.value.allDay">
+          <span *ngIf="!ptoeditorForm.get('allDay').value">
             Start Time
             <input type="time"
                    formControlName="startTime"
@@ -95,7 +95,7 @@
           </div>
         </div>
         <div class="col-2">
-          <span *ngIf="!ptoeditorForm.value.allDay">
+          <span *ngIf="!ptoeditorForm.get('allDay').value">
             End Time
             <input type="time"
                    formControlName="endTime"

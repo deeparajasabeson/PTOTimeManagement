@@ -25,7 +25,7 @@ namespace PTOTMT.Common.Entities
             modelBuilder.Entity<Location>().ToTable("Location", "Config");
             modelBuilder.Entity<Quota>().ToTable("Quota", "PTO");
             modelBuilder.Entity<Request>().ToTable("Request", "PTO");
-            modelBuilder.Entity<Flex>().ToTable("User", "PTO");
+            modelBuilder.Entity<Flex>().ToTable("Flex", "PTO");
             modelBuilder.Entity<RequestType>().ToTable("RequestType", "Config");
             modelBuilder.Entity<Role>().ToTable("Role", "Security");
             modelBuilder.Entity<ShiftSlide>().ToTable("ShiftSlide", "Config");

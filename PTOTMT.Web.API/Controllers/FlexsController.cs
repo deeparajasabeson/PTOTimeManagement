@@ -50,13 +50,13 @@ namespace PTOTMT.Service.Controllers
             return Flex;
         }
 
-        // GET: api/Flexs/ptoFlexsbyuserid/<userId:Guid>
-        [HttpGet("ptoflexsbyuserid/{userId}")]
+        // GET: api/Flexs/flexsbyuserid/<userId:Guid>
+        [HttpGet("flexsbyuserid/{userId}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IEnumerable<Flex> GetFlexsByUserId(Guid? userId)
         {
             var Flexs = GetFlex();
-            return Flexs.Where(r => r.UserId == userId);
+            return Flexs.Where(f => f.UserId == userId);
         }
 
         // PUT: api/flexs/5

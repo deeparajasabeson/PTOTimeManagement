@@ -150,18 +150,25 @@ Insert into Config.FlexType
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
 (@FlexTypeId, 'Shift Swap', 'Shift Swap', 1, @UserId, GETDATE(), @UserId, GETDATE())
-Insert into Config.RequestType
+Insert into Config.FlexType
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
 (NEWID(), 'Self-Shift Swap', 'Self-Shift Swap', 1, @UserId, GETDATE(), @UserId, GETDATE())
-Insert into Config.RequestType
+Insert into Config.FlexType
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
 (NEWID(), 'Shift Slide', 'Shift Slide', 1, @UserId, GETDATE(), @UserId, GETDATE())
-Insert into Config.RequestType
+Insert into Config.FlexType
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
 (NEWID(), 'Pre-Arranged Shift Slide', 'Pre-Arranged Shift Slide', 1, @UserId, GETDATE(), @UserId, GETDATE())
+
+
+--Config.FlexType TABLE
+Insert into PTO.Flex 
+(Id, UserId, FlexTypeId, Description, IsForward, StartDateTime, EndDateTime, Hours, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+Values
+(NEWID(), @UserId, @FlexTypeId, 'Sample',1,GETDATE(), GETDATE(), 1, 1, @UserId, GETDATE(), @UserId, GETDATE())
 
 --Add keys back in Security.User TABLE
 Alter Table Security.[User]
