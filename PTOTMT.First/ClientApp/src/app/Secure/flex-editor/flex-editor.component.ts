@@ -28,6 +28,11 @@ export class FlexEditorComponent implements OnInit {
   private toDate = new Date();  //used in endDate filter in calendar template
   toDateNgbDateStruct: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(this.toDate);
 
+  static subscribeTeamFromDBEntity: TeamFromDBEntity;
+  static setSubscribeTeamFromDBEntity(data: TeamFromDBEntity) {
+    FlexEditorComponent.subscribeTeamFromDBEntity = data;
+  }
+
   constructor(
     private dialogRef: MatDialogRef<FlexEditorComponent>,
     @Inject(MAT_DIALOG_DATA) public dataDialog: FlexDialogData,  
@@ -37,6 +42,13 @@ export class FlexEditorComponent implements OnInit {
     private teamService: TeamService) { }
 
   ngOnInit() {
+    let user = this.datastorageService.getUserEntity();
+    let response = this.teamService.getTeamById(user.teamFunctionId).toPromise();
+    response.then((data: TeamFromDBEntity) => {
+      FlexEditorComponent.setSubscribeTeamFromDBEntity(data);
+    })
+    let team = FlexEditorComponent.subscribeTeamFromDBEntity;
+
     if (this.flex.flexTypeId == "" && this.flex.flexTypes.length > 0) {
       this.flex.flexTypeId = this.flex.flexTypes.find(rt => rt.name == "Shift Slide").id;
     }
@@ -46,14 +58,14 @@ export class FlexEditorComponent implements OnInit {
       flexTypeId: [this.flex.flexTypeId, Validators.required],
       description: [this.flex.description, Validators.maxLength(50)],
       isForward: [this.flex.isForward, Validators.required],
-      hours: [Math.floor(this.flex.hours), [Validators.required, Validators.min(0), Validators.max(3)]],
-      minutes: [(this.flex.hours - Math.floor(this.flex.hours)) * 100, [Validators.min(0), Validators.max(30), ValidateMinutes]],
+      hours: [Math.floor(this.flex.hours), [Validators.required, Validators.min(0), Validators.max(team.maxShiftSlideHours)]],
+      minutes: [(this.flex.hours - Math.floor(this.flex.hours)) * 100, [Validators.min(0), Validators.max(30), FlexCustomValidators.ValidateFlexMinutes]],
       onDate: [this.flex.onDate, Validators.required],
       startTime: [this.flex.startTime],
       endTime: [this.flex.endTime],
       isNewEvent: [this.flex.isNewEvent]
     }, {
-        validator: FlexCustomValidators.ValidateHours()
+        validator: FlexCustomValidators.ValidateHours(team)
     });
     this.flexTypes = [];
     this.flex.flexTypes.forEach(val => this.flexTypes.push(Object.assign({}, val)));

@@ -1,9 +1,10 @@
 import { AbstractControl,  ValidatorFn } from '@angular/forms';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { TeamFromDBEntity } from '../_entities/TeamFromDBEntity';
 
 export class FlexCustomValidators {
 
-  static ValidateHours(): ValidatorFn {
+  static ValidateHours(team: TeamFromDBEntity): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
 
       const startTime = control.get('startTime').value;
@@ -11,9 +12,23 @@ export class FlexCustomValidators {
       const hours = control.get('hours').value;
       const minutes = control.get('minutes').value;
 
-      let calchours = this.calculateHours(startTime,  endTime);
+      let diffTime;
+      if (control.get('isForward').value) {
+        if (parseInt(endTime) <= team.shiftEndTimeLimit) {
+          diffTime = this.diffTime(endTime, team.shiftEndTimeLimit);
+        } else {
+          return {'invalidTime': true};
+        }
+      } else {
+        if (parseInt(startTime) >= team.shiftStartTimeLimit) {
+          diffTime = this.diffTime(startTime, team.shiftStartTimeLimit);
+        }
+        else {
+          return { 'invalidTime': true };
+        }
+      }
 
-      if (hours != null && minutes != null && calchours != hours+minutes/100) {
+      if (hours != null && minutes != null && diffTime > hours+minutes/100) {
         return { 'invalidHours': true };
       }
       return null;
@@ -21,18 +36,31 @@ export class FlexCustomValidators {
   }
 
   //To calculate number of hours between  specifed dates and times
-  static calculateHours(
-    startTime: string,
-    endTime: string,
+  static diffTime(
+    time: string,
+    range: number,
   ): number {
-    let hours: number = 0;
-    let iStartTime = parseInt(startTime);
-    let iEndTime = parseInt(endTime);
-    let iStartHour = Math.trunc(iStartTime);
-    let iStartMin = iStartTime - iStartHour;
-    let iEndHour = Math.trunc(iEndTime);
-    let iEndMin = iEndTime - iEndHour;
-    hours = (iEndHour - iStartHour) + (iEndMin - iStartMin);
-    return hours;
+    let iTime = parseInt(time);
+    let iStartHours = Math.trunc(iTime);
+    let iStartMinutes = iTime - iStartHours;
+    let iEndHours = Math.trunc(range);
+    let iEndMinutes = range - iEndHours;
+    if (iTime > range) {
+      return (iEndHours - iStartHours) + (iEndMinutes - iStartMinutes);
+    }
+    else {
+      return (iStartHours - iEndHours) + (iStartMinutes - iEndMinutes);
+    }
+  }
+
+  static ValidateFlexMinutes(team: TeamFromDBEntity): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      const hours = control.get('hours').value;
+      const minutes = control.get('minutes').value;
+      if (minutes == 0 || (minutes == 30 && hours < team.maxShiftSlideHours)) {
+        return null;
+      }
+     return { 'invalidMinutes': true };
+    }
   }
 }

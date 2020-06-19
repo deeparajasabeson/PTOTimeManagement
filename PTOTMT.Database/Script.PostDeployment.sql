@@ -80,15 +80,15 @@ Values
 Insert into Security.Team 
 (Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(NEWID(), 'Help Desk', 'Team of Help Desk Associates', 3,  8, 9, 1, @UserId, GETDATE(), @UserId, GETDATE())
+(NEWID(), 'Help Desk', 'Team of Help Desk Associates', 3,  8, 21, 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Security.Team 
 (Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(NEWID(), 'OnBoarding / Recovery (OBR)', 'OnBoarding, Recovery Team', 3,  9, 6, 1, @UserId, GETDATE(), @UserId, GETDATE())
+(NEWID(), 'OnBoarding / Recovery (OBR)', 'OnBoarding, Recovery Team', 3,  9, 18, 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Security.Team 
 (Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(@TeamId, 'Sales Order Entry (SOE)', 'Sales Order Entry Team', 3, 9, 5, 1, @UserId, GETDATE(), @UserId, GETDATE())
+(@TeamId, 'Sales Order Entry (SOE)', 'Sales Order Entry Team', 3, 9, 17, 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Security.Team 
 (Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
