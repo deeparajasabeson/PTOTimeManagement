@@ -28,5 +28,15 @@ export class FlexTypeService {
     let flexUrl: string = this.flexTypeUrl + "/flextypebyname/" + name;
     return this.http.get<FlexTypeFromDBEntity>(flexUrl, httpOptions);
   }
+
+  public getFlexTypeById(flexTypeId): string {
+    let flexTypeName: string = "";
+    let flexUrl: string = this.flexTypeUrl + "/" + flexTypeId;
+    let response = this.http.get<FlexTypeFromDBEntity>(flexUrl, httpOptions).toPromise();
+    response.then((data: FlexTypeFromDBEntity) => {
+      flexTypeName = data.name;
+    });
+    return flexTypeName;
+  }
 } 
 

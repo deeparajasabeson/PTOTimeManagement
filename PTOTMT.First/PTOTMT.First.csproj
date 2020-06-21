@@ -46,6 +46,7 @@
     <None Remove="ClientApp\src\app\_entities\RequestTypeFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\StatusEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\TeamFromDBEntity.ts" />
+    <None Remove="ClientApp\src\app\_services\user.service.ts" />
     <None Remove="ClientApp\src\app\_validators\FlexCustomValidators.validator.ts" />
     <None Remove="ClientApp\src\app\_validators\PTOCustomValidators.validator.ts" />
     <None Remove="ClientApp\src\app\_validators\QuotaCustomValidators.Validator.ts" />
@@ -78,11 +79,12 @@
     <TypeScriptCompile Include="ClientApp\src\app\_entities\RequestTypeFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\StatusEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\TeamFromDBEntity.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_services\user.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_validators\FlexCustomValidators.validator.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_viewmodels\FlexDialogData.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_viewmodels\PTODialogData.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_viewmodels\QuotaDialogData.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\_entities\UserEntity.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_entities\UserFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_interceptors\index.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_services\flex.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_services\pto.service.ts" />

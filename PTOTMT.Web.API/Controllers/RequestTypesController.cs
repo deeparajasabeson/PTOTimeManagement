@@ -29,7 +29,6 @@ namespace PTOTMT.Service.Controllers
         public IEnumerable<RequestType> GetRequestTypes()
         {
             return uow.RequestTypeRepo.GetAll();
-
         }
 
         // GET: api/RequestTypes/5

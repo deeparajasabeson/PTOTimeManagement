@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserEntity } from '../_entities/UserEntity';
+import { UserFromDBEntity } from '../_entities/UserFromDBEntity';
 import { StatusEntity } from '../_entities/StatusEntity';
 import { QuotaEntity } from '../_entities/QuotaEntity';
 
@@ -19,12 +19,12 @@ export class DataStorageService {
   setStatusEntity(value: StatusEntity) {
     this.statusEntity = value;
   }
-  getUserEntity(): UserEntity {
+  getUserEntity(): UserFromDBEntity {
     return this.userEntity;
   }
 
-  private userEntity: UserEntity;
-  setUserEntity(value: UserEntity) {
+  private userEntity: UserFromDBEntity;
+  setUserEntity(value: UserFromDBEntity) {
     this.userEntity = value;
   }
   getStatusEntity(): StatusEntity {

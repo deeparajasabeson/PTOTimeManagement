@@ -1,13 +1,13 @@
 <div class="modal-box">
-  <div class="navbar modal-title">
-    <h2 mat-dialog-title>
-      &nbsp;&nbsp;
-      <span *ngIf="quotaeditorForm.get('isNewEvent').value">New</span>
-      <span *ngIf="!quotaeditorForm.get('isNewEvent').value">Edit</span>
-      &nbsp;Quota
-    </h2>
-  </div>
-  <form [formGroup]="quotaeditorForm" (ngSubmit)="saveQuota(quotaeditorForm.value)" >
+  <form [formGroup]="quotaeditorForm" (ngSubmit)="saveQuota(quotaeditorForm.value)">
+    <div class="navbar modal-title">
+      <h2 mat-dialog-title>
+        &nbsp;&nbsp;
+        <span *ngIf="quotaeditorForm.get('isNewEvent').value">New</span>
+        <span *ngIf="!quotaeditorForm.get('isNewEvent').value">Edit</span>
+        &nbsp;Quota
+      </h2>
+    </div>
     <div mat-dialog-content>
       <div class="row">
         <div class="col-6">

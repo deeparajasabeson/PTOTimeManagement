@@ -22,6 +22,7 @@ import { PTOEditorComponent } from './pto-editor/pto-editor.component';
 import { QuotaEditorComponent } from './quota-editor/quota-editor.component';
 import { FlexEditorComponent } from './flex-editor/flex-editor.component';
 
+
 const routes: Routes = [
   { path: '', redirectTo: 'calendar', pathMatch: 'full' },
   {
@@ -69,7 +70,7 @@ const routes: Routes = [
     RouterModule.forChild( routes )
   ],
   exports: [ RouterModule ], 
-  providers: [AuthGuard],
+  providers: [ AuthGuard ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class SecureModule {

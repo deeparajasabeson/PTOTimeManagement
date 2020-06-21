@@ -16,13 +16,13 @@ import { QuotaEditorComponent } from '../quota-editor/quota-editor.component';
 import { QuotaDialogData } from '../../_viewmodels/QuotaDialogData';
 import { QuotaEntity } from '../../_entities/QuotaEntity';
 import { QuotaFromDBEntity } from '../../_entities/QuotaFromDBEntity';
-import { UserEntity } from '../../_entities/UserEntity';
+import { UserFromDBEntity } from '../../_entities/UserFromDbEntity';
 import { QuotaService } from '../../_services/quota.service';
 import { DataStorageService } from '../../_services/datastorage.service';
 
 
 @Component({
-  selector: 'app-quota-calendar',
+  selector:'app-quota-calendar',
   templateUrl: './quota-calendar.component.html'
 })
 export class QuotaCalendarComponent implements OnInit {
@@ -193,7 +193,7 @@ export class QuotaCalendarComponent implements OnInit {
 
   // Save Quota
   saveQuota() {
-    let userDetails: UserEntity = this.datastorageService.getUserEntity();
+    let userDetails: UserFromDBEntity = this.datastorageService.getUserEntity();
     let startDateTime = CommonLibrary.NgbDateStruct2DateTime(this.quota.startDate, this.quota.startTime);
     let endDateTime = CommonLibrary.NgbDateStruct2DateTime(this.quota.endDate, this.quota.endTime);
 

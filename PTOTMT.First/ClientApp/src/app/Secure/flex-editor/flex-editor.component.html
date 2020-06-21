@@ -1,131 +1,308 @@
 <div class="modal-box">
-  <div class="navbar modal-title">
-    <h2 mat-dialog-title>
-      &nbsp;&nbsp;
-      <span *ngIf="flexeditorForm.get('isNewEvent').value">New</span>
-      <span *ngIf="!flexeditorForm.get('isNewEvent').value">Edit</span>
-      &nbsp;Schedule Flexibility Options
-    </h2>
-  </div>
-  <form [formGroup]="flexeditorForm" (ngSubmit)="saveFlex(flexeditorForm.value)">
+    <form [formGroup]="flexeditorForm" (ngSubmit)="saveFlex(flexeditorForm.value)">
+    <div class="navbar modal-title">
+      <h2 mat-dialog-title>
+        &nbsp;&nbsp;
+        <span *ngIf="flexeditorForm.get('isNewEvent').value">New</span>
+        <span *ngIf="!flexeditorForm.get('isNewEvent').value">Edit</span>
+        &nbsp;Schedule Flexibility Options
+      </h2>
+    </div>
     <div mat-dialog-content>
       <div class="row">
         <div class="col-12">
           <span size="font-size:40px;"><b>Select your Flex option</b></span>
         </div>
       </div>
-       <div class="row col-12">
-          <span *ngFor="let flextype of flexTypes">
-            <label for="{{flextype.name}}">
-              <input id="{{flextype.name}}" type="radio" [value]="flextype.id" name="flexTypeId" formControlName="flexTypeId">
-              {{flextype.name}}&nbsp;&nbsp;&nbsp;
-            </label>
-          </span>
-      </div><hr>
-      <div class="row">
-        <div class="col-6">
-          <span size="font-size:40px;"><b>Shift your start and end time</b></span><br />
-          <b>Choose your current shift</b>
+      <span class="row col-12">
+        <span *ngFor="let flextype of flexTypes">
+          <label for="{{flextype.name}}">
+            <input id="{{flextype.name}}" type="radio" [value]="flextype.id" name="flexTypeId" formControlName="flexTypeId" (change)="radioChangeHandler($event)">
+            {{flextype.name}}&nbsp;&nbsp;&nbsp;
+          </label>
+        </span>
+      </span>
+      <hr>
+
+      <!--Shift Slide / Pre-Arranged Shift Slide-->
+      <div *ngIf="flex != null && (flex.flexTypeValue=='Shift Slide' || flex.flexTypeValue=='Pre-Arranged Shift Slide')">
+        <div class="row">
+          <div class="col-6">
+            <span size="font-size:40px;"><b>Shift your start and end time</b></span><br />
+            <b>Choose your current shift</b>
+          </div>
+          <div class="col-6">
+            <br /><span size="font-size:40px;"><b>Choose your shift slide details</b></span><br />
+          </div>
         </div>
-        <div class="col-6">
-          <br /><span size="font-size:40px;"><b>Choose your shift slide details</b></span><br />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-3">
-          Start Time
-          <input type="time"
-                  formControlName="startTime"
-                  placeholder="HH:mm"
-                  name="startTime"
-                  step=1800> <!--30 minutes-->
-        </div>
-        <div class="col-3">
-          End Time
-          <input type="time"
-                  formControlName="endTime"
-                  placeholder="HH:mm"
-                  name="startTime"
-                  step=1800> <!--30 minutes-->
-        </div>
-        <div class="col-6">
-          <label for="moveforward">
-            <input id="moveforward" type="radio" name="isForward" formControlName="isForward" value="true">
-            Move forward
-          </label>&nbsp;&nbsp;&nbsp;
-          <label for="movebackward">
-            <input id="movebackward" type="radio" name="isForward" formControlName="isForward" value="false">
-            Move backward
-          </label><br />
-          <input type="number"
-                 formControlName="hours"
-                 size="3"
-                 step="1"
-                 min="0"
-                 required
-                 style="width:20%"> Hours&nbsp;&nbsp;
-          <input type="number"
-                 formControlName="minutes"
-                 size="2"
-                 step="30"
-                 min="0"
-                 max="30"
-                 style="width:15%"> Minutes
-        </div>
-      </div>
-      <div style="color:red;" *ngIf="flexeditorForm.hasError('invalidHours')">
-        Shift Slide Request Hours with Minutes should match difference between Start and End Time periods.
-      </div>
-      <br *ngIf="!flexeditorForm.hasError('invalidHours')" />
-      <div class="row">
-        <div class="col-6">
-          On Date
-          <div class="input-group">
-            <input ngbDatepicker #dp
-                   formControlName="onDate"
-                   placeholder="mm/dd/yyyy"
-                   #dpOnDate="ngbDatepicker"
-                   name="onDate"
-                   size="10"
+        <div class="row">
+          <div class="col-3">
+            Start Time<br />
+            <input type="time"
+                   formControlName="startTime"
+                   placeholder="HH:mm"
+                   name="startTime"
+                   step=1800> <!--30 minutes-->
+          </div>
+          <div class="col-3">
+            End Time<br />
+            <input type="time"
+                   formControlName="endTime"
+                   placeholder="HH:mm"
+                   name="startTime"
+                   step=1800> <!--30 minutes-->
+          </div>
+          <div class="col-6">
+            <label for="moveforward">
+              <input id="moveforward" type="radio" name="isForward" formControlName="isForward" value="true">
+              Move forward
+            </label>&nbsp;&nbsp;&nbsp;
+            <label for="movebackward">
+              <input id="movebackward" type="radio" name="isForward" formControlName="isForward" value="false">
+              Move backward
+            </label><br />
+            <input type="number"
+                   formControlName="hours"
+                   size="3"
+                   step="1"
+                   min="0"
                    required
-                   placement="bottom-left"
-                   (dateChange)="changeOnDateEvent($event)">
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar" type="button">📅</button>
+                   style="width:15%"> Hours&nbsp;&nbsp;
+            <input type="number"
+                   formControlName="minutes"
+                   size="2"
+                   step="30"
+                   min="0"
+                   max="30"
+                   style="width:10%"> Minutes
+          </div>
+        </div>
+        <!--Error Display-->
+        <div style="color:red;" *ngIf="flexeditorForm.hasError('invalidHours')">
+          Shift Slide Request Hours with Minutes should match difference between Start and End Time periods.
+        </div>
+        <div style="color:red;" *ngIf="flexeditorForm.hasError('diffNot3Days')">
+          Pre-Arranged Shift Slide request is to be done at the least 3 days before.
+        </div>
+        <div style="color:red;" *ngIf="flexeditorForm.hasError('notFutureDate')">
+          Any request should be submitted for today or a future date.
+        </div>
+        <div style="color:red;" *ngIf="flexeditorForm.hasError('invalidMinutes')">
+          Minutes should be either 0 or 30.
+        </div>
+        <div style="color:red;" *ngIf="flexeditorForm.hasError('invalidHours')">
+          Hours+Minutes should not be greater than difference between Start and End Time periods and should not be greater than team maximum slide hours({{team.maxShiftSlideHours}}).
+        </div>
+        <div style="color:red;" *ngIf="flexeditorForm.hasError('invalidTime')">
+          Moved Time should fall inside team's working hours range .<span *ngIf="flexeditorForm.get('isForward').value">Team Working time ends at {{team.shiftEndTimeLimit}}.</span><span *ngIf="!flexeditorForm.get('isForward').value">Team Working time starts at {{team.shiftStartTimeLimit}}.</span>
+        </div>
+        <br *ngIf="!(flexeditorForm.hasError('invalidHours') ||
+                           flexeditorForm.hasError('invalidTime') ||
+                           flexeditorForm.hasError('invalidMinutes') ||
+                           flexeditorForm.hasError('diffNot3Days') ||
+                           flexeditorForm.hasError('notFutureDate'))" />
+
+        <div class="row">
+          <div class="col-6">
+            On Date
+            <div class="input-group">
+              <input ngbDatepicker #dp
+                     formControlName="onDate"
+                     placeholder="mm/dd/yyyy"
+                     #dpOnDate="ngbDatepicker"
+                     name="onDate"
+                     size="8"
+                     required
+                     placement="bottom-left" />
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" type="button">📅</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            Description<br />
+            <input type="text"
+                   formControlName="description"
+                   style="width:75%"
+                   maxlength="50">
+          </div>
+        </div>
+      </div>
+
+      <!--Shift Swap-->
+      <div *ngIf="flex != null && (flex.flexTypeValue=='Shift Swap')">
+        <div class="row">
+          <div class="col-12">
+            <span size="font-size:50px;"><b>Trade your shift with a co-worker</b></span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <div class="form-group">
+              <label for="coWorker">Co-worker's Name</label>
+              <select class="form-control" id="coWorker" formControlName="coWorker" required>
+                <option value="" disabled selected>Please select a Co-worker</option>
+                <option *ngFor="let coworker of coWorkersList" [ngValue]="coworker.id">{{coworker.firstName + " " + coworker.lastName}}</option>
+              </select>
+            </div>
+          </div>
+          <!--Error Display-->
+          <div class="col-7">
+            <div style="color:red;" *ngIf="flexeditorForm.hasError('notFutureDate')">
+              Any request should be submitted for today or a future date.
+            </div>
+            <div style="color:red;" *ngIf="flexeditorForm.hasError('inValidCoWorker')">
+            </div>
+            <div style="color:red;" *ngIf="flexeditorForm.hasError('notFutureCoWorkerDate')">
+            </div>
+            <div style="color:red;" *ngIf="flexeditorForm.hasError('inValidCoWorkerTime')">
             </div>
           </div>
         </div>
-        <div class="col-6">
-        Description<br/>
-        <input type="text"
-               formControlName="description"
-               style="width:75%"
-               maxlength="50">
+        <div class="row">
+          <div class="col-6">
+            <b>Choose your co-worker's shift</b>
+          </div>
+          <div class="col-6">
+            <b>Choose your own shift</b>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2">
+            Shift Start Date
+            <div class="input-group">
+              <input ngbDatepicker #dp
+                     formControlName="coWorkerDate"
+                     placeholder="mm/dd/yyyy"
+                     #dpcoWorkerDate="ngbDatepicker"
+                     name="coWorkerDate"
+                     size="8"
+                     required
+                     placement="bottom-left">
+              <!--<div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" type="button">📅</button>
+              </div>-->
+            </div>
+          </div>
+          <div class="col-2">
+            Start Time<br />
+            <input type="time"
+                   formControlName="coWorkerStartTime"
+                   placeholder="HH:mm"
+                   name="coWorkerStartTime"
+                   step=1800> <!--30 minutes-->
+          </div>
+          <div class="col-2">
+            End Time
+            <input type="time"
+                   formControlName="coWorkerEndTime"
+                   placeholder="HH:mm"
+                   name="coWorkerEndTime"
+                   step=1800> <!--30 minutes-->
+          </div>
+          <div class="col-2">
+            Shift Start Day
+            <div class="input-group">
+              <input ngbDatepicker #dp
+                     formControlName="onDate"
+                     placeholder="mm/dd/yyyy"
+                     #dpOnDate="ngbDatepicker"
+                     name="onDate"
+                     size="8"
+                     required
+                     placement="bottom-left">
+              <!--<div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" type="button">📅</button>
+        </div>-->
+            </div>
+          </div>
+          <div class="col-2">
+            Start Time
+            <input type="time"
+                   formControlName="startTime"
+                   placeholder="HH:mm"
+                   name="startTime"
+                   step=1800> <!--30 minutes-->
+          </div>
+          <div class="col-2">
+            End Time
+            <input type="time"
+                   formControlName="endTime"
+                   placeholder="HH:mm"
+                   name="endTime"
+                   step=1800> <!--30 minutes-->
+          </div>
         </div>
       </div>
-     </div>
-     <div mat-dialog-actions class="modal-footer ">
-        <button type="submit"
-                class="btn btn-success"
-                (click)="saveFlex(flexeditorForm.value)"
-                [disabled]="!flexeditorForm.valid"
+
+      <!--Self-Shift Swap-->
+      <div *ngIf="flex != null && (flex.flexTypeValue=='Self-Shift Swap')">
+        <div class="row">
+          <div class="col-12">
+            <span size="font-size:50px;"><b>Swap your own off-day with a work day</b></span>
+          </div>
+        </div><br />
+        <div class="row">
+          <div class="col-3">
+            <b>Choose your work day</b><br />
+            Shift Day<br />
+            <div class="input-group">
+              <input ngbDatepicker #dp
+                     formControlName="onDate"
+                     placeholder="mm/dd/yyyy"
+                     #dpOnDate="ngbDatepicker"
+                     name="onDate"
+                     size="8"
+                     required
+                     placement="bottom-left">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" type="button">📅</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <b>Choose your off day</b><br />
+            Off Day<br />
+            <div class="input-group">
+              <input ngbDatepicker #dp
+                     formControlName="offDate"
+                     placeholder="mm/dd/yyyy"
+                     #dpOffDate="ngbDatepicker"
+                     name="Date"
+                     size="8"
+                     required
+                     placement="bottom-left">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" type="button">📅</button>
+              </div>
+            </div>
+          </div>
+        </div><br /><br />
+      </div>
+    </div>
+
+    <div mat-dialog-actions class="modal-footer ">
+      <button type="submit"
+              class="btn btn-success"
+              (click)="saveFlex(flexeditorForm.value)"
+              [disabled]="!flexeditorForm.valid"
+              [mat-dialog-close]="data">
+        Request <span *ngIf="flex != null">{{flex.flexTypeValue}}</span>
+      </button>
+      <span *ngIf="!flexeditorForm.get('isNewEvent').value">
+        <button class="btn btn-danger deletebutton"
+                (click)="deleteFlex(flexeditorForm.value)"
                 [mat-dialog-close]="data">
-          Submit Flex
+          Delete Flex
         </button>
-        <span *ngIf="!flexeditorForm.get('isNewEvent').value">
-          <button class="btn btn-danger deletebutton"
-                  (click)="deleteFlex(flexeditorForm.value)"
-                  [mat-dialog-close]="data">
-            Delete Flex
-          </button>
-        </span>
-        <button type="button"
-                class="btn btn-danger cancelbutton`"
-                [mat-dialog-close]="data"
-                (click)="onNoClick()">
-          Cancel
-        </button>
-        <br />
-     </div>
+      </span>
+      <button type="button"
+              class="btn btn-danger cancelbutton`"
+              [mat-dialog-close]="data"
+              (click)="onNoClick()">
+        Cancel
+      </button>
+      <br />
+    </div>
   </form>
 </div>

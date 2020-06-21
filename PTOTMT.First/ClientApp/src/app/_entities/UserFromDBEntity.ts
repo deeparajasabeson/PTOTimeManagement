@@ -1,5 +1,5 @@
-// UserEntity.ts
-export interface UserEntity {
+// UserFromDBEntity.ts
+export interface UserFromDBEntity {
   id: string;
   firstName: string;
   lastName: string;

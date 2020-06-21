@@ -1,20 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { PTOEditorComponent } from './pto-editor.component';
 
-import { QuotaEditorComponent } from './quota-editor.component';
-
-describe('QuotaEditorComponent', () => {
-  let component: QuotaEditorComponent;
-  let fixture: ComponentFixture<QuotaEditorComponent>;
+describe('PTOEditorComponent', () => {
+  let component: PTOEditorComponent;
+  let fixture: ComponentFixture<PTOEditorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ QuotaEditorComponent ]
+      declarations: [PTOEditorComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QuotaEditorComponent);
+    fixture = TestBed.createComponent(PTOEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

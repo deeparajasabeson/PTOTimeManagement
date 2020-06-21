@@ -51,6 +51,13 @@ namespace PTOTMT.Service.Controllers
             return user;
         }
 
+        // GET: api/Users/coworkers/
+        [HttpGet("coworkers/")]
+        public IEnumerable<User> GetUser(Guid teamId, Guid locationId)
+        {
+            return uow.UserRepo.GetAll().Where(user => user.TeamFunctionId == teamId && user.LocationId == locationId);
+        }
+
         // PUT: api/Users/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.

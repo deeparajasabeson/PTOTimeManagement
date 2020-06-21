@@ -1,13 +1,13 @@
 <div class="modal-box">
-  <div class="navbar modal-title">
-    <h2 mat-dialog-title>
-      &nbsp;&nbsp;
-      <span *ngIf="ptoeditorForm.get('isNewEvent').value">New</span>
-      <span *ngIf="!ptoeditorForm.get('isNewEvent').value">Edit</span>
-      &nbsp;PTO Request
-    </h2>
-  </div>
   <form [formGroup]="ptoeditorForm" (ngSubmit)="savePTO(ptoeditorForm.value)">
+    <div class="navbar modal-title">
+      <h2 mat-dialog-title>
+        &nbsp;&nbsp;
+        <span *ngIf="ptoeditorForm.get('isNewEvent').value">New</span>
+        <span *ngIf="!ptoeditorForm.get('isNewEvent').value">Edit</span>
+        &nbsp;PTO Request
+      </h2>
+    </div>
     <div mat-dialog-content>
       <div class="row">
         <div class="col-5 form-group">

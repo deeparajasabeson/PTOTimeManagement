@@ -7,31 +7,27 @@ import { FlexCustomValidators } from '../../_validators/FlexCustomValidators.Val
 import { FlexService } from '../../_services/flex.service';
 import { FlexDialogData } from '../../_viewmodels/FlexDialogData';
 import { FlexTypeFromDBEntity } from '../../_entities/FlexTypeFromDBEntity';
-import { CommonLibrary } from '../../_library/common.library';
-import { ValidateMinutes } from '../../_validators/ValidateMinutes';
 import { TeamService } from '../../_services/team.service';
+import { UserService } from '../../_services/user.service';
 import { DataStorageService } from '../../_services/datastorage.service';
 import { TeamFromDBEntity } from '../../_entities/TeamFromDBEntity';
+import { CommonLibrary } from '../../_library/common.library';
+import { ValidateMinutes } from '../../_validators/ValidateMinutes';
+import { UserFromDBEntity } from '../../_entities/UserFromDBEntity';
 
 
 @Component({
-  selector: 'app-flex-editor',
   templateUrl: './flex-editor.component.html',
-  styleUrls: ['./flex-editor.component.css']
 })
 export class FlexEditorComponent implements OnInit {
   @ViewChild('dp', null) dp: NgbDatepicker;
   @Input() public flex: FlexDialogData;  
   flexTypes: FlexTypeFromDBEntity[];
-
+  team: TeamFromDBEntity;
   flexeditorForm: FormGroup;
+
   private toDate = new Date();  //used in endDate filter in calendar template
   toDateNgbDateStruct: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(this.toDate);
-
-  static subscribeTeamFromDBEntity: TeamFromDBEntity;
-  static setSubscribeTeamFromDBEntity(data: TeamFromDBEntity) {
-    FlexEditorComponent.subscribeTeamFromDBEntity = data;
-  }
 
   constructor(
     private dialogRef: MatDialogRef<FlexEditorComponent>,
@@ -39,36 +35,57 @@ export class FlexEditorComponent implements OnInit {
     private fb: FormBuilder,
     private flexService: FlexService,
     private datastorageService: DataStorageService,
+    private userService: UserService,
     private teamService: TeamService) { }
 
-  ngOnInit() {
-    let user = this.datastorageService.getUserEntity();
-    let response = this.teamService.getTeamById(user.teamFunctionId).toPromise();
-    response.then((data: TeamFromDBEntity) => {
-      FlexEditorComponent.setSubscribeTeamFromDBEntity(data);
-    })
-    let team = FlexEditorComponent.subscribeTeamFromDBEntity;
-
-    if (this.flex.flexTypeId == "" && this.flex.flexTypes.length > 0) {
-      this.flex.flexTypeId = this.flex.flexTypes.find(rt => rt.name == "Shift Slide").id;
-    }
+  async ngOnInit() {
     this.flexeditorForm = this.fb.group({
       id: [this.flex.id],
       userId: [this.flex.userId],
       flexTypeId: [this.flex.flexTypeId, Validators.required],
+      flexTypeValue: [this.flex.flexTypeValue, Validators.required],
       description: [this.flex.description, Validators.maxLength(50)],
       isForward: [this.flex.isForward, Validators.required],
-      hours: [Math.floor(this.flex.hours), [Validators.required, Validators.min(0), Validators.max(team.maxShiftSlideHours)]],
-      minutes: [(this.flex.hours - Math.floor(this.flex.hours)) * 100, [Validators.min(0), Validators.max(30), FlexCustomValidators.ValidateFlexMinutes]],
+      hours: [Math.floor(this.flex.hours), [Validators.required, Validators.min(0)]],
+      minutes: [(this.flex.hours - Math.floor(this.flex.hours)) * 100, [Validators.min(0), Validators.max(30)]],
       onDate: [this.flex.onDate, Validators.required],
       startTime: [this.flex.startTime],
       endTime: [this.flex.endTime],
+      coWorkerId: [this.flex.coWorkerId],
+      coWorkerDate: [this.flex.coWorkerDate],
+      coWorkerStartTime: [this.flex.coWorkerStartTime],
+      coWorkerEndTime: [this.flex.coWorkerEndTime],
       isNewEvent: [this.flex.isNewEvent]
-    }, {
-        validator: FlexCustomValidators.ValidateHours(team)
     });
-    this.flexTypes = [];
-    this.flex.flexTypes.forEach(val => this.flexTypes.push(Object.assign({}, val)));
+
+    let user = await this.datastorageService.getUserEntity();
+
+    await this.teamService.getTeamById(user.teamFunctionId).then((teamdata: TeamFromDBEntity) => {
+      this.team = teamdata;
+
+      this.userService.getCoWorkers(user).toPromise().then((userdata: UserFromDBEntity[]) => {
+        let coWorkersList = userdata;
+
+        if (this.flex.flexTypeId == "" && this.flex.flexTypes.length > 0) {
+          this.flex.flexTypeId = this.flex.flexTypes.find(rt => rt.name == "Shift Slide").id;
+        }
+        this.flexTypes = [];
+        this.flex.flexTypes.forEach(val => this.flexTypes.push(Object.assign({}, val)));
+        this.flex.flexTypeValue = "Shift Slide";
+
+        try {
+          this.flexeditorForm.validator = FlexCustomValidators.ValidateData(this.team, this.flexTypes);
+          this.flexeditorForm.controls["hours"].setValidators([Validators.required, Validators.min(0), Validators.max(this.team.maxShiftSlideHours)]);
+        } catch (Error) {
+          alert(Error.message);
+          console.log(Error);
+        }
+      });
+    });
+  }
+
+  radioChangeHandler(event: any) {
+    this.flex.flexTypeValue = event.target.id; 
   }
 
   navigateEvent(event) {

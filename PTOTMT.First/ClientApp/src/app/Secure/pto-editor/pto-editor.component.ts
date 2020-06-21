@@ -12,7 +12,7 @@ import { RequestTypeFromDBEntity } from '../../_entities/RequestTypeFromDBEntity
 
 
 @Component({
-  selector: 'app-pto-editor',
+  selector:'app-pto-editor',
   templateUrl: './pto-editor.component.html',
 })
 export class PTOEditorComponent implements OnInit {
@@ -81,6 +81,7 @@ export class PTOEditorComponent implements OnInit {
       this.ptoeditorForm.get('endTime').enable();
     }
   }
+
   navigateEvent(event) {
     this.pto.startDate = event.next;
   }

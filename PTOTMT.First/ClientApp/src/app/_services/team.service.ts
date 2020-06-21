@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { TeamFromDBEntity } from '../_entities/TeamFromDBEntity';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -18,9 +20,8 @@ export class TeamService {
     this.teamUrl = "https://localhost:44382/api/teams";
   }
 
-  public getTeamById(teamId: string) {
+  public getTeamById(teamId: string): Promise<TeamFromDBEntity>{
     let requestUrl: string = this.teamUrl + "/" + teamId;
-    return this.http.get<any>(requestUrl, httpOptions);
+    return this.http.get<TeamFromDBEntity>(requestUrl, httpOptions).toPromise();
   }
 }
-

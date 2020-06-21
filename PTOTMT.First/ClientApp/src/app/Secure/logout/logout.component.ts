@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-logout',
-  template:''
+  template: ''
 })
 export class LogoutComponent implements OnInit {
   constructor(public router: Router) { }

@@ -20,8 +20,9 @@ export class RequestTypeService {
     this.requestTypeUrl = "https://localhost:44382/api/requesttypes";
     }
 
-  public  getRequestTypes(): Promise<RequestTypeFromDBEntity[]> {
-    return this.http.get<RequestTypeFromDBEntity[]>(this.requestTypeUrl, httpOptions).toPromise();
+  public getRequestTypes(): Promise<RequestTypeFromDBEntity[]> {
+    let response = this.http.get<RequestTypeFromDBEntity[]>(this.requestTypeUrl, httpOptions);
+    return response.toPromise();
   }
 
   public getRequestTypeByName(name: string): Observable<RequestTypeFromDBEntity> {

@@ -9,7 +9,7 @@ import { QuotaService } from '../../_services/quota.service';
 import { ValidateMinutes } from '../../_validators/ValidateMinutes';
 
 @Component({
-  selector: 'app-quota-editor',
+  selector:'app-quota-editor',
   templateUrl: './quota-editor.component.html'
 })
 export class QuotaEditorComponent implements OnInit {
