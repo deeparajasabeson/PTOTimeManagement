@@ -3,30 +3,30 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialog } from '@angular/material';
 
 import { FullCalendarComponent } from '@fullcalendar/angular';
-import interactionPlugin from '@fullcalendar/interaction'; // for dateClick
 import { EventInput } from '@fullcalendar/core';
+import interactionPlugin from '@fullcalendar/interaction'; // for dateClick
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGrigPlugin from '@fullcalendar/timegrid';
 
-import { CommonLibrary } from '../../_library/common.library';
-import { PTOEditorComponent } from '../pto-editor/pto-editor.component';
-import { FlexDialogData } from '../../_viewmodels/FlexDialogData';
 import { PTODialogData } from '../../_viewmodels/PTODialogData';
+import { FlexDialogData } from '../../_viewmodels/FlexDialogData';
+import { QuotaEntity } from '../../_entities/QuotaEntity';
+import { PTOEntity } from '../../_entities/PTOEntity';
+import { StatusEntity } from '../../_entities/StatusEntity';
 import { FlexEntity } from '../../_entities/FlexEntity';
 import { FlexFromDBEntity } from '../../_entities/FlexFromDBEntity';
 import { FlexTypeFromDBEntity } from '../../_entities/FlexTypeFromDBEntity';
-import { PTOEntity } from '../../_entities/PTOEntity';
-import { StatusEntity } from '../../_entities/StatusEntity';
-import { PTOFromDBEntity } from '../../_entities/PTOFromDBEntity';
-import { RequestTypeFromDBEntity } from '../../_entities/RequestTypeFromDBEntity';
 import { UserFromDBEntity } from '../../_entities/UserFromDBEntity';
-import { QuotaEntity } from '../../_entities/QuotaEntity';
-import { PTOService } from '../../_services/pto.service';
+import { RequestTypeFromDBEntity } from '../../_entities/RequestTypeFromDBEntity';
+import { PTOFromDBEntity } from '../../_entities/PTOFromDBEntity';
+import { CommonLibrary } from '../../_library/common.library';
 import { DataStorageService } from '../../_services/datastorage.service';
+import { PTOEditorComponent } from '../pto-editor/pto-editor.component';
+import { FlexEditorComponent } from '../flex-editor/flex-editor.component';
 import { RequestTypeService } from '../../_services/requesttype.service';
+import { PTOService } from '../../_services/pto.service';
 import { FlexService } from '../../_services/flex.service';
 import { FlexTypeService } from '../../_services/flextype.service';
-import { FlexEditorComponent } from '../flex-editor/flex-editor.component';
 
 
 @Component({
