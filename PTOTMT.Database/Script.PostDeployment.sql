@@ -166,9 +166,9 @@ Values
 
 --Config.FlexType TABLE
 Insert into PTO.Flex 
-(Id, UserId, FlexTypeId, Description, IsForward, StartDateTime, EndDateTime, Hours, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, UserId, FlexTypeId, Name, Description, IsForward, StartDateTime, EndDateTime, Hours, CoWorkerId, AnotherStartDateTIme, AnotherEndDateTime, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(NEWID(), @UserId, @FlexTypeId, 'Sample',1,GETDATE(), GETDATE(), 1, 1, @UserId, GETDATE(), @UserId, GETDATE())
+(NEWID(), @UserId, @FlexTypeId, 'Sample Flex', 'Sample Description', 1, GETDATE(), GETDATE(), 2, @ReportToUserId, GETDATE(), GETDATE(), 1, @UserId, GETDATE(), @UserId, GETDATE())
 
 --Add keys back in Security.User TABLE
 Alter Table Security.[User]
