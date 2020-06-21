@@ -52,7 +52,7 @@ export class FlexEditorComponent implements OnInit {
       startTime: [this.flex.startTime],
       endTime: [this.flex.endTime],
       coWorkerId: [this.flex.coWorkerId],
-      coWorkerDate: [this.flex.coWorkerDate],
+      anotherDate: [this.flex.anotherDate],
       coWorkerStartTime: [this.flex.coWorkerStartTime],
       coWorkerEndTime: [this.flex.coWorkerEndTime],
       isNewEvent: [this.flex.isNewEvent]

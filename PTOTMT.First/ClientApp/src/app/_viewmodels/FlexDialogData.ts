@@ -14,7 +14,7 @@ export interface FlexDialogData {
   startTime: string;
   endTime: string;
   coWorkerId: string;
-  coWorkerDate: NgbDateStruct,
+  anotherDate: NgbDateStruct,
   coWorkerStartTime: string,
   coWorkerEndTime: string,
   isForward: boolean;

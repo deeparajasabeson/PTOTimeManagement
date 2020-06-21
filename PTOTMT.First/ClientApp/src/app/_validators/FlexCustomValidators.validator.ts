@@ -57,17 +57,21 @@ export class FlexCustomValidators {
       
       const toDay = new Date();   // Today's Date
 
+      //For Self-Shift Swap and Shift Swap Flextypes
+      if (flexTypeName == 'Self-Shift Swap' || flexTypeName == 'Shift Swap') {
+        const anotherDate = control.get('anotherDate').value;
+        if (anotherDate >= toDay) {
+          return { 'notFutureAnotherDate': true };
+        }
+      }
+
       // For Shift Swap Flextype
       if (flexTypeName == 'Shift Swap') {
         const coWorkerId = control.get('coWorkerId').value;
-        const coWorkerDate = control.get('coWorkerDate').value;
         const coWorkerStartTime = control.get('coWorkerStartTime').value;
         const coWorkerEndTime = control.get('coWorkerEndTime').value;
         if (coWorkerId == null || coWorkerId == undefined || coWorkerId == "") {
           return { 'inValidCoWorker': true };
-        }
-        if (coWorkerDate >= toDay) {
-          return { 'notFutureCoWorkerDate': true };
         }
         if (coWorkerStartTime > coWorkerEndTime) {
           return { 'inValidCoWorkerTime': true };

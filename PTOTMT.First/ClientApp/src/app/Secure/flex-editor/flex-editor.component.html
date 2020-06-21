@@ -85,7 +85,7 @@
           Pre-Arranged Shift Slide request is to be done at the least 3 days before.
         </div>
         <div style="color:red;" *ngIf="flexeditorForm.hasError('notFutureDate')">
-          Any request should be submitted for today or a future date.
+          Request can not be submitted for a past date.
         </div>
         <div style="color:red;" *ngIf="flexeditorForm.hasError('invalidMinutes')">
           Minutes should be either 0 or 30.
@@ -149,13 +149,16 @@
           <!--Error Display-->
           <div class="col-7">
             <div style="color:red;" *ngIf="flexeditorForm.hasError('notFutureDate')">
-              Any request should be submitted for today or a future date.
+              Request can not be submitted for a past date.
             </div>
             <div style="color:red;" *ngIf="flexeditorForm.hasError('inValidCoWorker')">
+              Please select your Co-worker.
             </div>
-            <div style="color:red;" *ngIf="flexeditorForm.hasError('notFutureCoWorkerDate')">
+            <div style="color:red;" *ngIf="flexeditorForm.hasError('notFutureAnotherDate')">
+              Can swap only with Co-worker's shift on a future date.
             </div>
             <div style="color:red;" *ngIf="flexeditorForm.hasError('inValidCoWorkerTime')">
+              Co-worker's End shift time is to be greater than Start shift time.
             </div>
           </div>
         </div>
@@ -172,10 +175,10 @@
             Shift Start Date
             <div class="input-group">
               <input ngbDatepicker #dp
-                     formControlName="coWorkerDate"
+                     formControlName="anotherDate"
                      placeholder="mm/dd/yyyy"
-                     #dpcoWorkerDate="ngbDatepicker"
-                     name="coWorkerDate"
+                     #dpanotherDate="ngbDatepicker"
+                     name="anotherDate"
                      size="8"
                      required
                      placement="bottom-left">
@@ -212,8 +215,8 @@
                      required
                      placement="bottom-left">
               <!--<div class="input-group-append">
-          <button class="btn btn-outline-secondary calendar" type="button">📅</button>
-        </div>-->
+                <button class="btn btn-outline-secondary calendar" type="button">📅</button>
+              </div>-->
             </div>
           </div>
           <div class="col-2">
@@ -277,7 +280,12 @@
               </div>
             </div>
           </div>
-        </div><br /><br />
+        </div>
+        <!--Error Display-->
+        <div style="color:red;" *ngIf="flexeditorForm.hasError('notFutureDate') || flexeditorForm.hasError('notFutureAnotherDate')">
+          Request can not be submitted for any past dates.
+        </div>
+        <br *ngIf="!(flexeditorForm.hasError('notFutureDate') || (flexeditorForm.hasError('notFutureAnotherDate')"/><br />
       </div>
     </div>
 

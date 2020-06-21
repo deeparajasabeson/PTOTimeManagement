@@ -169,7 +169,7 @@ export class PTOCalendarComponent implements OnInit {
       startTime: "00:00",
       endTime: "00:00",
       coWorkerId: "",
-      coWorkerDate: null,
+      anotherDate: null,
       coWorkerStartTime: "",
       coWorkerEndTime: "",
       isForward: true,
