@@ -42,9 +42,9 @@ export class FlexService {
     return this.http.get<FlexFromDBEntity[]>(requestUrl, httpOptions).toPromise();
   }
 
-  public getFlexsByUserIdInDateRange(userId: string,
-    fromDate: Date,
-    toDate: Date): Promise<FlexFromDBEntity[]> {
+  public getFlexsByUserIdInDateRange( userId: string,
+                                                              fromDate: Date,
+                                                              toDate: Date): Promise<FlexFromDBEntity[]> {
     let requestUrl: string = this.flexUrl +
       "/flexrequestsbyuseridindaterange" +
       "?userId=" + userId +

@@ -43,8 +43,8 @@ export class PTOService {
   }
 
   public getPTOsByUserIdInDateRange(userId: string,
-    fromDate: Date,
-    toDate: Date): Promise<PTOFromDBEntity[]> {
+                                                              fromDate: Date,
+                                                              toDate: Date): Promise<PTOFromDBEntity[]> {
     let requestUrl: string = this.ptoUrl +
       "/ptorequestsbyuseridindaterange" +
       "?userId=" + userId +

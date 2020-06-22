@@ -57,8 +57,22 @@ namespace PTOTMT.Service.Controllers
 
         [HttpGet("ptorequestsbyuseridindaterange")]
         public IEnumerable<Request> GetPTOsByUserIdInDateRange(Guid userId, DateTime fromDate, DateTime toDate) {
-            var requests = GetRequest();
-            return requests.Where(r => r.UserId == userId);
+            IEnumerable<Request> usersRequests = GetRequest().Where(r => r.UserId == userId);
+
+            if (fromDate != null && toDate != null)
+            {
+                usersRequests = usersRequests.Where(req => !((req.StartDateTime < fromDate && req.EndDateTime < fromDate) ||
+                                                                                                        (req.StartDateTime > toDate && req.EndDateTime > toDate)));
+            }
+            else if (fromDate == null && toDate != null)
+            {
+                usersRequests = usersRequests.Where(req => req.StartDateTime <= toDate);
+            }
+            else if (fromDate != null && toDate == null)
+            {
+                usersRequests = usersRequests.Where(req => req.EndDateTime >= fromDate);
+            }
+            return usersRequests;
         }
             
         // GET: api/requests/ptorequestsreportingmembers/<userId:Guid>

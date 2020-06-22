@@ -58,12 +58,25 @@ namespace PTOTMT.Service.Controllers
             return Flexs.Where(f => f.UserId == userId);
         }
 
-
         [HttpGet("flexrequestsbyuseridindaterange")]
-        public IEnumerable<Request> GetFlexsByUserIdInDateRange(Guid userId, DateTime fromDate, DateTime toDate)
+        public IEnumerable<Flex> GetFlexsByUserIdInDateRange(Guid userId, DateTime fromDate, DateTime toDate)
         {
-            var Flexs = GetFlex();
-            return Flexs.Where(f => f.UserId == userId);
+            IEnumerable<Flex> flexsRequests = GetFlex().Where(f => f.UserId == userId);
+
+            if (fromDate != null && toDate != null)
+            {
+                flexsRequests = flexsRequests.Where(req => !((req.StartDateTime < fromDate && req.EndDateTime < fromDate) ||
+                                                                                                        (req.StartDateTime > toDate && req.EndDateTime > toDate)));
+            }
+            else if (fromDate == null && toDate != null)
+            {
+                flexsRequests = flexsRequests.Where(req => req.StartDateTime <= toDate);
+            }
+            else if (fromDate != null && toDate == null)
+            {
+                flexsRequests = flexsRequests.Where(req => req.EndDateTime >= fromDate);
+            }
+            return flexsRequests;
         }
         
         // GET: api/requests/flexsreportingmembers
