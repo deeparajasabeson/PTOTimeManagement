@@ -29,14 +29,15 @@ export class LoginNavMenuComponent implements OnInit {
     let user: UserFromDBEntity = this.dataStorageService.getUserEntity();
     let team: TeamFromDBEntity = this.dataStorageService.getTeamEntity();
     let isLeadership: boolean = team.name == 'Leadership / Admin';
-    //Active Requests count of all Reporting Team Members
+
     if (isLeadership) {   
-      let ptoReporingMembersResponse = this.ptoService.getRequestsReportingMembers(user.id,new Date(), null ); 
+    //Active PTO Requests count of all Reporting Team Members
+      let ptoReporingMembersResponse = this.ptoService.getRequestsReportingMembers(user.id,new Date(), null );
       ptoReporingMembersResponse.then((data: PTOFromDBEntity[]) =>
       {
         let requestList = data;
-            //Active Flex Requests count of all Reporting Team Members
-        let flexResponse = this.flexService.getFlexsReportingMembers(user.id);
+        //Active Flex Requests count of all Reporting Team Members
+        let flexResponse = this.flexService.getFlexsReportingMembers(user.id, new Date(), null);
         flexResponse.then((data: FlexFromDBEntity[]) =>
         {
           let flexList = data;
@@ -45,12 +46,13 @@ export class LoginNavMenuComponent implements OnInit {
       });
     }
 
-    //Requests count of all Reporting Team Members
-    let ptoResponse = this.ptoService.getPTOsByUserId(user.id);
+    //Active PTO Requests count for the current user
+    let ptoResponse = this.ptoService.getPTOsByUserIdInDateRange(user.id, new Date(), null);
     ptoResponse.then((data: PTOFromDBEntity[]) =>
     {
       let requestList = data;
-      let flexResponse = this.flexService.getFlexsByUserId(user.id);
+      //Active Flex Requests count for the current user
+      let flexResponse = this.flexService.getFlexsByUserIdInDateRange(user.id, new Date(), null);
       flexResponse.then((data: FlexFromDBEntity[]) =>
       {
         let flexList = data;

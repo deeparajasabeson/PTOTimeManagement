@@ -58,6 +58,14 @@ namespace PTOTMT.Service.Controllers
             return Flexs.Where(f => f.UserId == userId);
         }
 
+
+        [HttpGet("flexrequestsbyuseridindaterange")]
+        public IEnumerable<Request> GetFlexsByUserIdInDateRange(Guid userId, DateTime fromDate, DateTime toDate)
+        {
+            var Flexs = GetFlex();
+            return Flexs.Where(f => f.UserId == userId);
+        }
+        
         // GET: api/requests/flexsreportingmembers
         [HttpGet("flexsreportingmembers")]
         public IEnumerable<Flex> GetFlexsReportingMembers(Guid leadershipuserId, DateTime fromDate, DateTime toDate)

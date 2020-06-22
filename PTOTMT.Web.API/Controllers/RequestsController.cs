@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
 using PTOTMT.Repository.Abstraction.Web;
-using Org.BouncyCastle.Ocsp;
+
 
 namespace PTOTMT.Service.Controllers
 {
@@ -55,6 +55,12 @@ namespace PTOTMT.Service.Controllers
             return requests.Where(r => r.UserId == userId);
         }
 
+        [HttpGet("ptorequestsbyuseridindaterange")]
+        public IEnumerable<Request> GetPTOsByUserIdInDateRange(Guid userId, DateTime fromDate, DateTime toDate) {
+            var requests = GetRequest();
+            return requests.Where(r => r.UserId == userId);
+        }
+            
         // GET: api/requests/ptorequestsreportingmembers/<userId:Guid>
         [HttpGet("requestsreportingmembers")]
         public IEnumerable<Request> GetRequestsReportingMembers(Guid leadershipuserId, DateTime fromDate, DateTime toDate)

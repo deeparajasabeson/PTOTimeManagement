@@ -42,6 +42,17 @@ export class FlexService {
     return this.http.get<FlexFromDBEntity[]>(requestUrl, httpOptions).toPromise();
   }
 
+  public getFlexsByUserIdInDateRange(userId: string,
+    fromDate: Date,
+    toDate: Date): Promise<FlexFromDBEntity[]> {
+    let requestUrl: string = this.flexUrl +
+      "/flexrequestsbyuseridindaterange" +
+      "?userId=" + userId +
+      "&fromDate=" + fromDate +
+      "&toDate=" + toDate;
+    return this.http.get<FlexFromDBEntity[]>(requestUrl, httpOptions).toPromise();
+  }
+
   public saveFlex(flex: FlexEntity) {
     const flexData = JSON.stringify(flex);
     this.http.post(this.flexUrl, flexData, httpOptions).toPromise()

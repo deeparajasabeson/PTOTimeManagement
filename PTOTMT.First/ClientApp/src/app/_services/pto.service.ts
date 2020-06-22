@@ -5,7 +5,6 @@ import { PTOEntity } from '../_entities/PTOEntity';
 import { PTOFromDBEntity } from '../_entities/PTOFromDBEntity';
 
 
-
 const httpOptions = {
   headers: new HttpHeaders({
     "Content-Type": "application/json"
@@ -31,13 +30,24 @@ export class PTOService {
     let requestUrl: string = this.ptoUrl + "/ptorequestsbyuserid/" + userId;
     return this.http.get<PTOFromDBEntity[]>(requestUrl, httpOptions).toPromise();
   }
-  
+
   public getRequestsReportingMembers( leadershipUserId: string,
                                                                 fromDate: Date,
                                                                 toDate: Date): Promise<PTOFromDBEntity[]> {
     let requestUrl: string = this.ptoUrl +
       "/requestsreportingmembers" +
       "?leadershipUserId=" + leadershipUserId +
+      "&fromDate=" + fromDate +
+      "&toDate=" + toDate;
+    return this.http.get<PTOFromDBEntity[]>(requestUrl, httpOptions).toPromise();
+  }
+
+  public getPTOsByUserIdInDateRange(userId: string,
+    fromDate: Date,
+    toDate: Date): Promise<PTOFromDBEntity[]> {
+    let requestUrl: string = this.ptoUrl +
+      "/ptorequestsbyuseridindaterange" +
+      "?userId=" + userId +
       "&fromDate=" + fromDate +
       "&toDate=" + toDate;
     return this.http.get<PTOFromDBEntity[]>(requestUrl, httpOptions).toPromise();
