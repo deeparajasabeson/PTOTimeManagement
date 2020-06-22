@@ -30,13 +30,12 @@ export class FlexEditorComponent implements OnInit {
   toDateNgbDateStruct: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(this.toDate);
 
   constructor(
-    private dialogRef: MatDialogRef<FlexEditorComponent>,
-    @Inject(MAT_DIALOG_DATA) public dataDialog: FlexDialogData,  
-    private fb: FormBuilder,
-    private flexService: FlexService,
-    private datastorageService: DataStorageService,
-    private userService: UserService,
-    private teamService: TeamService) { }
+      private dialogRef: MatDialogRef<FlexEditorComponent>,
+      @Inject(MAT_DIALOG_DATA) public dataDialog: FlexDialogData,  
+      private fb: FormBuilder,
+      private flexService: FlexService,
+      private datastorageService: DataStorageService,
+      private userService: UserService) { }
 
   async ngOnInit() {
     this.flexeditorForm = this.fb.group({
@@ -58,29 +57,26 @@ export class FlexEditorComponent implements OnInit {
       isNewEvent: [this.flex.isNewEvent]
     });
 
-    let user = await this.datastorageService.getUserEntity();
+    let user = this.datastorageService.getUserEntity();
+    this.team = this.datastorageService.getTeamEntity();
 
-    await this.teamService.getTeamById(user.teamFunctionId).then((teamdata: TeamFromDBEntity) => {
-      this.team = teamdata;
+    await this.userService.getCoWorkers(user).toPromise().then((userdata: UserFromDBEntity[]) => {
+      let coWorkersList = userdata;
 
-      this.userService.getCoWorkers(user).toPromise().then((userdata: UserFromDBEntity[]) => {
-        let coWorkersList = userdata;
+      if (this.flex.flexTypeId == "" && this.flex.flexTypes.length > 0) {
+        this.flex.flexTypeId = this.flex.flexTypes.find(rt => rt.name == "Shift Slide").id;
+      }
+      this.flexTypes = [];
+      this.flex.flexTypes.forEach(val => this.flexTypes.push(Object.assign({}, val)));
+      this.flex.flexTypeValue = "Shift Slide";
 
-        if (this.flex.flexTypeId == "" && this.flex.flexTypes.length > 0) {
-          this.flex.flexTypeId = this.flex.flexTypes.find(rt => rt.name == "Shift Slide").id;
-        }
-        this.flexTypes = [];
-        this.flex.flexTypes.forEach(val => this.flexTypes.push(Object.assign({}, val)));
-        this.flex.flexTypeValue = "Shift Slide";
-
-        try {
-          this.flexeditorForm.validator = FlexCustomValidators.ValidateData(this.team, this.flexTypes);
-          this.flexeditorForm.controls["hours"].setValidators([Validators.required, Validators.min(0), Validators.max(this.team.maxShiftSlideHours)]);
-        } catch (Error) {
-          alert(Error.message);
-          console.log(Error);
-        }
-      });
+      try {
+        this.flexeditorForm.validator = FlexCustomValidators.ValidateData(this.team, this.flexTypes);
+        this.flexeditorForm.controls["hours"].setValidators([Validators.required, Validators.min(0), Validators.max(this.team.maxShiftSlideHours)]);
+      } catch (Error) {
+        alert(Error.message);
+        console.log(Error);
+      }
     });
   }
 

@@ -23,7 +23,9 @@ export class LoginComponent  {
       {
         let token = (<any>response).token;
         let user = (<any>response).user;
+        let team = (<any>response).team;
         this.datastorageService.setUserEntity(user);
+        this.datastorageService.setTeamEntity(team);
         localStorage.setItem("jwt", token);
 
         this.invalidLogin = false;

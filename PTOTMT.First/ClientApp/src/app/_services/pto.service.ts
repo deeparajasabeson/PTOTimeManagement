@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { PTOEntity } from '../_entities/PTOEntity';
+import { PTOFromDBEntity } from '../_entities/PTOFromDBEntity';
+
 
 
 const httpOptions = {
@@ -19,14 +22,25 @@ export class PTOService {
     this.ptoUrl = "https://localhost:44382/api/requests";
   }
 
-  public getPTOById(ptoId: string) {
+  public getPTOById(ptoId: string): Observable<PTOFromDBEntity> {
     let requestUrl: string = this.ptoUrl + "/" + ptoId;
-    return this.http.get<any>(requestUrl, httpOptions);
+    return this.http.get<PTOFromDBEntity>(requestUrl, httpOptions);
   }
 
-  public getPTOsByUserId(userId: string): Promise<any> {
+  public getPTOsByUserId(userId: string): Promise<PTOFromDBEntity[]> {
     let requestUrl: string = this.ptoUrl + "/ptorequestsbyuserid/" + userId;
-    return this.http.get(requestUrl, httpOptions).toPromise();
+    return this.http.get<PTOFromDBEntity[]>(requestUrl, httpOptions).toPromise();
+  }
+  
+  public getRequestsReportingMembers( leadershipUserId: string,
+                                                                fromDate: Date,
+                                                                toDate: Date): Promise<PTOFromDBEntity[]> {
+    let requestUrl: string = this.ptoUrl +
+      "/requestsreportingmembers" +
+      "?leadershipUserId=" + leadershipUserId +
+      "&fromDate=" + fromDate +
+      "&toDate=" + toDate;
+    return this.http.get<PTOFromDBEntity[]>(requestUrl, httpOptions).toPromise();
   }
 
   public savePTO(pto: PTOEntity) {

@@ -76,6 +76,11 @@ export class PTOCalendarComponent implements OnInit {
     PTOCalendarComponent.subscribeFlexTypeFromDBEntity =flexTypes;
   }
 
+  static subscribeFlex: FlexFromDBEntity;
+  static setSubscribeFlex(flexs: FlexFromDBEntity) {
+    PTOCalendarComponent.subscribeFlex = flexs;
+  }
+
   static subscribeFlexFromDBEntity: FlexFromDBEntity[];
   static setSubscribeFlexFromDBEntity(flexs: FlexFromDBEntity[]) {
     PTOCalendarComponent.subscribeFlexFromDBEntity = flexs;
@@ -104,9 +109,9 @@ export class PTOCalendarComponent implements OnInit {
   // Constructor - executes when component is created first
   constructor(public dialog: MatDialog,
     private ptoService: PTOService,
+    private flexService: FlexService,
     private datastorageService: DataStorageService,
     private requestTypeService: RequestTypeService,
-    private flexService: FlexService,
     private flexTypeService: FlexTypeService) { }
 
   // Execute after constructor when component is initialized
@@ -115,7 +120,7 @@ export class PTOCalendarComponent implements OnInit {
       customButtons: {
         flex: {
           text: 'Schedule Flexibility',
-          click: () => this.scheduleFlex()
+          click: () => this.getScheduleFlex()
         },
         newpto: {
           text: 'New PTO Request',
@@ -292,11 +297,16 @@ export class PTOCalendarComponent implements OnInit {
         start: flexList[i].startDateTime,
         end: flexList[i].endDateTime,
         id: flexList[i].id,
+        description: flexList[i].description,
         extendedProps: {
+          name: flexList[i].name,
           hours: flexList[i].hours,
           userId: flexList[i].userId,
           flexTypeId: flexList[i].flexTypeId,
           isForward: flexList[i].isForward,
+          coWorkerId: flexList[i].coWorkerId,
+          anotherStartDateTime: flexList[i].anotherStartDateTime,
+          anotherEndDateTime: flexList[i].anotherEndDateTime,
           isActive: flexList[i].isActive,
           createdBy: flexList[i].createdBy,
           createdOn: flexList[i].createdOn,
@@ -321,7 +331,7 @@ export class PTOCalendarComponent implements OnInit {
     var attr_title = document.createAttribute("title");
     attr_tooltip.value = "";
     attr_title.value = info.event.extendedProps.description
-      + "  PTO Hours : " + info.event.extendedProps.hours
+      + "  Hours : " + info.event.extendedProps.name
       + "  Status : " + info.event.extendedProps.statusId;
     info.el.setAttributeNode(attr_tooltip);
     info.el.setAttributeNode(attr_title);
@@ -329,21 +339,23 @@ export class PTOCalendarComponent implements OnInit {
 
   // Edit Quota when event is clicked
   handleEventClick(info) {
-    let ptoId = info.event.id;
-    if (ptoId == null) {
+    let eventId = info.event.id;
+    if (eventId == null) {
       return;
     }
 
-    let response = this.ptoService.getPTOById(ptoId);
+    let response = this.ptoService.getPTOById(eventId);
     response.subscribe((data: PTOFromDBEntity) => {
       PTOCalendarComponent.setSubscribePTOFromDBEntity(data);
     });
 
     let ptoToEdit = PTOCalendarComponent.subscribePTOFromDBEntity;
     if (ptoToEdit == null || ptoToEdit == undefined) {
-      return
+      this.handleFlexEventClick(eventId);  
+      return;
     }
 
+    //Clicked event is a PTO request
     let startDateTime = new Date(ptoToEdit.startDateTime);
     let ptoStartDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(startDateTime);
     let endDateTime = new Date(ptoToEdit.endDateTime);
@@ -363,6 +375,37 @@ export class PTOCalendarComponent implements OnInit {
     this.pto.statusId = ptoToEdit.statusId;
     this.pto.isNewEvent = false;
     this.getPTO(null);
+  }
+
+  //Search in Flex table and handle the clicked event
+  handleFlexEventClick(eventId: string) {
+    let response = this.flexService.getFlexById(eventId);
+    response.subscribe((data: FlexFromDBEntity) => {
+      PTOCalendarComponent.setSubscribeFlex(data);
+    });
+
+    let flexToEdit = PTOCalendarComponent.subscribeFlex;
+    if (flexToEdit == null || flexToEdit == undefined) {
+      return;
+    }
+    //Clicked event is a Flex request
+    let startDateTime = new Date(flexToEdit.startDateTime);
+    let flexStartDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(startDateTime);
+    let endDateTime = new Date(flexToEdit.endDateTime);
+    let flexEndDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(endDateTime);
+
+    this.flex.id = flexToEdit.id;
+    this.flex.userId = flexToEdit.userId;
+    this.flex.description = flexToEdit.description;
+    this.flex.flexTypes = PTOCalendarComponent.subscribeFlexTypeFromDBEntity;
+    this.flex.flexTypeId = flexToEdit.flexTypeId,
+      this.flex.hours = flexToEdit.hours;
+    this.flex.onDate = flexStartDate;
+    this.flex.startTime = flexToEdit.startDateTime.substr(11, 5);
+    this.flex.anotherDate = flexEndDate;
+    this.flex.endTime = flexToEdit.endDateTime.substr(11, 5);
+    this.flex.isNewEvent = false;
+    this.getScheduleFlex();
   }
 
   // Get New PTO and set start date
@@ -387,6 +430,24 @@ export class PTOCalendarComponent implements OnInit {
       if (resultData != null && resultData != undefined) {
         this.pto = resultData;
         this.savePTO();
+      }
+    });
+  }
+
+  //Get New Schedule Flexibility
+  getScheduleFlex(): void {
+    let dialogConfig = CommonLibrary.CreateDialog();
+    dialogConfig.id = "flex-editor";
+    dialogConfig.height = "73%";
+    dialogConfig.width = "95%";
+    dialogConfig.data = { flex: this.flex };
+    const dialogRef = this.dialog.open(FlexEditorComponent, dialogConfig);
+    dialogRef.componentInstance.flex = this.flex;  //another way to pass quota to modal window
+
+    dialogRef.afterClosed().subscribe(resultData => {
+      if (resultData != null && resultData != undefined) {
+        this.flex = resultData;
+        this.saveFlex();
       }
     });
   }
@@ -434,39 +495,27 @@ export class PTOCalendarComponent implements OnInit {
     }
   }
 
-  //Get New Schedule Flexibility
-  scheduleFlex(): void {
-    let dialogConfig = CommonLibrary.CreateDialog();
-    dialogConfig.id = "flex-editor";
-    dialogConfig.height = "73%";
-    dialogConfig.width = "95%";
-    dialogConfig.data = { flex: this.flex };
-    const dialogRef = this.dialog.open(FlexEditorComponent, dialogConfig);
-    dialogRef.componentInstance.flex = this.flex;  //another way to pass quota to modal window
-
-    dialogRef.afterClosed().subscribe(resultData => {
-      if (resultData != null && resultData != undefined) {
-        this.flex = resultData;
-        this.saveFlex();
-      }
-    });
-  }
-
   //Save Schedule Flexibility when clicked Save button in popup modal window
   saveFlex() {
     let userDetails: UserFromDBEntity = this.datastorageService.getUserEntity();
     let startDateTime = CommonLibrary.NgbDateStruct2DateTime(this.flex.onDate, this.flex.startTime);
     let endDateTime = CommonLibrary.NgbDateStruct2DateTime(this.flex.onDate, this.flex.endTime);
+    let anotherStartDateTime = CommonLibrary.NgbDateStruct2DateTime(this.flex.anotherDate, this.flex.coWorkerStartTime);
+    let anotherEndDateTime = CommonLibrary.NgbDateStruct2DateTime(this.flex.anotherDate, this.flex.coWorkerEndTime);
 
     const flexEntity: FlexEntity = {
       id: (this.flex.id == "" && this.flex.isNewEvent) ? CommonLibrary.GenerateUUID() : this.flex.id,
       userId: userDetails.id,
       description: this.flex.description,
-      flexId: this.flex.id,
+      name: this.flex.name,
+      flexTypeId: this.flex.id,
       hours: this.flex.hours,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
       isForward: this.flex.isForward,
+      coWorkerId: this.flex.coWorkerId,
+      anotherStartDateTime: anotherStartDateTime,
+      anotherEndDateTime: anotherEndDateTime,
       isActive: true,
       createdBy: userDetails.id,
       createdOn: this.toDate,
@@ -485,8 +534,24 @@ export class PTOCalendarComponent implements OnInit {
       id: flexEntity.id,
       allDay: false,
       color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
-      textColor: "white"
-    })
+      textColor: "white",
+      description: flexEntity.description,
+      extendedProps: {
+        name: flexEntity.name,
+        hours: flexEntity.hours,
+        userId: flexEntity.userId,
+        flexTypeId: flexEntity.flexTypeId,
+        isForward: flexEntity.isForward,
+        coWorkerId: flexEntity.coWorkerId,
+        anotherStartDateTime: flexEntity.anotherStartDateTime,
+        anotherEndDateTime: flexEntity.anotherEndDateTime,
+        isActive: flexEntity.isActive,
+        createdBy: flexEntity.createdBy,
+        createdOn: flexEntity.createdOn,
+        updatedBy: flexEntity.updatedBy,
+        updatedOn: flexEntity.updatedOn
+      }
+    });
     let calendarApi = this.calendarComponent.getApi();
     if (calendarApi.needsRerender) {
       calendarApi.render();

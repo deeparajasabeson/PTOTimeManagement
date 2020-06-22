@@ -52,12 +52,40 @@ namespace PTOTMT.Service.Controllers
 
         // GET: api/Flexs/flexsbyuserid/<userId:Guid>
         [HttpGet("flexsbyuserid/{userId}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IEnumerable<Flex> GetFlexsByUserId(Guid? userId)
         {
             var Flexs = GetFlex();
             return Flexs.Where(f => f.UserId == userId);
         }
+
+        // GET: api/requests/flexsreportingmembers
+        [HttpGet("flexsreportingmembers")]
+        public IEnumerable<Flex> GetFlexsReportingMembers(Guid leadershipuserId, DateTime fromDate, DateTime toDate)
+        {
+            IEnumerable<Flex> flexList = GetFlex();
+            IEnumerable<User> reportingMembersList = uow.UserRepo.GetAll().Where(u => u.ReportToUserId == leadershipuserId);
+
+            IEnumerable<Flex> membersRequests = from flex in flexList
+                                                                            join mem in reportingMembersList
+                                                                            on flex.UserId equals mem.Id
+                                                                            select flex;
+            if (fromDate != null && toDate != null)
+            {
+
+                membersRequests = membersRequests.Where(flex => !((flex.StartDateTime < fromDate && flex.EndDateTime < fromDate) ||
+                                                                                                        (flex.StartDateTime > toDate      && flex.EndDateTime > toDate)));
+            }
+            else if (fromDate == null && toDate != null)
+            {
+                membersRequests = membersRequests.Where(req => req.StartDateTime <= toDate);
+            }
+            else if (fromDate != null && toDate == null)
+            {
+                membersRequests = membersRequests.Where(req => req.EndDateTime >= fromDate);
+            }
+            return membersRequests;
+        }
+
 
         // PUT: api/flexs/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for

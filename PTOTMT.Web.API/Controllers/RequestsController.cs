@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
 using PTOTMT.Repository.Abstraction.Web;
-
+using Org.BouncyCastle.Ocsp;
 
 namespace PTOTMT.Service.Controllers
 {
@@ -49,11 +49,34 @@ namespace PTOTMT.Service.Controllers
 
         // GET: api/requests/ptorequestsbyuserid/<userId:Guid>
         [HttpGet("ptorequestsbyuserid/{userId}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IEnumerable<Request> GetRequestsByUserId(Guid? userId)
+        public IEnumerable<Request> GetRequestsByUserId(Guid userId)
         {
             var requests = GetRequest();
             return requests.Where(r => r.UserId == userId);
+        }
+
+        // GET: api/requests/ptorequestsreportingmembers/<userId:Guid>
+        [HttpGet("requestsreportingmembers")]
+        public IEnumerable<Request> GetRequestsReportingMembers(Guid leadershipuserId, DateTime fromDate, DateTime toDate)
+        {
+            IEnumerable<Request> requestList = GetRequest();
+            IEnumerable<User> reportingMembersList = uow.UserRepo.GetAll().Where(u => u.ReportToUserId == leadershipuserId);
+
+            IEnumerable<Request> membersRequests = from req in requestList
+                                                                                  join mem in reportingMembersList
+                                                                                  on req.UserId equals mem.Id
+                                                                                  select req;
+            if(fromDate != null && toDate != null) {
+                membersRequests = membersRequests.Where(req => !((req.StartDateTime < fromDate && req.EndDateTime < fromDate) || 
+                                                                                                        (req.StartDateTime > toDate      && req.EndDateTime > toDate)));
+            }
+            else if (fromDate == null && toDate != null) {
+                    membersRequests = membersRequests.Where(req => req.StartDateTime <= toDate);
+             }
+            else if (fromDate != null && toDate == null) {
+                    membersRequests = membersRequests.Where(req => req.EndDateTime >= fromDate);
+            }
+            return membersRequests;
         }
 
         // PUT: api/Requests/5

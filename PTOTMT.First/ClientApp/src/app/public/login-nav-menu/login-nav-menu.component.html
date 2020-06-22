@@ -2,15 +2,21 @@
   <li class="nav-item">
     <fa-layers size="1.8x">
       <fa-icon icon="bell"></fa-icon>
-      <fa-layers-counter [content]="counter"></fa-layers-counter>
+      <fa-layers-counter [content]="userCounter"></fa-layers-counter>
     </fa-layers>
   </li>  &nbsp;  &nbsp;
+  <li class="nav-item" *ngIf="isLeadership">
+      <fa-layers size="1.8x">
+        <fa-icon icon="users"></fa-icon>
+        <fa-layers-counter [content]="teamCounter"></fa-layers-counter>
+      </fa-layers>
+  </li>  &nbsp;  &nbsp;
   <li class="nav-item">
-    <span *ngIf="userName ">
+    <span *ngIf="user != null && user != undefined">
       <fa-icon icon="user"></fa-icon>
     </span>
-    <b>{{ userName  }}</b>
-  </li>  &nbsp;
+    <b>{{ user.FirstName }}&nbsp;{{ user.LastName }}</b>&nbsp;
+  </li>
   <li class="nav-item">
     <a class="nav-link text-dark" [routerLink]='["/loggedout"]' [state]='{ local: true }' title="Loggedout">
       <fa-icon icon="sign-out-alt"></fa-icon>
