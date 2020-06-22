@@ -285,7 +285,7 @@
         <div style="color:red;" *ngIf="flexeditorForm.hasError('notFutureDate') || flexeditorForm.hasError('notFutureAnotherDate')">
           Request can not be submitted for any past dates.
         </div>
-        <br *ngIf="!(flexeditorForm.hasError('notFutureDate') || (flexeditorForm.hasError('notFutureAnotherDate')"/><br />
+        <br *ngIf="!(flexeditorForm.hasError('notFutureDate') || flexeditorForm.hasError('notFutureAnotherDate'))"/><br />
       </div>
     </div>
 

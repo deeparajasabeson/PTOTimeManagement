@@ -137,7 +137,7 @@ namespace PTOTMT.Service.Controllers
                 if (user == null) { return Unauthorized(); }
                 string tokenString = GenerateJWTToken(user);
                 Team team = uow.TeamRepo.GetById(user.TeamFunctionId);
-                Title title = uow.TitleRepo.GetById(user.TeamFunctionId);
+
                 return Ok(new { Token = tokenString, 
                                            User = user, 
                                            Team = team });

@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatBadgeModule } from '@angular/material';
 import { DataStorageService } from '../../_services/datastorage.service';
+import { PTOService } from '../../_services/pto.service';
+import { FlexService } from '../../_services/flex.service';
 import { UserFromDBEntity } from '../../_entities/UserFromDBEntity';
 import { FlexFromDBEntity } from '../../_entities/FlexFromDBEntity';
 import { PTOFromDBEntity } from '../../_entities/PTOFromDBEntity';
-import { PTOService } from '../../_services/pto.service';
-import { FlexService } from '../../_services/flex.service';
 import { TeamFromDBEntity } from '../../_entities/TeamFromDBEntity';
 
 
@@ -28,8 +28,8 @@ export class LoginNavMenuComponent implements OnInit {
   ngOnInit() {
     let user: UserFromDBEntity = this.dataStorageService.getUserEntity();
     let team: TeamFromDBEntity = this.dataStorageService.getTeamEntity();
-    let isLeadership: boolean = team.name == 'Leadership / Admin';
 
+    let isLeadership: boolean = (team.name == 'Leadership / Admin');
     if (isLeadership) {   
     //Active PTO Requests count of all Reporting Team Members
       let ptoReporingMembersResponse = this.ptoService.getRequestsReportingMembers(user.id,new Date(), null );
