@@ -1,0 +1,30 @@
+<br>
+<h3>Waiting List</h3>
+<br>
+<div class="container">
+  <table class="table table-striped table-bordered table-hovertable-sm table-responsive">
+    <caption>Waiting List of all active PTO and Flex Requests</caption>
+    <thead>
+      <tr class="table-dark">
+        <th>Priority</th>
+        <th>Requestor</th>
+        <th>Request Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let request of userRequestList; let i=index">
+        <td>{{ i }}</td>
+        <td>{{ request.userId | userName }}</td>
+        <td>{{ request.requestTypeId | requestTypeName}}</td>
+        <td>{{ request.startDateTime | date: 'short' }}&nbsp;--&nbsp;{{ request.endDateTime | date:'short' }}&nbsp;</td>
+      </tr>
+      <tr *ngFor="let flex of userFlexList">
+        <td>{{ i }}</td>
+        <td>{{ flex.userId | userName }}</td>
+        <td>{{ flex.flexTypeId | flexName }}</td>
+        <td>{{flex.startDateTime | date: 'short'}}&nbsp;--&nbsp;{{ flex.endDateTime | date:'short' }}&nbsp;</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

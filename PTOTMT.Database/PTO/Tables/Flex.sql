@@ -12,6 +12,7 @@
     [CoWorkerId] UNIQUEIDENTIFIER NOT NULL, 	
     [AnotherStartDateTime] DATETIMEOFFSET NOT NULL, 
     [AnotherEndDateTime] DATETIMEOFFSET NOT NULL, 
+    [StatusId]  UNIQUEIDENTIFIER NOT NULL, 	
     [IsActive]    BIT                NOT NULL,
     [CreatedBy]   UNIQUEIDENTIFIER   NOT NULL,
     [CreatedOn]   DATETIMEOFFSET (7) DEFAULT (getdate()) NOT NULL,
@@ -21,6 +22,7 @@
     CONSTRAINT FK_FlexTypeFlex FOREIGN KEY ([FlexTypeId]) REFERENCES [Config].[FlexType] ([Id]),
     CONSTRAINT FK_UserFlex_UserId FOREIGN KEY ([UserId]) REFERENCES [security].[User] ([Id]),
     CONSTRAINT FK_UserFlex_CoWorkerId FOREIGN KEY ([CoWorkerId]) REFERENCES [security].[User] ([Id]),
+    CONSTRAINT FK_StatusFlex FOREIGN KEY ([StatusId]) REFERENCES [Config].[Status] ([Id]),
     CONSTRAINT FK_UserFlex_CreatedBy FOREIGN KEY ([CreatedBy]) REFERENCES [security].[User] ([Id]),
     CONSTRAINT FK_UserFlex_UpdatedBy FOREIGN KEY ([UpdatedBy]) REFERENCES [security].[User]  ([Id])
 )

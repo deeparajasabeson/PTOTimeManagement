@@ -61,4 +61,13 @@ export class CommonLibrary
     dialogConfig.width = "70%";
     return dialogConfig;
   }
+
+  //convert the list to a sortedarray on the parameter given
+  static sortListByProperty<T>(list: T[], propName: string): T[] {
+    return list.sort((a, b) => {
+      if (a[propName] < b[propName]) { return -1; }
+      if (a[propName] > b[propName]) { return 1; }
+      return 0;
+    });
+  }
 }

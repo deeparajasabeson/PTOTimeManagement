@@ -12,6 +12,7 @@ export interface FlexFromDBEntity {
   coWorkerId: string;
   anotherStartDateTime: string,
   anotherEndDateTime: string,
+  statusId: string;
   isActive: boolean,
   createdBy: string,
   createdOn: string,

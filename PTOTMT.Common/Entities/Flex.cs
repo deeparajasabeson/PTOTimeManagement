@@ -16,6 +16,7 @@ namespace PTOTMT.Common.Entities
         public Guid CoWorkerId { get; set; }
         public DateTimeOffset AnotherStartDateTime { get; set; }
         public DateTimeOffset AnotherEndDateTime { get; set; }
+        public Guid StatusId { get; set; }
         public bool IsActive { get; set; }
         public Guid CreatedBy { get; set; }
         public DateTimeOffset CreatedOn { get; set; }

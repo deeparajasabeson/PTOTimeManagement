@@ -23,6 +23,7 @@ import { FlexEditorComponent } from './flex-editor/flex-editor.component';
 import { LogOutComponent } from './logout/logout.component';
 import { TeamNotificationsComponent } from './team-notifications/team-notifications.component';
 import { UserNotificationsComponent } from './user-notifications/user-notifications.component';
+import { WaitingListComponent } from './waiting-list/waiting-list.component';
 
 
 const routes: Routes = [
@@ -36,6 +37,7 @@ const routes: Routes = [
       { path: 'logout', component: LogOutComponent, runGuardsAndResolvers: 'always' },
       { path: 'user-notifications', component: UserNotificationsComponent },
       { path: 'team-notifications', component: TeamNotificationsComponent },
+      { path: 'waitinglist', component: WaitingListComponent }
     ],
     canActivate: [AuthGuard]
   }
@@ -52,7 +54,8 @@ const routes: Routes = [
     FlexEditorComponent,
     LogOutComponent,
     UserNotificationsComponent,
-    TeamNotificationsComponent
+    TeamNotificationsComponent,
+    WaitingListComponent
   ],
   entryComponents: [
     QuotaEditorComponent,

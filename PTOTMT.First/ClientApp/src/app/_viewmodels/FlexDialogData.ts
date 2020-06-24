@@ -20,5 +20,6 @@ export interface FlexDialogData {
   isForward: boolean;
   hours: number;
   minutes: number;
+  statusId: string;
   isNewEvent: boolean;
 }

@@ -177,6 +177,7 @@ export class PTOCalendarComponent implements OnInit {
       anotherDate: null,
       coWorkerStartTime: "",
       coWorkerEndTime: "",
+      statusId: "",
       isForward: true,
       isNewEvent: true
     };
@@ -307,6 +308,7 @@ export class PTOCalendarComponent implements OnInit {
           coWorkerId: flexList[i].coWorkerId,
           anotherStartDateTime: flexList[i].anotherStartDateTime,
           anotherEndDateTime: flexList[i].anotherEndDateTime,
+          statusId: flexList[i].statusId,
           isActive: flexList[i].isActive,
           createdBy: flexList[i].createdBy,
           createdOn: flexList[i].createdOn,
@@ -404,6 +406,7 @@ export class PTOCalendarComponent implements OnInit {
     this.flex.startTime = flexToEdit.startDateTime.substr(11, 5);
     this.flex.anotherDate = flexEndDate;
     this.flex.endTime = flexToEdit.endDateTime.substr(11, 5);
+    this.flex.statusId = flexToEdit.statusId;
     this.flex.isNewEvent = false;
     this.getScheduleFlex();
   }
@@ -516,6 +519,7 @@ export class PTOCalendarComponent implements OnInit {
       coWorkerId: this.flex.coWorkerId,
       anotherStartDateTime: anotherStartDateTime,
       anotherEndDateTime: anotherEndDateTime,
+      statusId: this.flex.statusId,
       isActive: true,
       createdBy: userDetails.id,
       createdOn: this.toDate,

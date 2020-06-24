@@ -21,8 +21,9 @@ import { DataSharingService } from './_services/datasharing.service';
 import { HttpConfigInterceptor } from './_interceptors/HttpConfigInterceptor';
 //import { httpInterceptorProviders } from './_interceptors/index';
 import { StatusNamePipe } from './_pipes/status-name.pipe';
-import { FlexNamePipe } from './_pipes/flex-name.pipe';
+import { FlexTypeNamePipe } from './_pipes/flextype-name.pipe';
 import { UserNamePipe } from './_pipes/user-name.pipe';
+import { RequestTypeNamePipe } from './_pipes/requesttype-name.pipe';
 
 import { PublicModule } from './public/public.module';
 import { SecureModule } from './secure/secure.module';
@@ -45,8 +46,9 @@ export function tokenGetter() {
     ErrorDialogComponent,
     AlertComponent,
     StatusNamePipe,
-    FlexNamePipe,
-    UserNamePipe
+    FlexTypeNamePipe,
+    UserNamePipe,
+    RequestTypeNamePipe
   ],
   imports: [
     BrowserModule,

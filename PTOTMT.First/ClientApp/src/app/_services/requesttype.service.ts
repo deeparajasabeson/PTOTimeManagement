@@ -25,6 +25,11 @@ export class RequestTypeService {
     return response.toPromise();
   }
 
+  public getRequestTypeById(requestTypeId: string): Observable<RequestTypeFromDBEntity> {
+    let requestUrl: string = this.requestTypeUrl + "/" + requestTypeId;
+    return this.http.get<RequestTypeFromDBEntity>(requestUrl, httpOptions);
+  }
+
   public getRequestTypeByName(name: string): Observable<RequestTypeFromDBEntity> {
     let requestUrl: string = this.requestTypeUrl + "/requesttypebyname/" + name;
     return this.http.get<RequestTypeFromDBEntity>(requestUrl, httpOptions);

@@ -1,1 +1,39 @@
-<p>team-notifications works!</p>
+<br>
+<h3>Team Notifications</h3>
+<span class="text-right">
+  <button class="btn-info btn btn-lg shadow-lg" (click)='viewWaitingList()'
+           data-toggle="tooltip" data-placement="top" title="Waiting List of Active Requests">
+      View Waiting List
+  </button>
+</span>
+<br>
+<div class="container">
+  <table class="table table-striped table-bordered table-hovertable-sm table-responsive">
+    <caption>List of PTO and Flex Requests</caption>
+    <thead>
+      <tr class="table-dark">
+        <th>Requestor</th>
+        <th>Request Type</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let request of teamRequestList">
+        <td>{{ request.userId | userName }}</td>
+        <td>{{ request.requestTypeId | requestTypeName}}</td>
+        <td>{{ request.startDateTime | date: 'short' }}&nbsp;--&nbsp;{{ request.endDateTime | date:'short' }}&nbsp;</td>
+        <td>{{ request.statusId | statusName }}</td>
+        <td><a class="link" [routerLink]="['/requestdisplay', {{ request.Id }}]">Open</a></td>
+      </tr>
+      <tr *ngFor="let flex of teamFlexList">
+        <td>{{ flex.userId | userName }}</td>
+        <td>{{ flex.flexTypeId | flexTypeName }}</td>
+        <td>{{flex.startDateTime | date: 'short'}}&nbsp;--&nbsp;{{ flex.endDateTime | date:'short' }}&nbsp;</td>
+        <td>{{ flex.statusId | statusName }}</td>
+        <td><a class="link" [routerLink]="['/requestdisplay', {{flex.Id}}]">Open</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

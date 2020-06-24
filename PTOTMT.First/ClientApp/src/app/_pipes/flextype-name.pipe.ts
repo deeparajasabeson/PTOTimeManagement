@@ -2,13 +2,13 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { FlexTypeService } from '../_services/flextype.service';
 
 @Pipe({
-  name: 'flexName'
+  name: 'flexTypeName'
 })
-export class FlexNamePipe implements PipeTransform {
+export class FlexTypeNamePipe implements PipeTransform {
 
   constructor(private flexTypeService: FlexTypeService) { }
 
-  transform(flexTypeId: any, ...args: any[]): any {
+  transform(flexTypeId: any, ...args: any[]): string {
     return this.flexTypeService.getFlexTypeById(flexTypeId);
   };
 }

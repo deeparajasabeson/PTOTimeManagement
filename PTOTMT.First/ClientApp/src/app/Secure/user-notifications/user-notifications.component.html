@@ -1,4 +1,6 @@
-<br><br>
+<br>
+<h3>My Notifications</h3>
+<br>
     <div class="container">
       <table class="table table-striped table-bordered table-hovertable-sm table-responsive">
         <caption>List of PTO and Flex Requests</caption>
@@ -14,14 +16,14 @@
         <tbody>
           <tr *ngFor="let request of userRequestList">
             <td>{{ request.userId | userName }}</td>
-            <td>{{ request.requestTypeId }}</td>
+            <td>{{ request.requestTypeId | requestTypeName}}</td>
             <td>{{ request.startDateTime | date: 'short' }}&nbsp;--&nbsp;{{ request.endDateTime | date:'short' }}&nbsp;</td>
             <td>{{ request.statusId | statusName }}</td>
             <td><a class="link" [routerLink]="['/requestdisplay', {{ request.Id }}]">Open</a></td>
           </tr>
           <tr *ngFor="let flex of userFlexList">
+            <td>{{ flex.userId | userName }}</td>
             <td>{{ flex.flexTypeId | flexName }}</td>
-            <td>{{ flex.name }}</td>
             <td>{{flex.startDateTime | date: 'short'}}&nbsp;--&nbsp;{{ flex.endDateTime | date:'short' }}&nbsp;</td>
             <td>{{ flex.statusId | statusName }}</td>
             <td><a class="link" [routerLink]="['/requestdisplay', {{flex.Id}}]">Open</a></td>
