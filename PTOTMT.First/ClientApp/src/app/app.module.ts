@@ -22,6 +22,7 @@ import { HttpConfigInterceptor } from './_interceptors/HttpConfigInterceptor';
 //import { httpInterceptorProviders } from './_interceptors/index';
 import { StatusNamePipe } from './_pipes/status-name.pipe';
 import { FlexNamePipe } from './_pipes/flex-name.pipe';
+import { UserNamePipe } from './_pipes/user-name.pipe';
 
 import { PublicModule } from './public/public.module';
 import { SecureModule } from './secure/secure.module';
@@ -44,7 +45,8 @@ export function tokenGetter() {
     ErrorDialogComponent,
     AlertComponent,
     StatusNamePipe,
-    FlexNamePipe
+    FlexNamePipe,
+    UserNamePipe
   ],
   imports: [
     BrowserModule,

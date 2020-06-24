@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { UserFromDBEntity } from '../_entities/UserFromDBEntity';
 import { Observable } from 'rxjs';
+import { UserFromDBEntity } from '../_entities/UserFromDBEntity';
 
 
 const httpOptions = {
@@ -37,6 +37,11 @@ export class UserService {
 
     let requestUrl: string = this.userUrl + "/coworkers/";
     return this.http.get<any>(requestUrl, httpOptions);
+  }
+
+  public getUserById(userId: string): Observable<UserFromDBEntity> {
+    let requestUrl: string = this.userUrl + "/" + userId;
+    return this.http.get<UserFromDBEntity>(requestUrl, httpOptions)
   }
 }
 

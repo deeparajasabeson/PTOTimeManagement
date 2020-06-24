@@ -4,8 +4,8 @@
         <caption>List of PTO and Flex Requests</caption>
         <thead>
           <tr class="table-dark">
+            <th>Requestor</th>
             <th>Request Type</th>
-            <th>From</th>
             <th>Description</th>
             <th>Status</th>
             <th>Action</th>
@@ -13,8 +13,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let request of userRequestList">
+            <td>{{ request.userId | userName }}</td>
             <td>{{ request.requestTypeId }}</td>
-            <td>{{ request.name }}</td>
             <td>{{ request.startDateTime | date: 'short' }}&nbsp;--&nbsp;{{ request.endDateTime | date:'short' }}&nbsp;</td>
             <td>{{ request.statusId | statusName }}</td>
             <td><a class="link" [routerLink]="['/requestdisplay', {{ request.Id }}]">Open</a></td>
