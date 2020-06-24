@@ -82,17 +82,31 @@ export class HeaderBarComponent implements AfterViewChecked {
     this.CountUserRequests();
   }
 
+  sortListByProperty<T>(list: T[], propName: string): T[] {
+    return list.sort((a, b) => {
+      if (a[propName] < b[propName]) { return -1; }
+      if (a[propName] > b[propName]) { return 1; }
+      return 0;
+    });
+  }
+
   CountUserRequests() {
     //Active PTO Requests count for the current user
     let ptoResponse = this.ptoService.getPTOsByUserIdInDateRange(this.user.id, new Date(), new Date(1111, 10, 1, 1, 11, 11));
     ptoResponse.then((data: PTOFromDBEntity[]) => {
       let requestList = data;
+
+      requestList = this.sortListByProperty(requestList, "startDateTime");
+
       this.dataSharingService.userRequestList.next(requestList);
       if (this.dataSharingService.isUserAuthenticated.value) {
         //Active Flex Requests count for the current user
         let flexResponse = this.flexService.getFlexsByUserIdInDateRange(this.user.id, new Date(), new Date(1111, 10, 1, 1, 11, 11));
         flexResponse.then((data: FlexFromDBEntity[]) => {
           let flexList = data;
+
+          flexList = this.sortListByProperty(this.sortListByProperty(flexList, "startDateTime"), "flexTypeId");
+
           this.dataSharingService.userFlexList.next(flexList);
           this.toChild.userCounter = requestList.length + flexList.length;
         });
@@ -105,12 +119,18 @@ export class HeaderBarComponent implements AfterViewChecked {
     let ptoReporingMembersResponse = this.ptoService.getRequestsReportingMembers(this.user.id, new Date(), new Date(1111, 10, 1, 1, 11, 11));
     ptoReporingMembersResponse.then((data: PTOFromDBEntity[]) => {
       let requestList = data;
+
+      requestList = this.sortListByProperty(requestList, "startDateTime");
+
       this.dataSharingService.teamRequestList.next(requestList);
       if (this.dataSharingService.isUserAuthenticated.value) {
         //Active Flex Requests count of all Reporting Team Members
         let flexResponse = this.flexService.getFlexsReportingMembers(this.user.id, new Date(), new Date(1111, 10, 1, 1, 11, 11));
         flexResponse.then((data: FlexFromDBEntity[]) => {
           let flexList = data;
+
+          flexList = this.sortListByProperty(this.sortListByProperty(flexList, "startDateTime"), "flexTypeId");
+
           this.dataSharingService.teamFlexList.next(flexList);
           this.toChild.teamCounter = requestList.length + flexList.length;
           console.log("TeamCounter : " + this.toChild.teamCounter);
