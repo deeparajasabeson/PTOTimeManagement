@@ -1,0 +1,23 @@
+<br><br>
+    <div class="container">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Request Type</th>
+            <th>From</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let request of userRequestList">
+            <td>{{ request.requestTypeId }}</td>
+            <td>{{ request.name }}</td>
+            <td>{{request.startDateTime | date: 'short'}}&nbsp;--&nbsp;{{ request.endDateTime | date:'short' }}&nbsp;</td>
+            <td>{{ request.statusId | statusName }}</td>
+            <td><a class="link"  [routerLink]="['/requestdisplay']">Open</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>

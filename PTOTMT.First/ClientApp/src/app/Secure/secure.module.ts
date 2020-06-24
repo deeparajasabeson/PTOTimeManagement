@@ -21,6 +21,8 @@ import { PTOEditorComponent } from './pto-editor/pto-editor.component';
 import { QuotaEditorComponent } from './quota-editor/quota-editor.component';
 import { FlexEditorComponent } from './flex-editor/flex-editor.component';
 import { LogOutComponent } from './logout/logout.component';
+import { TeamNotificationsComponent } from './team-notifications/team-notifications.component';
+import { UserNotificationsComponent } from './user-notifications/user-notifications.component';
 
 
 const routes: Routes = [
@@ -31,7 +33,9 @@ const routes: Routes = [
     children: [
       { path: 'pto-calendar', component: PTOCalendarComponent },
       { path: 'quota-calendar', component: QuotaCalendarComponent },
-      { path: 'logout', component: LogOutComponent, runGuardsAndResolvers: 'always' } 
+      { path: 'logout', component: LogOutComponent, runGuardsAndResolvers: 'always' },
+      { path: 'user-notifications', component: UserNotificationsComponent },
+      { path: 'team-notifications', component: TeamNotificationsComponent },
     ],
     canActivate: [AuthGuard]
   }
@@ -46,7 +50,9 @@ const routes: Routes = [
     QuotaEditorComponent,
     PTOEditorComponent,
     FlexEditorComponent,
-    LogOutComponent
+    LogOutComponent,
+    UserNotificationsComponent,
+    TeamNotificationsComponent
   ],
   entryComponents: [
     QuotaEditorComponent,

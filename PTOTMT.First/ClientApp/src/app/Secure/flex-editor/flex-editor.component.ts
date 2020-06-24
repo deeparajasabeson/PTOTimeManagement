@@ -7,7 +7,6 @@ import { FlexCustomValidators } from '../../_validators/FlexCustomValidators.Val
 import { FlexService } from '../../_services/flex.service';
 import { FlexDialogData } from '../../_viewmodels/FlexDialogData';
 import { FlexTypeFromDBEntity } from '../../_entities/FlexTypeFromDBEntity';
-import { TeamService } from '../../_services/team.service';
 import { UserService } from '../../_services/user.service';
 import { DataStorageService } from '../../_services/datastorage.service';
 import { TeamFromDBEntity } from '../../_entities/TeamFromDBEntity';

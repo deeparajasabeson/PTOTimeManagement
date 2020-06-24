@@ -1,5 +1,5 @@
-// StatusEntity.ts
-export interface StatusEntity {
+// StatusFromDBEntity.ts
+export interface StatusFromDBEntity {
   id: string,
   name: string,
   description: string,

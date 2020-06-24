@@ -12,7 +12,7 @@ import { PTODialogData } from '../../_viewmodels/PTODialogData';
 import { FlexDialogData } from '../../_viewmodels/FlexDialogData';
 import { QuotaEntity } from '../../_entities/QuotaEntity';
 import { PTOEntity } from '../../_entities/PTOEntity';
-import { StatusEntity } from '../../_entities/StatusEntity';
+import { StatusFromDBEntity } from '../../_entities/StatusFromDBEntity';
 import { FlexEntity } from '../../_entities/FlexEntity';
 import { FlexFromDBEntity } from '../../_entities/FlexFromDBEntity';
 import { FlexTypeFromDBEntity } from '../../_entities/FlexTypeFromDBEntity';
@@ -101,8 +101,8 @@ export class PTOCalendarComponent implements OnInit {
     PTOCalendarComponent.subscribeQuotaData = quota;
   }
 
-  static subscribeStatusData: StatusEntity[];
-  static setSubscribeStatusData(statuses: StatusEntity[]) {
+  static subscribeStatusData: StatusFromDBEntity[];
+  static setSubscribeStatusData(statuses: StatusFromDBEntity[]) {
     PTOCalendarComponent.subscribeStatusData = statuses;
   }
 

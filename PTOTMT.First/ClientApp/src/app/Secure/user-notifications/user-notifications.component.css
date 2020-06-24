@@ -1,0 +1,11 @@
+.link:hover {
+  background-color: #aaa;
+}
+
+.link:visited {
+  color: blue;
+}
+
+.link:active {
+  border: 1px solid red;
+}
