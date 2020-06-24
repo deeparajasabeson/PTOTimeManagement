@@ -21,6 +21,7 @@ import { DataSharingService } from './_services/datasharing.service';
 import { HttpConfigInterceptor } from './_interceptors/HttpConfigInterceptor';
 //import { httpInterceptorProviders } from './_interceptors/index';
 import { StatusNamePipe } from './_pipes/status-name.pipe';
+import { FlexNamePipe } from './_pipes/flex-name.pipe';
 
 import { PublicModule } from './public/public.module';
 import { SecureModule } from './secure/secure.module';
@@ -42,7 +43,8 @@ export function tokenGetter() {
     PageNotFoundComponent,
     ErrorDialogComponent,
     AlertComponent,
-    StatusNamePipe
+    StatusNamePipe,
+    FlexNamePipe
   ],
   imports: [
     BrowserModule,

@@ -17,7 +17,7 @@ export class UserNotificationsComponent implements OnInit {
   constructor(private dataSharingService: DataSharingService) { }
 
   ngOnInit() {
-    this.userRequestList = this.dataSharingService.userRequestList.value;
+    this.userRequestList = this.dataSharingService.userRequestList.getValue();
     this.userFlexList = this.dataSharingService.userFlexList.getValue();
   }
 }
