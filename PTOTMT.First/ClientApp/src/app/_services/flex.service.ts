@@ -37,8 +37,8 @@ export class FlexService {
     let requestUrl: string = this.flexUrl +
       "/flexsreportingmembers" +
       "?leadershipUserId=" + leadershipUserId +
-      "&fromDate=" + fromDate +
-      "&toDate=" + toDate;
+      "&fromDate=" + fromDate.toUTCString() +
+      "&toDate=" + toDate.toUTCString();
     return this.http.get<FlexFromDBEntity[]>(requestUrl, httpOptions).toPromise();
   }
 
@@ -48,8 +48,8 @@ export class FlexService {
     let requestUrl: string = this.flexUrl +
       "/flexrequestsbyuseridindaterange" +
       "?userId=" + userId +
-      "&fromDate=" + fromDate +
-      "&toDate=" + toDate;
+      "&fromDate=" + fromDate.toUTCString() +
+      "&toDate=" + toDate.toUTCString();
     return this.http.get<FlexFromDBEntity[]>(requestUrl, httpOptions).toPromise();
   }
 

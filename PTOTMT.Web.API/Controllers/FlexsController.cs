@@ -52,7 +52,7 @@ namespace PTOTMT.Service.Controllers
 
         // GET: api/Flexs/flexsbyuserid/<userId:Guid>
         [HttpGet("flexsbyuserid/{userId}")]
-        public IEnumerable<Flex> GetFlexsByUserId(Guid? userId)
+        public IEnumerable<Flex> GetFlexsByUserId(Guid userId)
         {
             var Flexs = GetFlex();
             return Flexs.Where(f => f.UserId == userId);
@@ -62,17 +62,17 @@ namespace PTOTMT.Service.Controllers
         public IEnumerable<Flex> GetFlexsByUserIdInDateRange(Guid userId, DateTime fromDate, DateTime toDate)
         {
             IEnumerable<Flex> flexsRequests = GetFlex().Where(f => f.UserId == userId);
-
-            if (fromDate != null && toDate != null)
+            DateTime date = new DateTime(1111, 11, 1, 1, 7, 13);
+            if (fromDate != date && toDate != date)
             {
                 flexsRequests = flexsRequests.Where(req => !((req.StartDateTime < fromDate && req.EndDateTime < fromDate) ||
                                                                                                         (req.StartDateTime > toDate && req.EndDateTime > toDate)));
             }
-            else if (fromDate == null && toDate != null)
+            else if (fromDate == date && toDate != date)
             {
                 flexsRequests = flexsRequests.Where(req => req.StartDateTime <= toDate);
             }
-            else if (fromDate != null && toDate == null)
+            else if (fromDate != date && toDate == date)
             {
                 flexsRequests = flexsRequests.Where(req => req.EndDateTime >= fromDate);
             }
@@ -90,17 +90,18 @@ namespace PTOTMT.Service.Controllers
                                                                             join mem in reportingMembersList
                                                                             on flex.UserId equals mem.Id
                                                                             select flex;
-            if (fromDate != null && toDate != null)
+            DateTime date = new DateTime(1111, 11, 1, 1, 7, 13);
+            if (fromDate != date && toDate != date)
             {
 
                 membersRequests = membersRequests.Where(flex => !((flex.StartDateTime < fromDate && flex.EndDateTime < fromDate) ||
                                                                                                         (flex.StartDateTime > toDate      && flex.EndDateTime > toDate)));
             }
-            else if (fromDate == null && toDate != null)
+            else if (fromDate == date && toDate != date)
             {
                 membersRequests = membersRequests.Where(req => req.StartDateTime <= toDate);
             }
-            else if (fromDate != null && toDate == null)
+            else if (fromDate != date && toDate == date)
             {
                 membersRequests = membersRequests.Where(req => req.EndDateTime >= fromDate);
             }

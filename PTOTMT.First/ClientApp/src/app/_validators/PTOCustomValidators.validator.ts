@@ -13,10 +13,9 @@ export class PTOCustomValidators {
       const endTime = control.get('endTime').value;
       const hours = control.get('hours').value;
       const minutes = control.get('minutes').value;
-
       let calchours = this.calculateHours(allDay, startDate, startTime, endDate, endTime);
 
-      if (hours != null && minutes != null && calchours != hours+minutes/100) {
+      if (hours != null && minutes != null && calchours != hours + minutes / 100) {
         return { 'invalidHours': true };
       }
       return null;
@@ -34,7 +33,7 @@ export class PTOCustomValidators {
     let hours: number = 0;
     let iStartTime = parseInt(startTime);
     let iEndTime = parseInt(endTime);
-    if (startDate == endDate) {
+    if (startDate.year == endDate.year && startDate.month == endDate.month && startDate.day == endDate.day) {
       if (allDay) {
         hours = 8;
       }
@@ -58,11 +57,8 @@ export class PTOCustomValidators {
   }
 
   //function to calculate number of days inbetween two dates
-  static NoOfDays(startDate: NgbDateStruct, endDate: NgbDateStruct) : number{
-    return Math.floor((
-           Date.UTC(endDate.year, endDate.month, endDate.day)
-        - Date.UTC(startDate.year, startDate.month, startDate.day)
-      ) / (1000 * 60 * 60 * 24)
-    );
+  static NoOfDays(startDate: NgbDateStruct, endDate: NgbDateStruct): number {
+    return Math.floor(Date.UTC(endDate.year, endDate.month, endDate.day)
+      - Date.UTC(startDate.year, startDate.month, startDate.day) / (1000 * 60 * 60 * 24)) + 1;
   }
 }

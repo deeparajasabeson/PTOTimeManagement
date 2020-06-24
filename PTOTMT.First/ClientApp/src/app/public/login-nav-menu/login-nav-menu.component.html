@@ -1,33 +1,31 @@
-<ul class="nav navbar-nav navbar-right" *ngIf="isAuthenticated">
-  <li class="nav-item">
-    <fa-layers size="1.8x">
-      <fa-icon icon="bell"></fa-icon>
-      <fa-layers-counter [content]="userCounter"></fa-layers-counter>
-    </fa-layers>
-  </li>  &nbsp;  &nbsp;
-  <li class="nav-item" *ngIf="isLeadership">
+<ul class="nav navbar-nav navbar-right" *ngIf="isUserAuthenticated">
+  <li class="nav-item" *ngIf="fromParent != undefined && fromParent.isLeadership">
+    <button class="bg-info notificationbtn" (click)="showUserNotifications()">
       <fa-layers size="1.8x">
         <fa-icon icon="users"></fa-icon>
-        <fa-layers-counter [content]="teamCounter"></fa-layers-counter>
+        <fa-layers-counter [content]="fromParent.teamCounter"></fa-layers-counter>
       </fa-layers>
-  </li>  &nbsp;  &nbsp;
+    </button>&nbsp;  &nbsp;
+  </li>  
   <li class="nav-item">
     <span *ngIf="user != null && user != undefined">
-      <fa-icon icon="user"></fa-icon>
+      <button class="bg-info notificationbtn" (click)="showUserNotifications()">
+        <fa-layers size="1.8x">
+           <fa-icon icon="user"></fa-icon>
+           <fa-layers-counter [content]="fromParent.userCounter"></fa-layers-counter>
+        </fa-layers>
+      </button>
+      <b>&nbsp;{{ user.firstName }}&nbsp;{{ user.lastName }}</b>&nbsp;
     </span>
-    <b>{{ user.FirstName }}&nbsp;{{ user.LastName }}</b>&nbsp;
   </li>
   <li class="nav-item">
-    <a class="nav-link text-dark" [routerLink]='["/loggedout"]' [state]='{ local: true }' title="Loggedout">
+    <a class="nav-link text-dark" [routerLink]='["/logout"]' [state]='{ local: true }' title="LogOut">
       <fa-icon icon="sign-out-alt"></fa-icon>
-      <!--<mat-icon matBadge="10">
-        notifications
-      </mat-icon>-->
       <b>Logout</b>
     </a>
   </li>
 </ul>
-<ul class="nav navbar-nav navbar-right" *ngIf="!(isAuthenticated)">
+<ul class="nav navbar-nav navbar-right" *ngIf="!isUserAuthenticated">
   <li class="nav-item">
     <a class="nav-link text-dark" [routerLink]='["/register"]'>
       <fa-icon icon="user-plus"></fa-icon>&nbsp;
@@ -42,3 +40,4 @@
     </a>
   </li>
 </ul>
+

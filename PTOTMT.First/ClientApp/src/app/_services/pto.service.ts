@@ -37,19 +37,19 @@ export class PTOService {
     let requestUrl: string = this.ptoUrl +
       "/requestsreportingmembers" +
       "?leadershipUserId=" + leadershipUserId +
-      "&fromDate=" + fromDate +
-      "&toDate=" + toDate;
+      "&fromDate=" + fromDate.toUTCString() +
+      "&toDate=" + toDate.toUTCString();
     return this.http.get<PTOFromDBEntity[]>(requestUrl, httpOptions).toPromise();
   }
 
   public getPTOsByUserIdInDateRange(userId: string,
                                                               fromDate: Date,
-                                                              toDate: Date): Promise<PTOFromDBEntity[]> {
+    toDate: Date): Promise<PTOFromDBEntity[]> {
     let requestUrl: string = this.ptoUrl +
       "/ptorequestsbyuseridindaterange" +
       "?userId=" + userId +
-      "&fromDate=" + fromDate +
-      "&toDate=" + toDate;
+      "&fromDate=" + fromDate.toUTCString() +
+      "&toDate=" + toDate.toUTCString();
     return this.http.get<PTOFromDBEntity[]>(requestUrl, httpOptions).toPromise();
   }
 

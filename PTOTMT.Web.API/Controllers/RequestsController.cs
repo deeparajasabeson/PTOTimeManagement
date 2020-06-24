@@ -58,17 +58,17 @@ namespace PTOTMT.Service.Controllers
         [HttpGet("ptorequestsbyuseridindaterange")]
         public IEnumerable<Request> GetPTOsByUserIdInDateRange(Guid userId, DateTime fromDate, DateTime toDate) {
             IEnumerable<Request> usersRequests = GetRequest().Where(r => r.UserId == userId);
-
-            if (fromDate != null && toDate != null)
+            DateTime date = new DateTime(1111, 11, 1,1,7,13);
+            if (fromDate != null && toDate != date)
             {
                 usersRequests = usersRequests.Where(req => !((req.StartDateTime < fromDate && req.EndDateTime < fromDate) ||
                                                                                                         (req.StartDateTime > toDate && req.EndDateTime > toDate)));
             }
-            else if (fromDate == null && toDate != null)
+            else if (fromDate == date && toDate != date)
             {
                 usersRequests = usersRequests.Where(req => req.StartDateTime <= toDate);
             }
-            else if (fromDate != null && toDate == null)
+            else if (fromDate != date && toDate == date)
             {
                 usersRequests = usersRequests.Where(req => req.EndDateTime >= fromDate);
             }
@@ -77,8 +77,9 @@ namespace PTOTMT.Service.Controllers
             
         // GET: api/requests/ptorequestsreportingmembers/<userId:Guid>
         [HttpGet("requestsreportingmembers")]
-        public IEnumerable<Request> GetRequestsReportingMembers(Guid leadershipuserId, DateTime fromDate, DateTime toDate)
+        public IEnumerable<Request> GetRequestsReportingMembers(Guid leadershipuserId, DateTimeOffset fromDate, DateTimeOffset toDate)
         {
+
             IEnumerable<Request> requestList = GetRequest();
             IEnumerable<User> reportingMembersList = uow.UserRepo.GetAll().Where(u => u.ReportToUserId == leadershipuserId);
 
@@ -86,14 +87,15 @@ namespace PTOTMT.Service.Controllers
                                                                                   join mem in reportingMembersList
                                                                                   on req.UserId equals mem.Id
                                                                                   select req;
-            if(fromDate != null && toDate != null) {
+            DateTime date = new DateTime(1111, 11, 1, 1, 7, 13);
+            if (fromDate != date && toDate != date) {
                 membersRequests = membersRequests.Where(req => !((req.StartDateTime < fromDate && req.EndDateTime < fromDate) || 
                                                                                                         (req.StartDateTime > toDate      && req.EndDateTime > toDate)));
             }
-            else if (fromDate == null && toDate != null) {
+            else if (fromDate == date && toDate != date) {
                     membersRequests = membersRequests.Where(req => req.StartDateTime <= toDate);
              }
-            else if (fromDate != null && toDate == null) {
+            else if (fromDate != date && toDate == date) {
                     membersRequests = membersRequests.Where(req => req.EndDateTime >= fromDate);
             }
             return membersRequests;
@@ -127,9 +129,9 @@ namespace PTOTMT.Service.Controllers
         public IActionResult PostRequest(Request request)
         {
             Quota quotaToAllot = quotaService.FindQuota(request);
+            request = quotaService.SendEmails(request, quotaToAllot);
             uow.RequestRepo.Post(request);
             uow.SaveChanges();
-            request = quotaService.SendEmails(request, quotaToAllot);
             return CreatedAtAction(nameof(GetRequest), new { id = request.Id }, request);
         }
 

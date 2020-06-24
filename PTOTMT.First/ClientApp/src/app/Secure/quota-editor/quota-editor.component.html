@@ -37,7 +37,7 @@
         </div>
         <div class="col-3">
           Unused PTO<br />
-          <label size="5" style="font-size: large;">{{this.quota.remainingHours}}</label>
+          <label size="5" style="font-size: large;" *ngIf="quota != null">{{quota.remainingHours}}</label>
           &nbsp;Hours
         </div>
       </div>

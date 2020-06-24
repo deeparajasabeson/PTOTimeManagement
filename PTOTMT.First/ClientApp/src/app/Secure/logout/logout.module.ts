@@ -1,16 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { LoggedoutComponent } from './loggedout.component';
+import { LogOutComponent } from './logout.component';
 import { AuthGuard } from '../../_guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: LoggedoutComponent, canActivate: [AuthGuard]}
+  {
+    path: '',
+    component: LogOutComponent,
+    canActivate: [AuthGuard]
+  }
 ];
 
 @NgModule({
   declarations: [
-    LoggedoutComponent,
+    LogOutComponent,
   ],
   imports: [
     CommonModule,

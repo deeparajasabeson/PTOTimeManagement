@@ -4,11 +4,11 @@ import { FormGroup, FormBuilder,  Validators, NgForm } from '@angular/forms';
 import { NgbDateStruct, NgbDatepicker  } from '@ng-bootstrap/ng-bootstrap';
 import { MaterialModule } from '../material.module';
 
-import { PTOService } from '../../_services/pto.service';
 import { PTODialogData } from '../../_viewmodels/PTODialogData';
+import { RequestTypeFromDBEntity } from '../../_entities/RequestTypeFromDBEntity';
+import { PTOService } from '../../_services/pto.service';
 import { PTOCustomValidators } from '../../_validators/PTOCustomValidators.Validator';
 import { ValidateMinutes } from '../../_validators/ValidateMinutes';
-import { RequestTypeFromDBEntity } from '../../_entities/RequestTypeFromDBEntity';
 
 
 @Component({

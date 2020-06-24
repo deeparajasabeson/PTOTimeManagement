@@ -1,3 +1,14 @@
 .navbar-nav {
   margin-left: auto;
 }
+
+.notificationbtn {
+  border: none; 
+  padding: 0px;
+  cursor: pointer;
+}
+
+/* Darker background on mouse-over */
+  .notificationbtn:hover {
+    color:white;
+  }

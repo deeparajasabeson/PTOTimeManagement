@@ -10,7 +10,6 @@ export class ErrorDialogComponent {
   constructor(private dialogRef: MatDialogRef<ErrorDialogComponent>, @Inject(MAT_DIALOG_DATA) public dialogdata: ErrorDialogData) { }
 
   public closeMe(event: any): void {
-    event.stopPropogation();
     this.dialogRef.close();
   }
 }

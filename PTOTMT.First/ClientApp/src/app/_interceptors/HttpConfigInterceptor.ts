@@ -48,7 +48,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         //}
         let data = {
           reason:  (error.error.errors && error.error.errors["$.id"]) ? error.error.errors["$.id"][0] 
-                      : (error.error.errors["$.statusId"]) ? error.error.errors["$.statusId"][0]
+                      : (error.error.errors && error.error.errors["$.statusId"]) ? error.error.errors["$.statusId"][0]
                       : "",
           error: error.message,
           statuscode: error.status,

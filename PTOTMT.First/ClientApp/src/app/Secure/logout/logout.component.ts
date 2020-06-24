@@ -1,20 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { LoginNavMenuComponent } from '../../public/login-nav-menu/login-nav-menu.component';
+import { AuthService } from '../../_services/auth.service';
 
 @Component({
-  selector: 'app-logout',
-  template: ''
+  providers: [LoginNavMenuComponent],
+  selector: 'app-loggedout',
+  template: '<p align ="center">   You are successfully logged out now !! '
 })
-export class LogoutComponent implements OnInit {
-  constructor(public router: Router) { }
+export class LogOutComponent implements OnInit {
+  constructor(private authService: AuthService,
+                      private loginNavMenu: LoginNavMenuComponent) { }
 
   ngOnInit() {
-    this.logOut();
-  }
-
-  logOut() {
-    localStorage.removeItem("jwt");
-    this.router.navigate(['/loggedout']);
+    this.authService.logOut();
+    this.loginNavMenu.ngOnInit();
   }
 }
-

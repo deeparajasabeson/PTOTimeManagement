@@ -37,7 +37,8 @@ Declare @UserId uniqueidentifier = NEWID(),
              @TeamId uniqueidentifier = NEWID(),
              @RequestTypeId uniqueidentifier = NEWID(),
              @StatusId uniqueidentifier = NEWID(),
-             @FlexTypeId uniqueidentifier = NEWID()
+             @FlexTypeId uniqueidentifier = NEWID(),
+             @LeadershipAdminId uniqueidentifier = NEWID()
 
  -- Security.User TABLE
 Insert into Security.[User]
@@ -49,7 +50,7 @@ Values
 Insert into Security.[User]
 (Id, FirstName, LastName, UserName, Password,TitleId, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamFunctionId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(@ReportToUserId, 'Harold', 'Gulube', 'haroldgulube@gmail.com', 'harold' , @TitleId , 'hgulub400', 'haroldgulube@gmail.com',@RoleId, @UserId,@LocationId, @TeamId, 1, @UserId, GETDATE(), @UserId, GETDATE())
+(@ReportToUserId, 'Harold', 'Gulube', 'haroldgulube@gmail.com', 'harold' , @TitleId , 'hgulub400', 'haroldgulube@gmail.com',@RoleId, @UserId,@LocationId, @LeadershipAdminId, 1, @UserId, GETDATE(), @UserId, GETDATE())
 
 -- Security.Role TABLE
 Insert into Security.Role 
@@ -92,7 +93,7 @@ Values
 Insert into Security.Team 
 (Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(NEWID(), 'Leadership / Admin', 'Leadership, Admin Team', 3,  8, 6, 1,@UserId, GETDATE(), @UserId, GETDATE())
+(@LeadershipAdminId, 'Leadership / Admin', 'Leadership, Admin Team', 3,  8, 6, 1,@UserId, GETDATE(), @UserId, GETDATE())
 
 
 --Security.Title TABLE

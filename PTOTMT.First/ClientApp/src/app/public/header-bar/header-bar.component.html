@@ -4,12 +4,16 @@
     <div class="col-2">
       <img src="comcast.jpg" height="70" width="150" align="middle" hspace="10" vspace="10" />
     </div>
-    <div class="col-7" align="center">
+    <div class="col-6" align="center">
       <h3 style="color:white"><b>Time Off Request Tool</b></h3>
     </div>
-    <div class="col-3">
+    <div class="col-4">
       <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-info mb-0">
-        <app-login-nav-menu [isAuthenticated]="isAuthenticated"></app-login-nav-menu>
+        <app-login-nav-menu  #loginNavMenu
+                                            [fromParent]="toChild"
+                                            (userNotifications)="showUserNotifications()"
+                                            (teamNotifications)="showTeamNotifications()" >
+        </app-login-nav-menu>
       </nav>
     </div>
   </div>

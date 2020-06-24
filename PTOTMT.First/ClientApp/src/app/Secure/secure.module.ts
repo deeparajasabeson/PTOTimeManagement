@@ -15,12 +15,12 @@ import { MaterialModule } from './material.module';
 
 import { SecureLayoutComponent } from './secure-layout/secure-layout.component';
 import { TopMenuComponent } from './top-menu/top-menu.component';
-import { LogoutComponent } from './logout/logout.component';
 import { PTOCalendarComponent } from './pto-calendar/pto-calendar.component';
 import { QuotaCalendarComponent } from './quota-calendar/quota-calendar.component';
 import { PTOEditorComponent } from './pto-editor/pto-editor.component';
 import { QuotaEditorComponent } from './quota-editor/quota-editor.component';
 import { FlexEditorComponent } from './flex-editor/flex-editor.component';
+import { LogOutComponent } from './logout/logout.component';
 
 
 const routes: Routes = [
@@ -31,11 +31,7 @@ const routes: Routes = [
     children: [
       { path: 'pto-calendar', component: PTOCalendarComponent },
       { path: 'quota-calendar', component: QuotaCalendarComponent },
-      {
-        path: 'logout',
-        component: LogoutComponent,
-        runGuardsAndResolvers: 'always'
-      }
+      { path: 'logout', component: LogOutComponent, runGuardsAndResolvers: 'always' } 
     ],
     canActivate: [AuthGuard]
   }
@@ -46,11 +42,11 @@ const routes: Routes = [
     SecureLayoutComponent,
     TopMenuComponent,
     PTOCalendarComponent,
-    LogoutComponent,
     QuotaCalendarComponent,
     QuotaEditorComponent,
     PTOEditorComponent,
-    FlexEditorComponent
+    FlexEditorComponent,
+    LogOutComponent
   ],
   entryComponents: [
     QuotaEditorComponent,

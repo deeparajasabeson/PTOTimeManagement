@@ -1,13 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { MatBadgeModule } from '@angular/material';
-import { DataStorageService } from '../../_services/datastorage.service';
-import { PTOService } from '../../_services/pto.service';
-import { FlexService } from '../../_services/flex.service';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { UserFromDBEntity } from '../../_entities/UserFromDBEntity';
-import { FlexFromDBEntity } from '../../_entities/FlexFromDBEntity';
-import { PTOFromDBEntity } from '../../_entities/PTOFromDBEntity';
-import { TeamFromDBEntity } from '../../_entities/TeamFromDBEntity';
-
+import { DataStorageService } from '../../_services/datastorage.service';
+import { DataSharingService } from '../../_services/datasharing.service';
 
 @Component({
   selector: 'app-login-nav-menu',
@@ -15,49 +9,30 @@ import { TeamFromDBEntity } from '../../_entities/TeamFromDBEntity';
   styleUrls: ['./login-nav-menu.component.css']
 })
 export class LoginNavMenuComponent implements OnInit {
-   public userName: string;
-  userCounter: number = 0;
-  teamCounter: number = 0;
-  @Input() isAuthenticated: boolean;
+  isUserAuthenticated: boolean;
+  user: UserFromDBEntity;
+  @Input() fromParent;
+  @Output() userNotifications = new EventEmitter();
+  @Output() teamNotifications = new EventEmitter();
 
   constructor(private dataStorageService: DataStorageService,
-                      private ptoService: PTOService,
-                      private flexService: FlexService) {
-  }
+                      private dataSharingService: DataSharingService) {  }
   
   ngOnInit() {
-    let user: UserFromDBEntity = this.dataStorageService.getUserEntity();
-    let team: TeamFromDBEntity = this.dataStorageService.getTeamEntity();
-
-    let isLeadership: boolean = (team.name == 'Leadership / Admin');
-    if (isLeadership) {   
-    //Active PTO Requests count of all Reporting Team Members
-      let ptoReporingMembersResponse = this.ptoService.getRequestsReportingMembers(user.id,new Date(), null );
-      ptoReporingMembersResponse.then((data: PTOFromDBEntity[]) =>
-      {
-        let requestList = data;
-        //Active Flex Requests count of all Reporting Team Members
-        let flexResponse = this.flexService.getFlexsReportingMembers(user.id, new Date(), null);
-        flexResponse.then((data: FlexFromDBEntity[]) =>
-        {
-          let flexList = data;
-          this.teamCounter = requestList.length + flexList.length;
-        });
-      });
-    }
-
-    //Active PTO Requests count for the current user
-    let ptoResponse = this.ptoService.getPTOsByUserIdInDateRange(user.id, new Date(), null);
-    ptoResponse.then((data: PTOFromDBEntity[]) =>
-    {
-      let requestList = data;
-      //Active Flex Requests count for the current user
-      let flexResponse = this.flexService.getFlexsByUserIdInDateRange(user.id, new Date(), null);
-      flexResponse.then((data: FlexFromDBEntity[]) =>
-      {
-        let flexList = data;
-        this.userCounter = requestList.length + flexList.length;
-      });
+    // Subscribe here, this will automatically update "isUserAuthenticated" whenever a change to the subject is made.
+    this.dataSharingService.isUserAuthenticated.subscribe(value => {
+      this.isUserAuthenticated = value;
     });
+    if (this.isUserAuthenticated) {
+      this.user = this.dataStorageService.getUserEntity();
+    }
+  }
+
+  showUserNotifications() {
+    this.userNotifications.emit();
+  }
+
+  showTeamNotifications() {
+    this.teamNotifications.emit();
   }
 }
