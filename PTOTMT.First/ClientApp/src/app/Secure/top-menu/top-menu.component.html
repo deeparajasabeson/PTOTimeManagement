@@ -1,16 +1,17 @@
-<!--<nav class="header nav-location navbar  navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark mb-3">-->
   <nav class="navbar navbar-light mr-3">
     <div class="d-sm-inline-flex">
       <ul class="navbar-nav flex-grow">
-        <li class="nav-item"
-            [routerLinkActive]="['link-active']"
-            [routerLinkActiveOptions]="{ exact: true }">
-          <a class="nav-link text-white" [routerLink]="['/pto-calendar']">My PTO Calendar</a>
+        <li class="nav-item">
+          <a class="nav-link text-white" [routerLink]="['/pto-calendar']"
+             [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{ exact: true }">
+            My PTO Calendar
+          </a>
         </li>
-        <li class="nav-item" [routerLinkActive]="['link-active']">
-          <a class="nav-link text-white" [routerLink]="['/quota-calendar']">Quota Manager</a>
+        <li class="nav-item" >
+          <a class="nav-link text-white" [routerLink]="['/quota-calendar']" [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{ exact: true }">
+          Quota Manager
+          </a>
         </li>
       </ul>
     </div>
   </nav>
-    <!--</nav>-->

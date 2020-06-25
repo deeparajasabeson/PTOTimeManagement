@@ -19,14 +19,14 @@
             <td>{{ request.requestTypeId | requestTypeName}}</td>
             <td>{{ request.startDateTime | date: 'short' }}&nbsp;--&nbsp;{{ request.endDateTime | date:'short' }}&nbsp;</td>
             <td>{{ request.statusId | statusName }}</td>
-            <td><a class="link" [routerLink]="['/requestdisplay', {{ request.Id }}]">Open</a></td>
+            <td><a class="link" [routerLink]="['/requestdisplay', request.Id]">Open</a></td>
           </tr>
           <tr *ngFor="let flex of userFlexList">
             <td>{{ flex.userId | userName }}</td>
             <td>{{ flex.flexTypeId | flexName }}</td>
             <td>{{flex.startDateTime | date: 'short'}}&nbsp;--&nbsp;{{ flex.endDateTime | date:'short' }}&nbsp;</td>
             <td>{{ flex.statusId | statusName }}</td>
-            <td><a class="link" [routerLink]="['/requestdisplay', {{flex.Id}}]">Open</a></td>
+            <td><a class="link" [routerLink]="['/requestdisplay', flex.Id]">Open</a></td>
           </tr>
         </tbody>
       </table>

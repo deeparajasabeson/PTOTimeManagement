@@ -24,6 +24,7 @@ import { LogOutComponent } from './logout/logout.component';
 import { TeamNotificationsComponent } from './team-notifications/team-notifications.component';
 import { UserNotificationsComponent } from './user-notifications/user-notifications.component';
 import { WaitingListComponent } from './waiting-list/waiting-list.component';
+import { RequestDisplayComponent } from './request-display/request-display.component';
 
 
 const routes: Routes = [
@@ -37,7 +38,7 @@ const routes: Routes = [
       { path: 'logout', component: LogOutComponent, runGuardsAndResolvers: 'always' },
       { path: 'user-notifications', component: UserNotificationsComponent },
       { path: 'team-notifications', component: TeamNotificationsComponent },
-      { path: 'waitinglist', component: WaitingListComponent }
+      { path: 'waitinglist/:id', component: WaitingListComponent }
     ],
     canActivate: [AuthGuard]
   }
@@ -55,7 +56,8 @@ const routes: Routes = [
     LogOutComponent,
     UserNotificationsComponent,
     TeamNotificationsComponent,
-    WaitingListComponent
+    WaitingListComponent,
+    RequestDisplayComponent
   ],
   entryComponents: [
     QuotaEditorComponent,
