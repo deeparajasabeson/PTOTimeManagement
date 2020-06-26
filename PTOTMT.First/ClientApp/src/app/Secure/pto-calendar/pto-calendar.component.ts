@@ -56,16 +56,6 @@ export class PTOCalendarComponent implements OnInit {
   toDateNgbDateStruct: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(this.toDate);
 
   //Static Subscribe Variables and Functions
-  static subscribeData: PTOFromDBEntity[];
-  static setSubscribeData(data: PTOFromDBEntity[]) {
-    PTOCalendarComponent.subscribeData = data;
-  }
-  
-  static subscribePTOFromDBEntity: PTOFromDBEntity;
-  static setSubscribePTOFromDBEntity(pto: PTOFromDBEntity) {
-    PTOCalendarComponent.subscribePTOFromDBEntity = pto;
-  }
-
   static subscribeFlexType: FlexTypeFromDBEntity;
   static setSubscribeFlexType(flexType: FlexTypeFromDBEntity) {
     PTOCalendarComponent.subscribeFlexType = flexType;
@@ -76,16 +66,6 @@ export class PTOCalendarComponent implements OnInit {
     PTOCalendarComponent.subscribeFlexTypeFromDBEntity =flexTypes;
   }
 
-  static subscribeFlex: FlexFromDBEntity;
-  static setSubscribeFlex(flexs: FlexFromDBEntity) {
-    PTOCalendarComponent.subscribeFlex = flexs;
-  }
-
-  static subscribeFlexFromDBEntity: FlexFromDBEntity[];
-  static setSubscribeFlexFromDBEntity(flexs: FlexFromDBEntity[]) {
-    PTOCalendarComponent.subscribeFlexFromDBEntity = flexs;
-  }
-
   static subscribeRequestType: RequestTypeFromDBEntity;
   static setSubscribeRequestType(requestType: RequestTypeFromDBEntity) {
     PTOCalendarComponent.subscribeRequestType = requestType;
@@ -94,16 +74,6 @@ export class PTOCalendarComponent implements OnInit {
   static subscribeRequestTypeFromDBEntity: RequestTypeFromDBEntity[];
   static setSubscribeRequestTypeFromDBEntity(requestTypes: RequestTypeFromDBEntity[]) {
     PTOCalendarComponent.subscribeRequestTypeFromDBEntity = requestTypes;
-  }
-
-  static subscribeQuotaData: QuotaEntity;
-  static setSubscribeQuotaData(quota: QuotaEntity) {
-    PTOCalendarComponent.subscribeQuotaData = quota;
-  }
-
-  static subscribeStatusData: StatusFromDBEntity[];
-  static setSubscribeStatusData(statuses: StatusFromDBEntity[]) {
-    PTOCalendarComponent.subscribeStatusData = statuses;
   }
 
   // Constructor - executes when component is created first
@@ -236,36 +206,35 @@ export class PTOCalendarComponent implements OnInit {
     let userId: string = this.datastorageService.getUserEntity().id;
     let response = this.ptoService.getPTOsByUserId(userId);
     response.then((data: PTOFromDBEntity[]) => {
-      PTOCalendarComponent.setSubscribeData(data);
+      let ptoList = data;
+      if (ptoList == null || ptoList == undefined) {
+        return
+      }
+      for (var i = 0; i < ptoList.length; ++i) {
+        this.calendarEvents[i] =
+        {
+          allDay: (ptoList[i].hours == 8 && ptoList[i].startDateTime == ptoList[i].endDateTime),
+          backgroundColor: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
+          textColor: "white",
+          title: ptoList[i].description,
+          start: ptoList[i].startDateTime,
+          end: ptoList[i].endDateTime,
+          id: ptoList[i].id,
+          extendedProps: {
+            hours: ptoList[i].hours,
+            userId: ptoList[i].userId,
+            requestTypeId: ptoList[i].requestTypeId,
+            quotaId:ptoList[i].quotaId,
+            statusId: ptoList[i].statusId,
+            isActive: ptoList[i].isActive,
+            createdBy: ptoList[i].createdBy,
+            createdOn: ptoList[i].createdOn,
+            updatedBy: ptoList[i].updatedBy,
+            updatedOn: ptoList[i].updatedOn
+          }
+        };
+      }
     });
-    let ptoList = PTOCalendarComponent.subscribeData;
-    if (ptoList == null || ptoList == undefined) {
-      return
-    }
-    for (var i = 0; i < ptoList.length; ++i) {
-      this.calendarEvents[i] =
-      {
-        allDay: (ptoList[i].hours == 8 && ptoList[i].startDateTime == ptoList[i].endDateTime),
-        backgroundColor: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
-        textColor: "white",
-        title: ptoList[i].description,
-        start: ptoList[i].startDateTime,
-        end: ptoList[i].endDateTime,
-        id: ptoList[i].id,
-        extendedProps: {
-          hours: ptoList[i].hours,
-          userId: ptoList[i].userId,
-          requestTypeId: ptoList[i].requestTypeId,
-          quotaId:ptoList[i].quotaId,
-          statusId: ptoList[i].statusId,
-          isActive: ptoList[i].isActive,
-          createdBy: ptoList[i].createdBy,
-          createdOn: ptoList[i].createdOn,
-          updatedBy: ptoList[i].updatedBy,
-          updatedOn: ptoList[i].updatedOn
-        }
-      };
-    }
     if (this.requestTypes != undefined && this.requestTypes != null) {
       this.pto.requestTypes = this.requestTypes;
       this.pto.requestTypeId =  this.requestTypes.find(rt => rt.name == "Flex Time").id;
@@ -281,42 +250,41 @@ export class PTOCalendarComponent implements OnInit {
     let userId: string = this.datastorageService.getUserEntity().id;
     let response = this.flexService.getFlexsByUserId(userId);
     response.then((data: FlexFromDBEntity[]) => {
-      PTOCalendarComponent.setSubscribeFlexFromDBEntity(data);
+      let flexList = data;
+      if (flexList == null || flexList == undefined) {
+        return
+      }
+      var length = this.calendarEvents.length;
+      for (var i = 0; i < flexList.length; ++i) {
+        this.calendarEvents[length + i] =
+        {
+          allDay: false,
+          backgroundColor: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
+          textColor: "white",
+          title: flexList[i].description,
+          start: flexList[i].startDateTime,
+          end: flexList[i].endDateTime,
+          id: flexList[i].id,
+          description: flexList[i].description,
+          extendedProps: {
+            name: flexList[i].name,
+            hours: flexList[i].hours,
+            userId: flexList[i].userId,
+            flexTypeId: flexList[i].flexTypeId,
+            isForward: flexList[i].isForward,
+            coWorkerId: flexList[i].coWorkerId,
+            anotherStartDateTime: flexList[i].anotherStartDateTime,
+            anotherEndDateTime: flexList[i].anotherEndDateTime,
+            statusId: flexList[i].statusId,
+            isActive: flexList[i].isActive,
+            createdBy: flexList[i].createdBy,
+            createdOn: flexList[i].createdOn,
+            updatedBy: flexList[i].updatedBy,
+            updatedOn: flexList[i].updatedOn
+          }
+        };
+      }
     });
-    let flexList = PTOCalendarComponent.subscribeFlexFromDBEntity;
-    if (flexList == null || flexList == undefined) {
-      return
-    }
-    var length = this.calendarEvents.length;
-    for (var i = 0; i < flexList.length; ++i) {
-      this.calendarEvents[length + i] =
-      {
-        allDay: false,
-        backgroundColor: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
-        textColor: "white",
-        title: flexList[i].description,
-        start: flexList[i].startDateTime,
-        end: flexList[i].endDateTime,
-        id: flexList[i].id,
-        description: flexList[i].description,
-        extendedProps: {
-          name: flexList[i].name,
-          hours: flexList[i].hours,
-          userId: flexList[i].userId,
-          flexTypeId: flexList[i].flexTypeId,
-          isForward: flexList[i].isForward,
-          coWorkerId: flexList[i].coWorkerId,
-          anotherStartDateTime: flexList[i].anotherStartDateTime,
-          anotherEndDateTime: flexList[i].anotherEndDateTime,
-          statusId: flexList[i].statusId,
-          isActive: flexList[i].isActive,
-          createdBy: flexList[i].createdBy,
-          createdOn: flexList[i].createdOn,
-          updatedBy: flexList[i].updatedBy,
-          updatedOn: flexList[i].updatedOn
-        }
-      };
-    }
     if (this.flexTypes != undefined && this.flexTypes != null) {
       this.flex.flexTypes = this.flexTypes;
       this.flex.flexTypeId = this.flexTypes.find(ft => ft.name == "Shift Slide").id;
@@ -348,67 +316,63 @@ export class PTOCalendarComponent implements OnInit {
 
     let response = this.ptoService.getPTOById(eventId);
     response.subscribe((data: PTOFromDBEntity) => {
-      PTOCalendarComponent.setSubscribePTOFromDBEntity(data);
-    });
+      let ptoToEdit = data;
+      if (ptoToEdit == null || ptoToEdit == undefined) {
+        this.handleFlexEventClick(eventId);  
+        return;
+      }
 
-    let ptoToEdit = PTOCalendarComponent.subscribePTOFromDBEntity;
-    if (ptoToEdit == null || ptoToEdit == undefined) {
-      this.handleFlexEventClick(eventId);  
-      return;
-    }
+      //Clicked event is a PTO request
+      let startDateTime = new Date(ptoToEdit.startDateTime);
+      let ptoStartDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(startDateTime);
+      let endDateTime = new Date(ptoToEdit.endDateTime);
+      let ptoEndDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(endDateTime);
 
-    //Clicked event is a PTO request
-    let startDateTime = new Date(ptoToEdit.startDateTime);
-    let ptoStartDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(startDateTime);
-    let endDateTime = new Date(ptoToEdit.endDateTime);
-    let ptoEndDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(endDateTime);
-
-    this.pto.id = ptoToEdit.id;
-    this.pto.userId = ptoToEdit.userId;
-    this.pto.description = ptoToEdit.description;
-    this.pto.requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
-   this.pto.requestTypeId = ptoToEdit.requestTypeId,
-    this.pto.hours = ptoToEdit.hours;
-    this.pto.startDate = ptoStartDate;
-    this.pto.startTime = ptoToEdit.startDateTime.substr(11, 5);
-    this.pto.endDate = ptoEndDate;
-    this.pto.endTime = ptoToEdit.endDateTime.substr(11, 5);
-    this.pto.quotaId = ptoToEdit.quotaId;
-    this.pto.statusId = ptoToEdit.statusId;
-    this.pto.isNewEvent = false;
-    this.getPTO(null);
+      this.pto.id = ptoToEdit.id;
+      this.pto.userId = ptoToEdit.userId;
+      this.pto.description = ptoToEdit.description;
+      this.pto.requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
+     this.pto.requestTypeId = ptoToEdit.requestTypeId,
+      this.pto.hours = ptoToEdit.hours;
+      this.pto.startDate = ptoStartDate;
+      this.pto.startTime = ptoToEdit.startDateTime.substr(11, 5);
+      this.pto.endDate = ptoEndDate;
+      this.pto.endTime = ptoToEdit.endDateTime.substr(11, 5);
+      this.pto.quotaId = ptoToEdit.quotaId;
+      this.pto.statusId = ptoToEdit.statusId;
+      this.pto.isNewEvent = false;
+      this.getPTO(null);
+      });
   }
 
   //Search in Flex table and handle the clicked event
   handleFlexEventClick(eventId: string) {
     let response = this.flexService.getFlexById(eventId);
     response.subscribe((data: FlexFromDBEntity) => {
-      PTOCalendarComponent.setSubscribeFlex(data);
+      let flexToEdit = data;
+      if (flexToEdit == null || flexToEdit == undefined) {
+        return;
+      }
+      //Clicked event is a Flex request
+      let startDateTime = new Date(flexToEdit.startDateTime);
+      let flexStartDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(startDateTime);
+      let endDateTime = new Date(flexToEdit.endDateTime);
+      let flexEndDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(endDateTime);
+
+      this.flex.id = flexToEdit.id;
+      this.flex.userId = flexToEdit.userId;
+      this.flex.description = flexToEdit.description;
+      this.flex.flexTypes = PTOCalendarComponent.subscribeFlexTypeFromDBEntity;
+      this.flex.flexTypeId = flexToEdit.flexTypeId,
+        this.flex.hours = flexToEdit.hours;
+      this.flex.onDate = flexStartDate;
+      this.flex.startTime = flexToEdit.startDateTime.substr(11, 5);
+      this.flex.anotherDate = flexEndDate;
+      this.flex.endTime = flexToEdit.endDateTime.substr(11, 5);
+      this.flex.statusId = flexToEdit.statusId;
+      this.flex.isNewEvent = false;
+      this.getScheduleFlex();
     });
-
-    let flexToEdit = PTOCalendarComponent.subscribeFlex;
-    if (flexToEdit == null || flexToEdit == undefined) {
-      return;
-    }
-    //Clicked event is a Flex request
-    let startDateTime = new Date(flexToEdit.startDateTime);
-    let flexStartDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(startDateTime);
-    let endDateTime = new Date(flexToEdit.endDateTime);
-    let flexEndDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(endDateTime);
-
-    this.flex.id = flexToEdit.id;
-    this.flex.userId = flexToEdit.userId;
-    this.flex.description = flexToEdit.description;
-    this.flex.flexTypes = PTOCalendarComponent.subscribeFlexTypeFromDBEntity;
-    this.flex.flexTypeId = flexToEdit.flexTypeId,
-      this.flex.hours = flexToEdit.hours;
-    this.flex.onDate = flexStartDate;
-    this.flex.startTime = flexToEdit.startDateTime.substr(11, 5);
-    this.flex.anotherDate = flexEndDate;
-    this.flex.endTime = flexToEdit.endDateTime.substr(11, 5);
-    this.flex.statusId = flexToEdit.statusId;
-    this.flex.isNewEvent = false;
-    this.getScheduleFlex();
   }
 
   // Get New PTO and set start date

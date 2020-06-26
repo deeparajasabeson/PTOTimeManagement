@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { MatDialog } from '@angular/material';
 
 import { PTOFromDBEntity } from '../../_entities/PTOFromDBEntity';
 import { FlexFromDBEntity } from '../../_entities/FlexFromDBEntity';
@@ -7,7 +8,6 @@ import { PTOService } from '../../_services/pto.service';
 import { FlexService } from '../../_services/flex.service';
 import { FlexTypeService } from '../../_services/flextype.service';
 import { CommonLibrary } from '../../_library/common.library';
-import { MatDialog } from '@angular/material';
 
 
 @Component({
@@ -82,9 +82,7 @@ export class RequestDisplayComponent implements OnInit {
     });
   }
 
-  acceptSwiftSwapRequest() {
-
-  }
+  acceptSwiftSwapRequest() {  }
 
   onBack(): void {
     this.dialogRef.close();
