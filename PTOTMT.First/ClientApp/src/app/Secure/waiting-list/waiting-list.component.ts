@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 
 import { PTOFromDBEntity } from '../../_entities/PTOFromDBEntity';
 import { FlexFromDBEntity } from '../../_entities/FlexFromDBEntity';
+import { StatusFromDBEntity } from '../../_entities/StatusFromDBEntity';
 import { DataSharingService } from '../../_services/datasharing.service';
 import { StatusService } from '../../_services/status.service';
 import { CommonLibrary } from '../../_library/common.library';
-import { StatusFromDBEntity } from '../../_entities/StatusFromDBEntity';
 
 
 @Component({

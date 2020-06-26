@@ -1,6 +1,6 @@
 <ul class="nav navbar-nav navbar-right" *ngIf="isUserAuthenticated">
   <li class="nav-item" *ngIf="fromParent != undefined && fromParent.isLeadership">
-    <button class="bg-info notificationbtn" (click)="showUserNotifications()"
+    <button class="bg-info notificationbtn" (click)="showTeamNotifications()"
             data-toggle="tooltip" data-placement="bottom" title="Team Notifications">
       <fa-layers size="1.8x">
         <fa-icon icon="users"></fa-icon>

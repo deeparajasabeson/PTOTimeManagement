@@ -1,13 +1,12 @@
 <br>
 <h3>Team Notifications</h3>
-<span class="text-right">
-  <button class="btn-info btn btn-lg shadow-lg" (click)='viewWaitingList()'
-           data-toggle="tooltip" data-placement="top" title="Waiting List of Active Requests">
-      View Waiting List
-  </button>
-</span>
-<br>
 <div class="container">
+  <!--<div class="container" *ngIf="teamRequestList.length > 0">-->
+  <button class="btn-info btn btn-lg shadow-lg" style=" position: absolute;right:18%;" (click)='viewWaitingList()'
+          data-toggle="tooltip" data-placement="top" title="Waiting List of Active Requests">
+    View Waiting List
+  </button>
+  <br>
   <table class="table table-striped table-bordered table-hovertable-sm table-responsive">
     <thead>
       <tr class="table-dark">
