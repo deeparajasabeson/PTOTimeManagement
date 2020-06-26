@@ -36,17 +36,20 @@
                 <td></td>
                 <td style="font-weight: bold">{{ ptoRequest.startDateTime | date:'shortTime'}}</td>
               </tr>
-              <tr *ngIf="{{ ptoRequest.startDateTime | date : 'mm/dd/yyyy' }} != {{ ptoRequestEndDateTime | date : 'mm/dd/yyyy' }}">
-                <td style="text-align:right">Request for:</td>
+              <tr *ngIf="ptoRequest.startDateTime.getFullYear() !=  ptoRequestEndDateTime.getFullYear() ||
+                                 ptoRequest.startDateTime.getMonth() !=  ptoRequestEndDateTime.getMonth() ||
+                                 ptoRequest.startDateTime.getDay() !=  ptoRequestEndDateTime.getDay()">                <td style="text-align:right">Request for:</td>
                 <td style="font-weight: bold">{{ ptoRequest.endDateTime | date : 'mm/dd/yyyy'}}</td>
               </tr>
-              <tr *ngIf="{{ ptoRequest.startDateTime | date : 'mm/dd/yyyy' }} != {{ ptoRequestEndDateTime | date : 'mm/dd/yyyy' }}">
+              <tr *ngIf="ptoRequest.startDateTime.getFullYear() !=  ptoRequestEndDateTime.getFullYear() ||
+                                 ptoRequest.startDateTime.getMonth() !=  ptoRequestEndDateTime.getMonth() ||
+                                 ptoRequest.startDateTime.getDay() !=  ptoRequestEndDateTime.getDay()">
                 <td></td>
                 <td style="font-weight: bold">{{ ptoRequest.endDateTime | date:'shortTime'}}</td>
               </tr>
               <tr>
                 <td style="text-align:right">Hours:</td>
-                <td style="font-weight: bold">{{ ptoRequest.hours | '999.99' ed}}</td>
+                <td style="font-weight: bold">{{ ptoRequest.hours | number : '3.2' }}</td>
               </tr>
             </tbody>
           </table>
@@ -86,7 +89,7 @@
               </tr>
               <tr>
                 <td style="text-align:right">Request Type:</td>
-                <td style="font-weight: bold">{{ flexRequest.flexTypeId | flexName}}</td>
+                <td style="font-weight: bold">{{ flexRequest.flexTypeId | flexTypeName}}</td>
               </tr>
               <tr>
                 <td style="text-align:right">Status:</td>
@@ -161,7 +164,7 @@
               </tr>
               <tr>
                 <td style="text-align:right">Request Type:</td>
-                <td style="font-weight: bold">{{ flexRequest.flexTypeId | flexName}}</td>
+                <td style="font-weight: bold">{{ flexRequest.flexTypeId | flexTypeName}}</td>
               </tr>
               <tr>
                 <td style="text-align:right">Status:</td>
@@ -216,7 +219,7 @@
               </tr>
               <tr>
                 <td style="text-align:right">Request Type:</td>
-                <td style="font-weight: bold">{{ flexRequest.flexTypeId | flexName}}</td>
+                <td style="font-weight: bold">{{ flexRequest.flexTypeId | flexTypeName}}</td>
               </tr>
               <tr>
                 <td style="text-align:right">Status:</td>
@@ -239,7 +242,7 @@
               </tr>
               <tr>
                 <td style="text-align:right">Hours:</td>
-                <td style="font-weight: bold">{{ flexRequest.hours | '999.99' }}</td>
+                <td style="font-weight: bold">{{ flexRequest.hours | number:'3.2' }}</td>
               </tr>
               <tr>
                 <td style="text-align:right">Current Shift Start Time:</td>

@@ -22,7 +22,7 @@
       <tr *ngFor="let flex of userFlexList">
         <td>{{ i }}</td>
         <td>{{ flex.userId | userName }}</td>
-        <td>{{ flex.flexTypeId | flexName }}</td>
+        <td>{{ flex.flexTypeId | flexTypeName }}</td>
         <td>{{flex.startDateTime | date: 'short'}}&nbsp;--&nbsp;{{ flex.endDateTime | date:'short' }}&nbsp;</td>
       </tr>
     </tbody>

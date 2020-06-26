@@ -25,7 +25,10 @@ import { TeamNotificationsComponent } from './team-notifications/team-notificati
 import { UserNotificationsComponent } from './user-notifications/user-notifications.component';
 import { WaitingListComponent } from './waiting-list/waiting-list.component';
 import { RequestDisplayComponent } from './request-display/request-display.component';
-
+import { StatusNamePipe } from '../_pipes/status-name.pipe';
+import { FlexTypeNamePipe } from '../_pipes/flextype-name.pipe';
+import { UserNamePipe } from '../_pipes/user-name.pipe';
+import { RequestTypeNamePipe } from '../_pipes/requesttype-name.pipe';
 
 const routes: Routes = [
   { path: '', redirectTo: 'calendar', pathMatch: 'full' },
@@ -57,7 +60,11 @@ const routes: Routes = [
     UserNotificationsComponent,
     TeamNotificationsComponent,
     WaitingListComponent,
-    RequestDisplayComponent
+    RequestDisplayComponent,
+    StatusNamePipe,
+    FlexTypeNamePipe,
+    UserNamePipe,
+    RequestTypeNamePipe
   ],
   entryComponents: [
     QuotaEditorComponent,
@@ -77,7 +84,13 @@ const routes: Routes = [
     RouterModule.forChild( routes )
   ],
   exports: [ RouterModule ], 
-  providers: [ AuthGuard ],
+  providers: [
+    AuthGuard,
+    StatusNamePipe,
+    FlexTypeNamePipe,
+    UserNamePipe,
+    RequestTypeNamePipe
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class SecureModule {

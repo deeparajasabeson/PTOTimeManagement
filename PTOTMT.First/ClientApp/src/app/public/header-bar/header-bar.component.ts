@@ -56,12 +56,10 @@ export class HeaderBarComponent implements AfterViewChecked {
 
   showUserNotifications() {
     this.router.navigate(["/user-notifications"]);
-    console.log("User Notifications clicked - from Header-Bar Component");
   }
 
   showTeamNotifications() {
     this.router.navigate(["/team-notifications"]);
-    console.log("Team Notifications clicked - from Header-Bar Component");
   }
 
   collapse() {
@@ -113,7 +111,6 @@ export class HeaderBarComponent implements AfterViewChecked {
           let flexList = data;
           this.dataSharingService.teamFlexList.next(flexList);
           this.toChild.teamCounter = requestList.length + flexList.length;
-          console.log("TeamCounter : " + this.toChild.teamCounter);
         });
       }
     });

@@ -3,7 +3,7 @@ import { UserService } from '../_services/user.service';
 import { UserFromDBEntity } from '../_entities/UserFromDBEntity';
 
 @Pipe({
-  name: 'statusName'
+  name: 'userName'
 })
 export class UserNamePipe implements PipeTransform {
 

@@ -1,7 +1,7 @@
 /// <reference path="flex.service.ts" />
 import { Injectable } from '@angular/core';
 import { UserFromDBEntity } from '../_entities/UserFromDBEntity';
-import { StatusEntity } from '../_entities/StatusEntity';
+import { StatusFromDBEntity } from '../_entities/StatusFromDBEntity';
 import { QuotaEntity } from '../_entities/QuotaEntity';
 import { TeamFromDBEntity } from '../_entities/TeamFromDBEntity';
 
@@ -18,11 +18,11 @@ export class DataStorageService {
     return this.quotas;
   }
 
-  private statusEntity: StatusEntity;
-  setStatusEntity(value: StatusEntity) {
+  private statusEntity: StatusFromDBEntity;
+  setStatusEntity(value: StatusFromDBEntity) {
     this.statusEntity = value;
   }
-  getStatusEntity(): StatusEntity {
+  getStatusEntity(): StatusFromDBEntity {
     return this.statusEntity;
   }
 

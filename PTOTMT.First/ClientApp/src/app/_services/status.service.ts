@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { StatusEntity } from '../_entities/StatusEntity';
+import { StatusFromDBEntity } from '../_entities/StatusFromDBEntity';
 import { Observable } from 'rxjs';
 
 const httpOptions = {
@@ -30,8 +30,8 @@ export class StatusService {
     return this.http.get(this.statusUrl, httpOptions)
   }
 
-  public getStatuses() : Observable<StatusEntity[]>{
-    return this.http.get<StatusEntity[]>(this.statusUrl, httpOptions);
+  public getStatuses(): Observable<StatusFromDBEntity[]>{
+    return this.http.get<StatusFromDBEntity[]>(this.statusUrl, httpOptions);
   }
 } 
 
