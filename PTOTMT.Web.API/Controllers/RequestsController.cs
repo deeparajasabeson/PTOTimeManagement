@@ -101,6 +101,17 @@ namespace PTOTMT.Service.Controllers
             return membersRequests;
         }
 
+        // GET: api/requests/approvepto
+        [HttpGet("approvepto")]
+        public void ApprovePTO(Guid id)
+        {
+            Request request = uow.RequestRepo.GetById(id);
+            Status approved = uow.StatusRepo.GetByName("Approved");
+            request.StatusId = approved.Id;
+            uow.RequestRepo.Put(request, request.Id);
+            uow.SaveChanges();
+        }
+
         // PUT: api/Requests/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
@@ -129,7 +140,7 @@ namespace PTOTMT.Service.Controllers
         public IActionResult PostRequest(Request request)
         {
             Quota quotaToAllot = quotaService.FindQuota(request);
-            request = quotaService.SendEmails(request, quotaToAllot);
+            request = quotaService.SendPTOEmails(request, quotaToAllot);
             uow.RequestRepo.Post(request);
             uow.SaveChanges();
             return CreatedAtAction(nameof(GetRequest), new { id = request.Id }, request);
@@ -142,7 +153,9 @@ namespace PTOTMT.Service.Controllers
         {
             if (uow.RequestRepo.Exists(id))
             {
-                uow.RequestRepo.DeleteById(id);
+                Request request = uow.RequestRepo.GetById(id);
+                request.IsActive = false;
+                uow.RequestRepo.Put(request, request.Id);
                 uow.SaveChanges();
                 return NoContent();
             }
@@ -156,7 +169,8 @@ namespace PTOTMT.Service.Controllers
         {
             if (uow.RequestRepo.Exists(request.Id))
             {
-                uow.RequestRepo.Delete(request);
+                request.IsActive = false;
+                uow.RequestRepo.Put(request, request.Id);
                 uow.SaveChanges();
                 return NoContent();
             }

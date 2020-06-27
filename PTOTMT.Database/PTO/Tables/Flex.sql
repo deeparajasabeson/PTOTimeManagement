@@ -10,6 +10,7 @@
     [EndDateTime] DATETIMEOFFSET NOT NULL, 
     [Hours] DECIMAL(4,1) NOT NULL, 
     [CoWorkerId] UNIQUEIDENTIFIER NOT NULL, 	
+    [CoWorkerFlexId] UNIQUEIDENTIFIER NULL, 	
     [AnotherStartDateTime] DATETIMEOFFSET NOT NULL, 
     [AnotherEndDateTime] DATETIMEOFFSET NOT NULL, 
     [StatusId]  UNIQUEIDENTIFIER NOT NULL, 	

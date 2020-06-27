@@ -53,9 +53,5 @@ namespace PTOTMT.Repository.Implementation.Web
                 }
             }
         }
-        public Flex SendEmails(Flex flex)
-        {
-            return flex;
-        }
     }
 }

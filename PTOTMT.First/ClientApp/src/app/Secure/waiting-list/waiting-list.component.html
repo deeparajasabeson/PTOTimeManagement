@@ -9,6 +9,7 @@
         <th>Requestor</th>
         <th>Request Type</th>
         <th>Description</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -17,12 +18,14 @@
         <td>{{ request.userId | userName }}</td>
         <td>{{ request.requestTypeId | requestTypeName}}</td>
         <td>{{ request.startDateTime | date: 'short' }}&nbsp;--&nbsp;{{ request.endDateTime | date:'short' }}&nbsp;</td>
+        <td><button class="btn btn-success" (click)="approvePTO(request.id)">Approve</button></td>
       </tr>
       <tr *ngFor="let flex of userFlexList">
         <td>{{ i }}</td>
         <td>{{ flex.userId | userName }}</td>
         <td>{{ flex.flexTypeId | flexTypeName }}</td>
         <td>{{flex.startDateTime | date: 'short'}}&nbsp;--&nbsp;{{ flex.endDateTime | date:'short' }}&nbsp;</td>
+        <td><button class="btn btn-success" (click)="approveFlex(flex.id)">Approve</button></td>
       </tr>
     </tbody>
   </table>

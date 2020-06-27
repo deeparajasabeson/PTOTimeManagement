@@ -144,6 +144,10 @@ Values
 Insert into Config.Status
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
+(NEWID(), 'Declined', 'Shift Swap Request is declined by Co-Worker', 1, @UserId, GETDATE(), @UserId, GETDATE())
+Insert into Config.Status
+(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+Values
 (NEWID(), 'Cancelled', 'Entry is cancelled by Leadership / Applier', 1, @UserId, GETDATE(), @UserId, GETDATE())
 
 --Config.FlexType TABLE
@@ -151,6 +155,10 @@ Insert into Config.FlexType
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
 (@FlexTypeId, 'Shift Swap', 'Shift Swap', 1, @UserId, GETDATE(), @UserId, GETDATE())
+Insert into Config.FlexType 
+(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+Values
+(NEWID(), 'Shift Swap Request', 'Shift Swap Request', 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Config.FlexType
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
@@ -167,9 +175,9 @@ Values
 
 --Config.FlexType TABLE
 Insert into PTO.Flex 
-(Id, UserId, FlexTypeId, Name, Description, IsForward, StartDateTime, EndDateTime, Hours, CoWorkerId, AnotherStartDateTIme, AnotherEndDateTime, StatusId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, UserId, FlexTypeId, Name, Description, IsForward, StartDateTime, EndDateTime, Hours, CoWorkerId, CoWorkerFlexId, AnotherStartDateTIme, AnotherEndDateTime, StatusId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(NEWID(), @UserId, @FlexTypeId, 'Sample Flex', 'Sample Description', 1, GETDATE(), GETDATE(), 2, @ReportToUserId, GETDATE(), GETDATE(), @StatusId,1, @UserId, GETDATE(), @UserId, GETDATE())
+(NEWID(), @UserId, @FlexTypeId, 'Sample Flex', 'Sample Description', 1, GETDATE(), GETDATE(), 2, @ReportToUserId, null, GETDATE(), GETDATE(), @StatusId,1, @UserId, GETDATE(), @UserId, GETDATE())
 
 --Add keys back in Security.User TABLE
 Alter Table Security.[User]

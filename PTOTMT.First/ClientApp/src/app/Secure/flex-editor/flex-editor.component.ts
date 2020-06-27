@@ -3,16 +3,17 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators, NgForm } from '@angular/forms';
 import { NgbDateStruct, NgbDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { MaterialModule } from '../material.module';
+import { ValidateMinutes } from '../../_validators/ValidateMinutes';
 import { FlexCustomValidators } from '../../_validators/FlexCustomValidators.Validator';
-import { FlexService } from '../../_services/flex.service';
-import { FlexDialogData } from '../../_viewmodels/FlexDialogData';
-import { FlexTypeFromDBEntity } from '../../_entities/FlexTypeFromDBEntity';
+import { CommonLibrary } from '../../_library/common.library';
 import { UserService } from '../../_services/user.service';
 import { DataStorageService } from '../../_services/datastorage.service';
+import { FlexService } from '../../_services/flex.service';
+import { FlexDialogData } from '../../_viewmodels/FlexDialogData';
 import { TeamFromDBEntity } from '../../_entities/TeamFromDBEntity';
-import { CommonLibrary } from '../../_library/common.library';
-import { ValidateMinutes } from '../../_validators/ValidateMinutes';
 import { UserFromDBEntity } from '../../_entities/UserFromDBEntity';
+import { FlexTypeFromDBEntity } from '../../_entities/FlexTypeFromDBEntity';
+
 
 
 @Component({

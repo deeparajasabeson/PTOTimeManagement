@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
 import { FlexEntity } from '../_entities/FlexEntity';
 import { FlexFromDBEntity } from '../_entities/FlexFromDBEntity';
-import { Observable } from 'rxjs';
+
 
 
 const httpOptions = {
@@ -64,5 +66,15 @@ export class FlexService {
   public deleteFlex(flexId: string) {
     let requestUrl: string = this.flexUrl + "/flexbyid/" + flexId;
     this.http.delete(requestUrl, httpOptions).subscribe(data => { return data });
+  }
+
+  public approveFlex(flexId: string) {
+    let requestUrl: string = this.flexUrl + "/approveflex/" + flexId;
+    this.http.get(requestUrl, httpOptions).subscribe(data => { return data });
+  }
+
+  public declineFlex(flexId: string) {
+    let requestUrl: string = this.flexUrl + "/declineflex/" + flexId;
+    this.http.get(requestUrl, httpOptions).subscribe(data => { return data });
   }
 }

@@ -108,6 +108,27 @@ namespace PTOTMT.Service.Controllers
             return membersRequests;
         }
 
+        // GET: api/requests/approveflex
+        [HttpGet("approveflex")]
+        public void ApproveFlex(Guid id)
+        {
+            Flex flex = uow.FlexRepo.GetById(id);
+            Status approved = uow.StatusRepo.GetByName("Approved");
+            flex.StatusId = approved.Id;
+            uow.FlexRepo.Put(flex, flex.Id);
+            uow.SaveChanges();
+        }
+
+        // GET: api/requests/declineflex
+        [HttpGet("declineflex")]
+        public void DeclineFlex(Guid id)
+        {
+            Flex flex = uow.FlexRepo.GetById(id);
+            Status declined = uow.StatusRepo.GetByName("Declined");
+            flex.StatusId = declined.Id;
+            uow.FlexRepo.Put(flex, flex.Id);
+            uow.SaveChanges();
+        }
 
         // PUT: api/flexs/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -116,27 +137,79 @@ namespace PTOTMT.Service.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public IActionResult PutFlex(Guid? id, Flex Flex)
+        public IActionResult PutFlex(Guid? id, Flex flex)
         {
-            if (id != Flex.Id)
+            if (id != flex.Id)
             {
                 return BadRequest();
             }
             if (uow.FlexRepo.Exists(id))
             {
-                uow.FlexRepo.Put(Flex, Flex.Id);
+                Flex flexOld = uow.FlexRepo.GetById(flex.Id);
+
+                FlexType shiftSwap = uow.FlexTypeRepo.GetByName("Shift Swap");
+                FlexType shiftSwapRequest = uow.FlexTypeRepo.GetByName("Shift Swap Request");
+                if (flex.FlexTypeId == shiftSwap.Id)
+                {
+                    Flex coWorkerFlex = uow.FlexRepo.GetById(flex.CoWorkerFlexId);
+                    if (flex.CoWorkerId != flexOld.CoWorkerId && coWorkerFlex.FlexTypeId == shiftSwapRequest.Id) {
+                        //Delete the old Co-Worker Flex Entry; Need to send an email to old Co-Worker about the updates.
+                        coWorkerFlex.IsActive = false;
+                        uow.FlexRepo.Put(coWorkerFlex, coWorkerFlex.Id);
+                        uow.SaveChanges();
+                        quotaService.SendEmaisOnCoWorkerChange(coWorkerFlex);
+
+                        //Create another request  for CoWorker Id
+                        Guid coWorkerFlexId = CreateCoWorkerFlex(flex);
+                        flex.CoWorkerFlexId = coWorkerFlexId;
+                    }
+                }
+                Status approved = uow.StatusRepo.GetByName("Approved");
+                if (flex.StatusId != flexOld.StatusId && flex.StatusId == approved.Id)
+                {
+                    quotaService.SendApproveFlexEmails(flex);
+                }
+                uow.FlexRepo.Put(flex, flex.Id);
                 uow.SaveChanges();
                 return NoContent();
             }
             return NotFound();
         }
 
+        private Guid CreateCoWorkerFlex(Flex flex)
+        {
+            Guid userId = flex.UserId;
+            flex.UserId = flex.CoWorkerId;
+            flex.CoWorkerId = userId;
+
+            FlexType shiftSwapRequest = uow.FlexTypeRepo.GetByName("Shift Swap Request");
+            flex.FlexTypeId = shiftSwapRequest.Id;
+
+            flex.CoWorkerFlexId = flex.Id;
+
+            Guid guid = Guid.NewGuid();
+            flex.Id = guid;
+            uow.FlexRepo.Post(flex);
+            uow.SaveChanges();
+            return guid;
+        }
+
         // POST: api/flexs
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult PostFlex(Flex flex)
         {
-            flex = emailSender.SendEmails(flex);
+            quotaService.SendFlexEmails(flex);
+            Status waitlistStatus = uow.StatusRepo.GetAll().Where(status => status.Name == "WaitList").FirstOrDefault();
+            flex.StatusId = waitlistStatus.Id;
+
+            FlexType shiftSwap = uow.FlexTypeRepo.GetByName("Shift Swap");
+            if(flex.FlexTypeId == shiftSwap.Id)
+            {
+                Guid guid = CreateCoWorkerFlex(flex);
+                flex.CoWorkerFlexId = guid;
+            }
+            uow.FlexRepo.Post(flex);
+            uow.SaveChanges();
             return CreatedAtAction(nameof(GetFlex), new { id = flex.Id }, flex);
         }
 
@@ -147,7 +220,9 @@ namespace PTOTMT.Service.Controllers
         {
             if (uow.FlexRepo.Exists(id))
             {
-                uow.FlexRepo.DeleteById(id);
+                Flex flex = uow.FlexRepo.GetById(id);
+                flex.IsActive = false;
+                uow.FlexRepo.Put(flex, id);
                 uow.SaveChanges();
                 return NoContent();
             }
@@ -161,7 +236,8 @@ namespace PTOTMT.Service.Controllers
         {
             if (uow.FlexRepo.Exists(flex.Id))
             {
-                uow.FlexRepo.Delete(flex);
+                flex.IsActive = false;
+                uow.FlexRepo.Put(flex, id);
                 uow.SaveChanges();
                 return NoContent();
             }

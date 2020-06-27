@@ -14,6 +14,7 @@ namespace PTOTMT.Common.Entities
         public DateTimeOffset EndDateTime { get; set; }
         public decimal Hours { get; set; }
         public Guid CoWorkerId { get; set; }
+        public Guid CoWorkerFlexId { get; set; }
         public DateTimeOffset AnotherStartDateTime { get; set; }
         public DateTimeOffset AnotherEndDateTime { get; set; }
         public Guid StatusId { get; set; }

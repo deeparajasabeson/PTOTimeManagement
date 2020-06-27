@@ -65,4 +65,9 @@ export class PTOService {
     let requestUrl: string = this.ptoUrl + "/ptobyid/" + ptoId;
     this.http.delete(requestUrl, httpOptions).subscribe(data => { return data });
   }
+
+  public approvePTO(flexId: string) {
+    let requestUrl: string = this.ptoUrl + "/approvepto/" + flexId;
+    this.http.get(requestUrl, httpOptions).subscribe(data => { return data });
+  }
 }

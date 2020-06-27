@@ -10,7 +10,6 @@ using PTOTMT.Repository;
 using PTOTMT.Common.Entities;
 using PTOTMT.Common.Models;
 using PTOTMT.Repository.Abstraction.Web;
-using PTOTMT.Repository.Implementation.Web;
 
 
 namespace PTOTMT.Service.Controllers
@@ -125,7 +124,9 @@ namespace PTOTMT.Service.Controllers
         {
             if (uow.QuotaRepo.Exists(id))
             {
-                uow.QuotaRepo.DeleteById(id);
+                Quota quota = uow.QuotaRepo.GetById(id);
+                quota.IsActive = false;
+                uow.QuotaRepo.Put(quota, id);
                 uow.SaveChanges();
                 return Ok();
             }
@@ -139,7 +140,8 @@ namespace PTOTMT.Service.Controllers
         {
             if (uow.QuotaRepo.Exists(quota.Id))
             {
-                uow.QuotaRepo.Delete(quota);
+                quota.IsActive = false;
+                uow.QuotaRepo.Put(quota, quota.Id);
                 uow.SaveChanges();
                 return NoContent();
             }

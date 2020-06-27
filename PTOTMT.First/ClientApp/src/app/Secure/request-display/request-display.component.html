@@ -72,7 +72,7 @@
 <!-- 2. Shift Swap type Flex Request  -->
 <div *ngIf="isFlexRequest && isShiftSwap">
   <div class="modal-box">
-    <form [formGroup]="requestDisplayForm" (ngSubmit)="acceptRequest(requestDisplayForm.value)">
+    <form [formGroup]="requestDisplayForm" (ngSubmit)="acceptRequest(flexRequest.id)">
       <div class="navbar modal-title">
         <h2 mat-dialog-title>
           &nbsp;Flex Request Details
@@ -123,13 +123,13 @@
       <div mat-dialog-actions class="modal-footer ">
         <button type="submit"
                 class="btn btn-success"
-                (click)="acceptRequest(requestDisplayForm.value)"
+                (click)="acceptRequest(flexRequest.id)"
                 [disabled]="!requestDisplayForm.valid"
                 [mat-dialog-close]="data">
           Accept
         </button>
         <button class="btn btn-danger deletebutton"
-                (click)="declineRequest(requestDisplayForm.value)"
+                (click)="declineRequest(flexRequest.id)"
                 [mat-dialog-close]="data">
           Decline
         </button>

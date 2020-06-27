@@ -77,12 +77,15 @@ export class RequestDisplayComponent implements OnInit {
     dialogConfig.height = (this.isSelfShiftSwap) ? "85%" : "75%";
     dialogConfig.width = "65%";
     this.dialogRef = this.dialog.open(RequestDisplayComponent, dialogConfig);
-    this.dialogRef.afterClosed().subscribe(resultData => {
-      if (this.isShiftSwap) {  this.acceptSwiftSwapRequest();  }
-    });
   }
 
-  acceptSwiftSwapRequest() {  }
+  acceptRequest(flexId: string) {
+    this.flexService.approveFlex(flexId);
+  }
+
+  declineRequest(flexId: string) {
+    this.flexService.declineFlex(flexId);
+  }
 
   onBack(): void {
     this.dialogRef.close();
