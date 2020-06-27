@@ -157,7 +157,7 @@ namespace PTOTMT.Service.Controllers
                         coWorkerFlex.IsActive = false;
                         uow.FlexRepo.Put(coWorkerFlex, coWorkerFlex.Id);
                         uow.SaveChanges();
-                        quotaService.SendEmaisOnCoWorkerChange(coWorkerFlex);
+                        quotaService.SendEmailsOnCoWorkerChange(coWorkerFlex);
 
                         //Create another request  for CoWorker Id
                         Guid coWorkerFlexId = CreateCoWorkerFlex(flex);
@@ -189,6 +189,8 @@ namespace PTOTMT.Service.Controllers
 
             Guid guid = Guid.NewGuid();
             flex.Id = guid;
+            Status pending = uow.StatusRepo.GetByName("Pending");
+            flex.StatusId = pending.Id;
             uow.FlexRepo.Post(flex);
             uow.SaveChanges();
             return guid;
@@ -207,6 +209,8 @@ namespace PTOTMT.Service.Controllers
             {
                 Guid guid = CreateCoWorkerFlex(flex);
                 flex.CoWorkerFlexId = guid;
+                Status pending = uow.StatusRepo.GetByName("Pending");
+                flex.StatusId = pending.Id;
             }
             uow.FlexRepo.Post(flex);
             uow.SaveChanges();

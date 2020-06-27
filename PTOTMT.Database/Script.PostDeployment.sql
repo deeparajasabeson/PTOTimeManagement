@@ -144,11 +144,15 @@ Values
 Insert into Config.Status
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(NEWID(), 'Declined', 'Shift Swap Request is declined by Co-Worker', 1, @UserId, GETDATE(), @UserId, GETDATE())
+(NEWID(), 'Cancelled', 'Entry is cancelled by Leadership / Applier', 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Config.Status
 (Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(NEWID(), 'Cancelled', 'Entry is cancelled by Leadership / Applier', 1, @UserId, GETDATE(), @UserId, GETDATE())
+(NEWID(), 'Pending', 'Shift Swap is pending to accept by CoWorker', 1, @UserId, GETDATE(), @UserId, GETDATE())
+Insert into Config.Status
+(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+Values
+(NEWID(), 'Declined', 'Shift Swap Request is declined by Co-Worker', 1, @UserId, GETDATE(), @UserId, GETDATE())
 
 --Config.FlexType TABLE
 Insert into Config.FlexType 
