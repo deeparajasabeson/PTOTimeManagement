@@ -76,7 +76,6 @@
     <Build Include="Security\Config.sql" />
     <Build Include="Security\PTO.sql" />
     <Build Include="Security\Security.sql" />
-    <Build Include="Security\Tables\TeamUser.sql" />
     <Build Include="Config\Tables\Status.sql" />
     <Build Include="Config\Tables\RequestType.sql" />
     <Build Include="PTO\Tables\Request.sql" />

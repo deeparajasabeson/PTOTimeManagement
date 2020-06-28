@@ -1,6 +1,31 @@
-<div fxLayout="row" fxLayoutGap="20px">
-  <a routerLink="/login" class="btn btn-link">Go To Login</a>
-  <br />
-  <a routerLink="/home" class="btn btn-link">Go to HomePage</a>
+<h2 mat-dialog-title>
+  &nbsp;PTO Request Details
+</h2>
+<div class="row">
+  <div class="col-4"></div>
+  <div class="col-4">
+    <form class="form-signin" #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+      <div class="container-fluid">
+        <h2 class="form-signin-heading">Login</h2>
+        <div *ngIf="invalidLogin" class="alert alert-danger">Invalid username or password.</div>
+        <br />
+        <label for="username" class="sr-only">Email address</label>
+        <input type="email" id="username" name="username" ngModel class="form-control" placeholder="User Name" required autofocus>
+        <!--<label *ngIf="name.invalid" [ngClass]="'error'"> UserName is required </label>-->
+        <br />
+        <label for="password" class="sr-only">Password</label>
+        <input type="password" id="password" name="password" ngModel class="form-control" placeholder="Password" required>
+        <!--<label *ngIf="password.invalid" [ngClass]="'error'"> Password is required </label>-->
+        <br />
+        <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="!loginForm.form.valid">Sign in</button>
+        <div class="already">
+          <p>Don't have an account yet?</p>
+          <a ng-href="signup.html">Sign Up</a>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!--<div class="col-3"></div>-->
 </div>
+<button (click)="onBack()">Close</button>
 

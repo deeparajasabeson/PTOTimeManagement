@@ -10,6 +10,7 @@ import { PublicLayoutComponent } from './public-layout/public-layout.component';
 import { HeaderBarComponent } from './header-bar/header-bar.component';
 import { LoginNavMenuComponent } from './login-nav-menu/login-nav-menu.component';
 import { FooterBarComponent } from './footer-bar/footer-bar.component';
+import { RegisterComponent } from './register/register.component';
 
 
 const routes: Routes = [
@@ -19,7 +20,7 @@ const routes: Routes = [
     component: PublicLayoutComponent,
     children: [
       { path: 'home', loadChildren: './home/home.module#HomeModule' },
-      { path: 'register', loadChildren: './register/register.module#RegisterModule' },
+      { path: 'register', component: RegisterComponent },
       { path: 'login', loadChildren: './login/login.module#LoginModule' }
     ]
   }
@@ -30,7 +31,8 @@ const routes: Routes = [
     PublicLayoutComponent,
     HeaderBarComponent,
     LoginNavMenuComponent,
-    FooterBarComponent
+    FooterBarComponent,
+    RegisterComponent
   ],
   imports: [
     CommonModule,
@@ -43,6 +45,9 @@ const routes: Routes = [
     LoginNavMenuComponent,
     FooterBarComponent,
     RouterModule
+  ],
+  entryComponents: [
+    RegisterComponent
   ],
   providers: [
     AuthService

@@ -52,6 +52,7 @@
     <None Remove="ClientApp\src\app\_validators\QuotaCustomValidators.Validator.ts" />
     <None Remove="ClientApp\src\app\_viewmodels\FlexDialogData.ts" />
     <None Remove="ClientApp\src\app\_viewmodels\PTODialogData.ts" />
+    <None Remove="ClientApp\src\app\_viewmodels\RequestDisplayDialogData.ts" />
     <None Remove="ClientApp\src\app\_viewmodels\UserEntity.ts" />
     <None Remove="ClientApp\src\app\_interceptors\index.ts" />
     <None Remove="ClientApp\src\app\_services\flex.service.ts" />
@@ -83,6 +84,9 @@
     <TypeScriptCompile Include="ClientApp\src\app\_validators\FlexCustomValidators.validator.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_viewmodels\FlexDialogData.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_viewmodels\PTODialogData.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_viewmodels\RequestDisplayDialogData.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\_viewmodels\QuotaDialogData.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\UserFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_interceptors\index.ts" />

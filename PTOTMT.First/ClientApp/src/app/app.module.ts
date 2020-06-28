@@ -76,7 +76,9 @@ export function tokenGetter() {
     DataSharingService,
     { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
   ],
-  entryComponents: [ErrorDialogComponent],
+  entryComponents: [
+    ErrorDialogComponent
+  ],
   bootstrap: [
     AppComponent
   ]

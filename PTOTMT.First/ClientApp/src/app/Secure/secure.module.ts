@@ -30,6 +30,7 @@ import { FlexTypeNamePipe } from '../_pipes/flextype-name.pipe';
 import { UserNamePipe } from '../_pipes/user-name.pipe';
 import { RequestTypeNamePipe } from '../_pipes/requesttype-name.pipe';
 
+
 const routes: Routes = [
   { path: '', redirectTo: 'calendar', pathMatch: 'full' },
   {
@@ -70,7 +71,8 @@ const routes: Routes = [
   entryComponents: [
     QuotaEditorComponent,
     PTOEditorComponent,
-    FlexEditorComponent
+    FlexEditorComponent,
+    RequestDisplayComponent
   ],
   imports: [
     CommonModule,
