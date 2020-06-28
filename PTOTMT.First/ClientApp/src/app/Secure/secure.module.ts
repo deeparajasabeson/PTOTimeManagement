@@ -41,7 +41,7 @@ const routes: Routes = [
       { path: 'logout', component: LogOutComponent, runGuardsAndResolvers: 'always' },
       { path: 'user-notifications', component: UserNotificationsComponent },
       { path: 'team-notifications', component: TeamNotificationsComponent },
-      { path: 'waitinglist', component: WaitingListComponent }.
+      { path: 'waitinglist', component: WaitingListComponent },
       { path: 'requestdisplay/:id:isPTO', component: RequestDisplayComponent}
     ],
     canActivate: [AuthGuard]

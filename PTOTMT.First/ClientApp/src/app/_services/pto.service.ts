@@ -72,7 +72,7 @@ export class PTOService {
   }
 
   public declinePTO(ptoId: string) {
-    let requestUrl: string = this.flexUrl + "/declinepto/" + ptoId;
+    let requestUrl: string = this.ptoUrl + "/declinepto/" + ptoId;
     this.http.get(requestUrl, httpOptions).subscribe(data => { return data });
   }
 }
