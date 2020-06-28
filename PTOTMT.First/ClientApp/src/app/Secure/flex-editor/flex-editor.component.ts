@@ -15,7 +15,6 @@ import { UserFromDBEntity } from '../../_entities/UserFromDBEntity';
 import { FlexTypeFromDBEntity } from '../../_entities/FlexTypeFromDBEntity';
 
 
-
 @Component({
   templateUrl: './flex-editor.component.html',
 })

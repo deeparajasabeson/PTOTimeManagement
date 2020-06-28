@@ -185,7 +185,7 @@ export class PTOCalendarComponent implements OnInit {
       this.flexTypes = [];
       data.forEach(val => this.flexTypes.push(Object.assign({}, val)));
       this.flex.flexTypes = [];
-      this.flexTypes.forEach(val => this.flex.flexTypes.push(Object.assign({}, val)));
+      this.flexTypes.filter(ft => ft.name != "Shift Swap Request").forEach(val => this.flex.flexTypes.push(Object.assign({}, val)));
     });
     if (this.flexTypes == undefined || this.flexTypes.length == 0) {
       this.flexTypes = PTOCalendarComponent.subscribeFlexTypeFromDBEntity;
@@ -286,7 +286,7 @@ export class PTOCalendarComponent implements OnInit {
       }
     });
     if (this.flexTypes != undefined && this.flexTypes != null) {
-      this.flex.flexTypes = this.flexTypes;
+      this.flexTypes.filter(ft => ft.name != "Shift Swap Request").forEach(val => this.flex.flexTypes.push(Object.assign({}, val)));
       this.flex.flexTypeId = this.flexTypes.find(ft => ft.name == "Shift Slide").id;
     }
     else {
@@ -362,7 +362,7 @@ export class PTOCalendarComponent implements OnInit {
       this.flex.id = flexToEdit.id;
       this.flex.userId = flexToEdit.userId;
       this.flex.description = flexToEdit.description;
-      this.flex.flexTypes = PTOCalendarComponent.subscribeFlexTypeFromDBEntity;
+      this.flexTypes.forEach(val => this.flex.flexTypes.filter(ft => ft.name != "Shift Swap Request").push(Object.assign({}, val)));
       this.flex.flexTypeId = flexToEdit.flexTypeId,
         this.flex.hours = flexToEdit.hours;
       this.flex.onDate = flexStartDate;
