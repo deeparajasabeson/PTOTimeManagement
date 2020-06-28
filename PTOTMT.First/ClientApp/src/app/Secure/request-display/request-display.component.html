@@ -57,6 +57,17 @@
         Comments<br> {{ ptoRequest.description }}
       </div>
       <div mat-dialog-actions class="modal-footer ">
+        <button type="submit"
+                class="btn btn-success"
+                (click)="acceptPTO(ptoRequest.id)"
+                [mat-dialog-close]="data">
+          Accept
+        </button>
+        <button class="btn btn-danger deletebutton"
+                (click)="declinePTO(ptoRequest.id)"
+                [mat-dialog-close]="data">
+          Decline
+        </button>
         <button type="button"
                 class="btn btn-danger cancelbutton`"
                 [mat-dialog-close]="data"
@@ -104,16 +115,24 @@
                 <td style="font-weight: bold">{{ flexRequest.startDateTime | date : 'mm/dd/yyyy'}}</td>
               </tr>
               <tr>
-                <td></td>
+                <td>Start Time:</td>
                 <td style="font-weight: bold">{{ flexRequest.startDateTime | date:'shortTime'}}</td>
+              </tr>
+              <tr>
+                <td>End Time:</td>
+                <td style="font-weight: bold">{{ flexRequest.endDateTime | date:'shortTime'}}</td>
               </tr>
               <tr>
                 <td style="text-align:right">Proposed Shift:</td>
                 <td style="font-weight: bold">{{ flexRequest.anotherStartDateTime | date: 'mm/dd/yyyy'}}</td>
               </tr>
               <tr>
-                <td></td>
+                <td>Start Time:</td>
                 <td style="font-weight: bold">{{ flexRequest.anotherStartDateTime | date:'shortTime'}}</td>
+              </tr>
+              <tr>
+                <td>End Time:</td>
+                <td style="font-weight: bold">{{ flexRequest.anotherEndDateTime | date:'shortTime'}}</td>
               </tr>
             </tbody>
           </table>
@@ -123,15 +142,14 @@
       <div mat-dialog-actions class="modal-footer ">
         <button type="submit"
                 class="btn btn-success"
-                (click)="acceptRequest(flexRequest.id)"
-                [disabled]="!requestDisplayForm.valid"
+                (click)="acceptFlex(flexRequest.id)"
                 [mat-dialog-close]="data">
-          Accept
+          Approve
         </button>
         <button class="btn btn-danger deletebutton"
-                (click)="declineRequest(flexRequest.id)"
+                (click)="declineFlex(flexRequest.id)"
                 [mat-dialog-close]="data">
-          Decline
+          Reject
         </button>
         <button type="button"
                 class="btn btn-danger cancelbutton`"

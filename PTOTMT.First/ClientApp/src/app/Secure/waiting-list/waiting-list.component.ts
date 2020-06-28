@@ -10,6 +10,7 @@ import { StatusService } from '../../_services/status.service';
 import { FlexTypeService } from '../../_services/flextype.service';
 import { FlexService } from '../../_services/flex.service';
 import { PTOService } from '../../_services/pto.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -20,19 +21,21 @@ export class WaitingListComponent implements OnInit {
 
   userRequestList: PTOFromDBEntity[];
   userFlexList: FlexFromDBEntity[];
-  waitingList: StatusFromDBEntity;
+  waitList: StatusFromDBEntity;
+  pending: StatusFromDBEntity;
   shiftSwapRequest: FlexTypeFromDBEntity;
 
   constructor(private dataSharingService: DataSharingService,
                       private statusService: StatusService,
                       private flexTypeService: FlexTypeService,
                       private flexService: FlexService,
-                      private ptoService: PTOService) { }
+                      private ptoService: PTOService,
+                      private router: Router) { }
 
   ngOnInit() {
-    this.statusService.getStatusByName("WaitingList")
+    this.statusService.getStatusByName("WaitList")
       .toPromise()
-      .then((data: StatusFromDBEntity) => { this.waitingList = data });
+      .then((data: StatusFromDBEntity) => { this.waitList = data });
 
     this.userRequestList = this.dataSharingService.userRequestList.getValue().filter(this.isWaitingList);
     this.userRequestList = CommonLibrary.sortListByProperty(this.userRequestList, "startDateTime");
@@ -44,16 +47,16 @@ export class WaitingListComponent implements OnInit {
   }
 
   isWaitingList(element, index, array) {
-    return (element.statusId == this.waitingList.id &&
-                this.shiftSwapRequest != null &&
-                element.flexTypeId != this.shiftSwapRequest.id);
+    return (element.statusId == this.waitList.id ||
+                 element.statusId == this.pending.id ||
+                (this.shiftSwapRequest != null &&
+                element.flexTypeId != this.shiftSwapRequest.id));
+  }
+  openPTO(ptoId: string) {
+    this.router.navigate(["/requestdisplay", { id: ptoId, isPTO: true }]);
   }
 
-  approvePTO(ptoId: string) {
-    this.ptoService.approvePTO(ptoId);
-  }
-
-  approveFlex(flexId: string) {
-    this.flexService.approveFlex(flexId);
+  openFlex(flexId: string) {
+    this.router.navigate(["/requestdisplay", { id: flexId, isPTO: false }]);
   }
 }

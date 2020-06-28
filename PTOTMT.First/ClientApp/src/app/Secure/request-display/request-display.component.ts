@@ -17,8 +17,10 @@ import { CommonLibrary } from '../../_library/common.library';
 })
 export class RequestDisplayComponent implements OnInit {
   parentUrl: string;
+
   requestId: string;
-  isFlexRequest: boolean = false ;
+  isPTO: boolean;
+
   isShiftSwap: boolean = false;
   isSelfShiftSwap: boolean = false;
   isShiftSlide: boolean = false;
@@ -46,26 +48,28 @@ export class RequestDisplayComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe(param =>
     {
       this.requestId = param.get('id');
-      this.ptoService.getPTOById(this.requestId) 
-        .toPromise().then((request: PTOFromDBEntity) =>
-        {
-          this.ptoRequest = request;
-          this.isFlexRequest = (this.ptoRequest == null);
-          if (this.isFlexRequest)
-          {
-            this.flexService.getFlexById(this.requestId)
-              .toPromise().then((request: FlexFromDBEntity) =>
-              {
-                this.flexRequest = request;
-                let flexTypeName = this.flexTypeService.getFlexTypeById(request.flexTypeId);
+      this.isPTO = (param.get('isPTO') == "true");
 
-                this.isShiftSwap = (flexTypeName == "Shift Swap");
-                this.isSelfShiftSwap = (flexTypeName == "Self-Shift Swap");
-                this.isShiftSlide = (flexTypeName == "Shift Slide");
-                this.isPreArrangedShiftSlide = (flexTypeName == "Pre-Arranged Shift Slide");
-              });
-          }
+      if (this.isPTO) {
+        this.ptoService.getPTOById(this.requestId)
+          .toPromise().then((request: PTOFromDBEntity) =>
+        {
+            this.ptoRequest = request;
         });
+      }
+     else {
+        this.flexService.getFlexById(this.requestId)
+            .toPromise().then((request: FlexFromDBEntity) =>
+        {
+              this.flexRequest = request;
+              let flexTypeName = this.flexTypeService.getFlexTypeById(request.flexTypeId);
+
+              this.isShiftSwap = (flexTypeName == "Shift Swap");
+              this.isSelfShiftSwap = (flexTypeName == "Self-Shift Swap");
+              this.isShiftSlide = (flexTypeName == "Shift Slide");
+              this.isPreArrangedShiftSlide = (flexTypeName == "Pre-Arranged Shift Slide");
+            });
+        }
     });
     this.displayRequestDialog();
   }
@@ -79,11 +83,19 @@ export class RequestDisplayComponent implements OnInit {
     this.dialogRef = this.dialog.open(RequestDisplayComponent, dialogConfig);
   }
 
-  acceptRequest(flexId: string) {
+  approvePTO(ptoId: string) {
+    this.ptoService.approvePTO(ptoId);
+  }
+
+  approveFlex(flexId: string) {
     this.flexService.approveFlex(flexId);
   }
 
-  declineRequest(flexId: string) {
+  declinePTO(flexId: string) {
+    this.flexService.declineFlex(flexId);
+  }
+
+  declineFlex(flexId: string) {
     this.flexService.declineFlex(flexId);
   }
 

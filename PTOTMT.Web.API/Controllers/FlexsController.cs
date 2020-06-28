@@ -241,7 +241,7 @@ namespace PTOTMT.Service.Controllers
             if (uow.FlexRepo.Exists(flex.Id))
             {
                 flex.IsActive = false;
-                uow.FlexRepo.Put(flex, id);
+                uow.FlexRepo.Put(flex,flex.Id);
                 uow.SaveChanges();
                 return NoContent();
             }
