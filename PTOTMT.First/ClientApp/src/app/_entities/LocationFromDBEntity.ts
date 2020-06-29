@@ -1,5 +1,5 @@
-// TitleFromDBEntity.ts
-export interface TitleFromDBEntity {
+// LocationFromDBEntity.ts
+export interface LocationFromDBEntity {
   id: string,
   name: string,
   description: string,

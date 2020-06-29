@@ -39,11 +39,13 @@
     <None Remove="ClientApp\src\app\public\DialogData.ts" />
     <None Remove="ClientApp\src\app\_entities\FlexEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\FlexTypeFromDBEntity.ts" />
+    <None Remove="ClientApp\src\app\_entities\LocationFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\PTOEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\PTOFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\QuotaEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\QuotaFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\RequestTypeFromDBEntity.ts" />
+    <None Remove="ClientApp\src\app\_entities\RoleFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\StatusFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_entities\TeamFromDBEntity.ts" />
     <None Remove="ClientApp\src\app\_services\user.service.ts" />
@@ -78,6 +80,12 @@
     <TypeScriptCompile Include="ClientApp\src\app\_entities\QuotaEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\QuotaFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\RequestTypeFromDBEntity.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_entities\RoleFromDBEntity.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\_entities\LocationFromDBEntity.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\_entities\StatusFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_entities\TeamFromDBEntity.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_services\user.service.ts" />

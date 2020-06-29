@@ -27,7 +27,7 @@ export class StatusService {
 
   public getStatusByName(statusName: string) {
     let requestUrl: string = this.statusUrl + "?statusName=" + statusName;
-    return this.http.get(this.statusUrl, httpOptions)
+    return this.http.get(requestUrl, httpOptions)
   }
 
   public getStatuses(): Observable<StatusFromDBEntity[]>{

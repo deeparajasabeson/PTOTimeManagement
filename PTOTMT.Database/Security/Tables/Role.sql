@@ -2,6 +2,7 @@
     [Id]          UNIQUEIDENTIFIER   NOT NULL,
     [Name]        NVARCHAR (30)      NOT NULL,
     [Description] NVARCHAR (50)      NULL,
+    [IsLeadership] BIT NOT NULL,
     [IsActive]    BIT                NOT NULL,
     [CreatedBy]   UNIQUEIDENTIFIER   NOT NULL,
     [CreatedOn]   DATETIMEOFFSET (7) DEFAULT (getdate()) NOT NULL,

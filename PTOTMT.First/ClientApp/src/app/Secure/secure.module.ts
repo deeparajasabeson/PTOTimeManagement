@@ -25,10 +25,22 @@ import { TeamNotificationsComponent } from './team-notifications/team-notificati
 import { UserNotificationsComponent } from './user-notifications/user-notifications.component';
 import { WaitingListComponent } from './waiting-list/waiting-list.component';
 import { RequestDisplayComponent } from './request-display/request-display.component';
+
 import { StatusNamePipe } from '../_pipes/status-name.pipe';
 import { FlexTypeNamePipe } from '../_pipes/flextype-name.pipe';
 import { UserNamePipe } from '../_pipes/user-name.pipe';
 import { RequestTypeNamePipe } from '../_pipes/requesttype-name.pipe';
+
+import { FlexService } from '../_services/flex.service';
+import { FlexTypeService } from '../_services/flextype.service';
+import { LocationService } from '../_services/location.service';
+import { PTOService } from '../_services/pto.service';
+import { QuotaService } from '../_services/quota.service';
+import { RequestTypeService } from '../_services/requesttype.service';
+import { RoleService } from '../_services/role.service';
+import { StatusService } from '../_services/status.service';
+import { TeamService } from '../_services/team.service';
+import { UserService } from '../_services/user.service';
 
 
 const routes: Routes = [
@@ -92,7 +104,17 @@ const routes: Routes = [
     StatusNamePipe,
     FlexTypeNamePipe,
     UserNamePipe,
-    RequestTypeNamePipe
+    RequestTypeNamePipe,
+    FlexService,
+    FlexTypeService,
+    LocationService,
+    PTOService,
+    QuotaService,
+    RequestTypeService,
+    RoleService,
+    StatusService,
+    TeamService,
+    UserService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA ]
 })

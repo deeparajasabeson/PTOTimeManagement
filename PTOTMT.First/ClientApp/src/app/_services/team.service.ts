@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TeamFromDBEntity } from '../_entities/TeamFromDBEntity';
 
@@ -22,5 +23,9 @@ export class TeamService {
   public getTeamById(teamId: string): Promise<TeamFromDBEntity>{
     let requestUrl: string = this.teamUrl + "/" + teamId;
     return this.http.get<TeamFromDBEntity>(requestUrl, httpOptions).toPromise();
+  }
+
+  public getTeamFunctions(): Observable<TeamFromDBEntity[]> {
+    return this.http.get<TeamFromDBEntity[]>(this.teamUrl, httpOptions);
   }
 }

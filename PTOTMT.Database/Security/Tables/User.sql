@@ -4,7 +4,6 @@
     [LastName]       NVARCHAR (30)      NOT NULL,
     [UserName]      NVARCHAR(50)  NOT NULL,
     [Password]       NVARCHAR(30)  NOT NULL,
-    [TitleId]        UNIQUEIDENTIFIER   NOT NULL,
     [NTLogin]        NVARCHAR (12)      NOT NULL,
     [EmailAddress]   NVARCHAR (50)      NOT NULL,
     [RoleId]         UNIQUEIDENTIFIER   NOT NULL,
@@ -21,7 +20,6 @@
     CONSTRAINT FK_UserUser_ReportToUserId FOREIGN KEY ([ReportToUserId]) REFERENCES [security].[User]  ([Id]),
     CONSTRAINT FK_RoleUser FOREIGN KEY ([RoleId]) REFERENCES [Security].[Role] ([Id]),
     CONSTRAINT FK_TeamUser FOREIGN KEY ([TeamFunctionId]) REFERENCES [Security].[Team] ([Id]),
-    CONSTRAINT FK_TitleUser FOREIGN KEY ([TitleId]) REFERENCES [Security].[Title] ([Id]),
     CONSTRAINT FK_UserUser_CreatedBy FOREIGN KEY ([CreatedBy]) REFERENCES [security].[User]  ([Id]),
     CONSTRAINT FK_UserUser_UpdatedBy FOREIGN KEY ([UpdatedBy]) REFERENCES[security].[User]  ([Id])
 );

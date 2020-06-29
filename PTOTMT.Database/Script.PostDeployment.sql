@@ -12,8 +12,7 @@ Post-Deployment Script Template
 Use PTOTimeManagement
 
     Alter Table Security.[User]
-    Drop CONSTRAINT FK_TitleUser,
-                                       FK_RoleUser,
+    Drop CONSTRAINT FK_RoleUser,
                                        FK_UserUser_ReportToUserId,
                                        FK_LocationUser,
                                        FK_TeamUser,
@@ -23,14 +22,12 @@ Use PTOTimeManagement
     --delete all rows from Tables
     delete from Security.Role 
     delete from Config.Location 
-    delete from Security.Title
     delete from Security.Team 
     delete from Config.RequestType
     delete from Security.[User]
 GO
 
 Declare @UserId uniqueidentifier = NEWID(),
-             @TitleId uniqueidentifier = NEWID(),
              @RoleId uniqueidentifier = NEWID(),
               @ReportToUserId uniqueidentifier = NEWID(),
              @LocationId uniqueidentifier = NEWID(),
@@ -42,29 +39,29 @@ Declare @UserId uniqueidentifier = NEWID(),
 
  -- Security.User TABLE
 Insert into Security.[User]
-(Id, FirstName, LastName, UserName, Password, TitleId, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamFunctionId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, FirstName, LastName, UserName, Password, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamFunctionId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(@UserId, 'Deepa', 'Rajasabeson', 'deeparajasabeson@gmail.com', 'deepa', @TitleId, 'drajas401', 'deeparajasabeson@gmail.com', @RoleId, @ReportToUserId, @LocationId,  @TeamId, 1, @UserId, GETDATE(), @UserId, GETDATE())
+(@UserId, 'Deepa', 'Rajasabeson', 'deeparajasabeson@gmail.com', 'deepa',  'drajas401', 'deeparajasabeson@gmail.com', @RoleId, @ReportToUserId, @LocationId,  @TeamId, 1, @UserId, GETDATE(), @UserId, GETDATE())
 
 
 Insert into Security.[User]
-(Id, FirstName, LastName, UserName, Password,TitleId, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamFunctionId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, FirstName, LastName, UserName, Password, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamFunctionId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(@ReportToUserId, 'Harold', 'Gulube', 'haroldgulube@gmail.com', 'harold' , @TitleId , 'hgulub400', 'haroldgulube@gmail.com',@RoleId, @UserId,@LocationId, @LeadershipAdminId, 1, @UserId, GETDATE(), @UserId, GETDATE())
+(@ReportToUserId, 'Harold', 'Gulube', 'haroldgulube@gmail.com', 'harold', 'hgulub400', 'haroldgulube@gmail.com',@RoleId, @UserId,@LocationId, @LeadershipAdminId, 1, @UserId, GETDATE(), @UserId, GETDATE())
 
 -- Security.Role TABLE
 Insert into Security.Role 
-(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn) 
+(Id, Name, Description, IsActive, IsLeadership, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn) 
 Values  
-(NEWID(), 'Manager', 'Team Manager', 1, @UserId, GETDATE(), @UserId, GETDATE())
+(NEWID(), 'Manager', 'Team Manager', 1, 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Security.Role 
-(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn) 
+(Id, Name, Description, IsActive, IsLeadership, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn) 
 Values  
-(NEWID(), 'Developer 1', 'Developer 1', 1, @UserId, GETDATE(), @UserId, GETDATE())
+(NEWID(), 'Developer 1', 'Developer 1', 1, 0, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Security.Role 
-(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn) 
+(Id, Name, Description, IsActive, IsLeadership, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn) 
 Values  
-(@RoleId, 'Developer 2', 'Developer 2', 1, @UserId, GETDATE(), @UserId, GETDATE())
+(@RoleId, 'Developer 2', 'Developer 2', 1, 0, @UserId, GETDATE(), @UserId, GETDATE())
 
 --Config.Location TABLE
 Insert into Config.Location 
@@ -94,13 +91,6 @@ Insert into Security.Team
 (Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
 (@LeadershipAdminId, 'Leadership / Admin', 'Leadership, Admin Team', 3,  8, 6, 1,@UserId, GETDATE(), @UserId, GETDATE())
-
-
---Security.Title TABLE
-Insert into Security.Title
-(Id, Name, Description, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
-Values 
-( @TitleId, 'SomeTitle', 'Some Title',1,@UserId, GETDATE(), @UserId, GETDATE())
 
 --Config.RequestType TABLE
 Insert into Config.RequestType 
@@ -185,8 +175,7 @@ Values
 
 --Add keys back in Security.User TABLE
 Alter Table Security.[User]
-ADD  CONSTRAINT FK_TitleUser FOREIGN KEY ([TitleId]) REFERENCES [Security].[Title] ([Id]),
-          CONSTRAINT FK_RoleUser FOREIGN KEY (RoleId) REFERENCES [Security].[Role] ([Id]) ,
+ADD  CONSTRAINT FK_RoleUser FOREIGN KEY (RoleId) REFERENCES [Security].[Role] ([Id]) ,
          CONSTRAINT FK_UserUser_ReportToUserId FOREIGN KEY (ReportToUserId) REFERENCES [Security].[User] ([Id]),
          CONSTRAINT FK_LocationUser FOREIGN KEY (LocationId) REFERENCES [Config].[Location] ([Id]),
          CONSTRAINT FK_TeamUser FOREIGN KEY (TeamFunctionId) REFERENCES [Security].[Team] ([Id]),

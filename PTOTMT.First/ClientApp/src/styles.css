@@ -203,3 +203,8 @@ input.ng-invalid.ng-touched {
   color: red;
   background: #fff;
 }
+
+.error {
+  color: red;
+  font-size: 15px;
+}

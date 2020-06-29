@@ -70,7 +70,6 @@
   <ItemGroup>
     <Build Include="Security\Tables\User.sql" />
     <Build Include="Security\Tables\Role.sql" />
-    <Build Include="Security\Tables\Title.sql" />
     <Build Include="Security\Tables\Team.sql" />
     <Build Include="Config\Tables\Location.sql" />
     <Build Include="Security\Config.sql" />
