@@ -15,8 +15,6 @@ namespace PTOTMT.Common.Entities
         public DbSet<ShiftSlide> ShiftSlide { get; set; }
         public DbSet<Status> Status { get; set; }
         public DbSet<Team> Team { get; set; }
-        public DbSet<TeamUser> TeamUser { get; set; }
-        public DbSet<Title> Title { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<FlexType> FlexType { get; set; }
         public DbSet<Flex> Flex { get; set; }
@@ -32,8 +30,6 @@ namespace PTOTMT.Common.Entities
             modelBuilder.Entity<Status>().ToTable("Status", "Config");
             modelBuilder.Entity<FlexType>().ToTable("FlexType", "Config");
             modelBuilder.Entity<Team>().ToTable("Team", "Security");
-            modelBuilder.Entity<TeamUser>().ToTable("TeamUser", "Security");
-            modelBuilder.Entity<Title>().ToTable("Title", "Security");
             modelBuilder.Entity<User>().ToTable("User", "Security");
         }
     }

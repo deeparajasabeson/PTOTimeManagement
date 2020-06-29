@@ -43,5 +43,11 @@ export class UserService {
     let requestUrl: string = this.userUrl + "/" + userId;
     return this.http.get<UserFromDBEntity>(requestUrl, httpOptions)
   }
+
+  public getLeadershipUsers(locationId: string): Observable<UserFromDBEntity[]> {
+    let requestUrl: string = this.userUrl + "/leadershipusers/" + locationId;
+    return this.http.get<UserFromDBEntity[]>(requestUrl, httpOptions)
+  }
+  
 }
 

@@ -25,7 +25,7 @@ export class LocationService {
     return this.http.get<any>(requestUrl, httpOptions);
   }
 
-  public getStatuses(): Observable<LocationFromDBEntity[]>{
+  public getLocations(): Observable<LocationFromDBEntity[]>{
     return this.http.get<LocationFromDBEntity[]>(this.locationUrl, httpOptions);
   }
 } 

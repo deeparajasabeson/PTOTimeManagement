@@ -25,7 +25,7 @@ export class TeamService {
     return this.http.get<TeamFromDBEntity>(requestUrl, httpOptions).toPromise();
   }
 
-  public getTeamFunctions(): Observable<TeamFromDBEntity[]> {
+  public getTeams(): Observable<TeamFromDBEntity[]> {
     return this.http.get<TeamFromDBEntity[]>(this.teamUrl, httpOptions);
   }
 }

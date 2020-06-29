@@ -47,32 +47,31 @@
     </div>
     <div class="col-1"></div>
     <div class="col-3">
+      <label for="locationId">Location</label><br />
+      <select class="form-control" id="locationId" formControlName="locationId" required (onChange) ="onLocationChange(registerForm.get('locationId').value)">
+        <option *ngFor="let location of locations" [ngValue]="location.id">{{ location.name }}</option>
+      </select>
+    </div>    <div class="col-1"></div>
+    <div class="col-3">
       <label for="report2User">Reporting Manager</label><br />
       <select class="form-control" id="report2User" formControlName="report2User" required>
-        <option *ngFor="let leadership of leadershipUsers" [ngValue]="leadership.id">{{ leadership.firstName }} {{ leadership.lastname }} - {{ leadership.ntLogin }}</option>
-      </select>
-    </div>
-    <div class="col-1"></div>
-    <div class="col-3">
-      <label for="location">Location</label><br />
-      <select class="form-control" id="location" formControlName="location" required>
-        <option *ngFor="let location of locations" [ngValue]="location.id">{{ location.name }}</option>
+        <option *ngFor="let leadership of leadershipUsers" [ngValue]="leadershipUsers.id">{{ leadershipUsers.firstName }} {{ leadershipUsers.lastname }} - {{ leadershipUsers.ntLogin }}</option>
       </select>
     </div>
   </div>
   <div class="row">
     <div class="col-1"></div>
     <div class="col-3">
-      <label for="role">Role</label><br />
-      <select class="form-control" id="role" formControlName="role" required>
+      <label for="roleId">Role</label><br />
+      <select class="form-control" id="roleId" formControlName="roleId" required>
         <option *ngFor="let role of roles" [ngValue]="role.id">{{ role.name }}</option>
       </select>
     </div>
     <div class="col-1"></div>
     <div class="col-3">
-      <label for="teamFunction">Team Function</label><br />
-      <select class="form-control" id="teamFunction" formControlName="teamFunction" required>
-        <option *ngFor="let teamFunction of teamFunctions" [ngValue]="teamFunction.id">{{ teamFunction.name }}</option>
+      <label for="teamId">Team Function</label><br />
+      <select class="form-control" id="teamId" formControlName="teamId" required>
+        <option *ngFor="let team of teams" [ngValue]="team.id">{{ team.name }}</option>
       </select>
     </div>
   </div>
