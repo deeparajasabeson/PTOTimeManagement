@@ -98,30 +98,6 @@ namespace PTOTMT.Repository
                 return _TeamRepo;
             }
         }
-        private ITeamUserRepository _TeamUserRepo;
-        public ITeamUserRepository TeamUserRepo
-        {
-            get
-            {
-                if (_TeamUserRepo == null)
-                {
-                    _TeamUserRepo = new TeamUserRepository(context);
-                }
-                return _TeamUserRepo;
-            }
-        }
-        private ITitleRepository _TitleRepo;
-        public ITitleRepository TitleRepo
-        {
-            get
-            {
-                if (_TitleRepo == null)
-                {
-                    _TitleRepo = new TitleRepository(context);
-                }
-                return _TitleRepo;
-            }
-        }
         private IUserRepository _UserRepo;
         public IUserRepository UserRepo
         {

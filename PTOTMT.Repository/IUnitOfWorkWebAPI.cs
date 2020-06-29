@@ -11,8 +11,6 @@ namespace PTOTMT.Repository
         IRoleRepository RoleRepo { get; }
         IStatusRepository StatusRepo { get; }
         ITeamRepository TeamRepo { get; }
-        ITeamUserRepository TeamUserRepo { get; }
-        ITitleRepository TitleRepo { get; }
         IUserRepository UserRepo { get; }
         IFlexRepository FlexRepo { get; }
         IFlexTypeRepository FlexTypeRepo { get; }

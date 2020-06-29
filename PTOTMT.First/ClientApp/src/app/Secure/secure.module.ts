@@ -42,7 +42,18 @@ import { StatusService } from '../_services/status.service';
 import { TeamService } from '../_services/team.service';
 import { UserService } from '../_services/user.service';
 
-
+const customPipes = [
+  StatusNamePipe,
+  FlexTypeNamePipe,
+  UserNamePipe,
+  RequestTypeNamePipe
+]
+const entryComponents = [
+  QuotaEditorComponent,
+  PTOEditorComponent,
+  FlexEditorComponent,
+  RequestDisplayComponent
+]
 const routes: Routes = [
   { path: '', redirectTo: 'calendar', pathMatch: 'full' },
   {
@@ -67,24 +78,15 @@ const routes: Routes = [
     TopMenuComponent,
     PTOCalendarComponent,
     QuotaCalendarComponent,
-    QuotaEditorComponent,
-    PTOEditorComponent,
-    FlexEditorComponent,
     LogOutComponent,
     UserNotificationsComponent,
     TeamNotificationsComponent,
     WaitingListComponent,
-    RequestDisplayComponent,
-    StatusNamePipe,
-    FlexTypeNamePipe,
-    UserNamePipe,
-    RequestTypeNamePipe
+    customPipes,
+    entryComponents
   ],
   entryComponents: [
-    QuotaEditorComponent,
-    PTOEditorComponent,
-    FlexEditorComponent,
-    RequestDisplayComponent
+    entryComponents
   ],
   imports: [
     CommonModule,
@@ -101,10 +103,6 @@ const routes: Routes = [
   exports: [ RouterModule ], 
   providers: [
     AuthGuard,
-    StatusNamePipe,
-    FlexTypeNamePipe,
-    UserNamePipe,
-    RequestTypeNamePipe,
     FlexService,
     FlexTypeService,
     LocationService,
@@ -114,7 +112,8 @@ const routes: Routes = [
     RoleService,
     StatusService,
     TeamService,
-    UserService
+    UserService,
+    customPipes
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA ]
 })

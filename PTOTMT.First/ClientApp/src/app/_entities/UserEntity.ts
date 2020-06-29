@@ -1,5 +1,5 @@
-// UserFromDBEntity.ts
-export interface UserFromDBEntity {
+// UserEntity.ts
+export interface UserEntity {
   id: string;
   firstName: string;
   lastName: string;
@@ -13,7 +13,7 @@ export interface UserFromDBEntity {
   teamFunctionId: string;
   isActive: boolean;
   createdBy: string;
-  createdOn: string;
+  createdOn: Date;
   updatedBy: string;
-  updatedOn: string;
+  updatedOn: Date;
 }

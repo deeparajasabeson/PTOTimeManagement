@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserFromDBEntity } from '../_entities/UserFromDBEntity';
-
+import { UserEntity } from '../_entities/UserEntity';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -48,6 +48,20 @@ export class UserService {
     let requestUrl: string = this.userUrl + "/leadershipusers/" + locationId;
     return this.http.get<UserFromDBEntity[]>(requestUrl, httpOptions)
   }
-  
+
+  public registerUser(user: UserEntity) {
+    const newUser = JSON.stringify(user);
+    return this.http.post(this.userUrl, newUser, httpOptions);
+  }
+
+  public updateUser(user: UserEntity) {
+    const updateUser = JSON.stringify(user);
+    return this.http.put(this.userUrl, updateUser, httpOptions);
+  }
+
+  public deleteUser(userId) {
+    let requestUrl: string = this.userUrl + "/" + userId;
+    return this.http.delete(this.userUrl, httpOptions);
+  }
 }
 

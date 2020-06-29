@@ -1,5 +1,9 @@
-<h2>&nbsp;Register User</h2>
-<form class="registerForm" #registerForm="ngForm" (ngSubmit)="register(registerForm.value)">
+<h2>
+  <span *ngIf="isNewEvent">New</span>
+  <span *ngIf="!isNewEvent">Edit</span>
+  &nbsp;User
+</h2>
+<form class="loginForm" #registerForm="ngForm" (ngSubmit)="login(loginForm.value)">
   <div class="row">
     <div class="col-1"></div>
     <h2>Register</h2>
@@ -17,79 +21,89 @@
       <input type="password" id="password" name="password" formControlName="password" placeholder="Password" required>
       <br />
     </div>
-  </div><hr />
-  <div class="row">
-    <div class="col-1"></div>
-    <div class="col-3">
-      <label for="firstName">First Name</label><br />
-      <input type="text" id="firstName" name="firstName" formControlName="firstName" placeholder="First Name" required autofocus>
-      <br />
-    </div>
-    <div class="col-1"></div>
-    <div class="col-3">
-      <label for="lastName">Last Name</label><br />
-      <input type="text" id="lastName" name="lastName" formControlName="lastName" placeholder="Last Name" required>
-      <br />
-    </div>
-    <div class="col-1"></div>
-    <div class="col-3">
-      <label for="ntLogin">NTLogin</label><br />
-      <input type="text" id="ntLogin" name="ntLogin" formControlName="ntLogin" required>
-      <br />
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-1"></div>
-    <div class="col-3">
-      <label for="emailAddress">Email Address</label><br />
-      <input type="email" id="emailAddress" name="emailAddress" formControlName="emailAddress" required>
-      <br />
-    </div>
-    <div class="col-1"></div>
-    <div class="col-3">
-      <label for="locationId">Location</label><br />
-      <select class="form-control" id="locationId" formControlName="locationId" required (onChange) ="onLocationChange(registerForm.get('locationId').value)">
-        <option *ngFor="let location of locations" [ngValue]="location.id">{{ location.name }}</option>
-      </select>
-    </div>    <div class="col-1"></div>
-    <div class="col-3">
-      <label for="report2User">Reporting Manager</label><br />
-      <select class="form-control" id="report2User" formControlName="report2User" required>
-        <option *ngFor="let leadership of leadershipUsers" [ngValue]="leadershipUsers.id">{{ leadershipUsers.firstName }} {{ leadershipUsers.lastname }} - {{ leadershipUsers.ntLogin }}</option>
-      </select>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-1"></div>
-    <div class="col-3">
-      <label for="roleId">Role</label><br />
-      <select class="form-control" id="roleId" formControlName="roleId" required>
-        <option *ngFor="let role of roles" [ngValue]="role.id">{{ role.name }}</option>
-      </select>
-    </div>
-    <div class="col-1"></div>
-    <div class="col-3">
-      <label for="teamId">Team Function</label><br />
-      <select class="form-control" id="teamId" formControlName="teamId" required>
-        <option *ngFor="let team of teams" [ngValue]="team.id">{{ team.name }}</option>
-      </select>
-    </div>
   </div>
   <div class="align=right">
     <button type="submit"
             class="btn btn-success"
-            [disabled]="!registerForm.valid">
-      Register User
-    </button>
-    <button class="btn btn-danger deletebutton"
-            (click)="deleteUser(registerForm.get('id').value)">
-      Delete User
-    </button>
-    <button type="button"
-            class="btn btn-danger cancelbutton`"
-            [mat-dialog-close]="data"
-            (click)="onBack()">
-      Cancel
+            [disabled]="!loginForm.valid">
+      Create/Edit Profile
     </button>
   </div>
+    <hr />
 </form>
+<form class="registerForm" #registerForm="ngForm" (ngSubmit)="register(registerForm.value)">
+    <div class="row">
+      <div class="col-1"></div>
+      <div class="col-3">
+        <label for="firstName">First Name</label><br />
+        <input type="text" id="firstName" name="firstName" formControlName="firstName" placeholder="First Name" required autofocus>
+        <br />
+      </div>
+      <div class="col-1"></div>
+      <div class="col-3">
+        <label for="lastName">Last Name</label><br />
+        <input type="text" id="lastName" name="lastName" formControlName="lastName" placeholder="Last Name" required>
+        <br />
+      </div>
+      <div class="col-1"></div>
+      <div class="col-3">
+        <label for="ntLogin">NTLogin</label><br />
+        <input type="text" id="ntLogin" name="ntLogin" formControlName="ntLogin" required>
+        <br />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1"></div>
+      <div class="col-3">
+        <label for="emailAddress">Email Address</label><br />
+        <input type="email" id="emailAddress" name="emailAddress" formControlName="emailAddress" required>
+        <br />
+      </div>
+      <div class="col-1"></div>
+      <div class="col-3">
+        <label for="locationId">Location</label><br />
+        <select class="form-control" id="locationId" formControlName="locationId" required (onChange)="onLocationChange(registerForm.get('locationId').value)">
+          <option *ngFor="let location of locations" [ngValue]="location.id">{{ location.name }}</option>
+        </select>
+      </div>    <div class="col-1"></div>
+      <div class="col-3">
+        <label for="report2UserId">Reporting Manager</label><br />
+        <select class="form-control" id="report2UserId" formControlName="report2UserId" required>
+          <option *ngFor="let leadership of leadershipUsers" [ngValue]="leadershipUsers.id">{{ leadershipUsers.firstName }} {{ leadershipUsers.lastname }} - {{ leadershipUsers.ntLogin }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1"></div>
+      <div class="col-3">
+        <label for="roleId">Role</label><br />
+        <select class="form-control" id="roleId" formControlName="roleId" required>
+          <option *ngFor="let role of roles" [ngValue]="role.id">{{ role.name }}</option>
+        </select>
+      </div>
+      <div class="col-1"></div>
+      <div class="col-3">
+        <label for="teamId">Team Function</label><br />
+        <select class="form-control" id="teamId" formControlName="teamId" required>
+          <option *ngFor="let team of teams" [ngValue]="team.id">{{ team.name }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="align=right">
+      <button type="submit"
+              class="btn btn-success"
+              [disabled]="!registerForm.valid">
+        Register User
+      </button>
+      <button class="btn btn-danger deletebutton"
+              (click)="deleteUser(registerForm.get('id').value)">
+        Delete User
+      </button>
+      <button type="button"
+              class="btn btn-danger cancelbutton`"
+              [mat-dialog-close]="data"
+              (click)="onBack()">
+        Cancel
+      </button>
+    </div>
+  </form>
