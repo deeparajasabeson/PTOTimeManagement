@@ -25,7 +25,8 @@ export class UserService {
 
   public login(loginData: LoginFormData): Observable<UserFromDBEntity> {
     const credentials = JSON.stringify(loginData);
-    return this.http.post<UserFromDBEntity>(this.userUrl, credentials, httpOptions);
+    let requestUrl: string = this.userUrl + "/login";
+    return this.http.post<UserFromDBEntity>(requestUrl, credentials, httpOptions);
   }
 
   public getCoWorkers(user: UserFromDBEntity): Observable<any> {

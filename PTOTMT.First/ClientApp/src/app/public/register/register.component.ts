@@ -88,6 +88,7 @@ export class RegisterComponent implements OnInit {
       });
     }, 5000);
   }
+
   // convenience getter for easy access to form fields
   get u() { return this.userForm.controls; }
   get r() { return this.registerForm.controls; }
@@ -99,6 +100,8 @@ export class RegisterComponent implements OnInit {
     };
     this.userService.login(this.loginData).toPromise().then((response: any) => {
       this.currentUser = (<any>response).user;
+      console.log(this.currentUser);
+      debugger;
     });
   }
 

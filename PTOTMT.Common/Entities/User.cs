@@ -9,7 +9,6 @@ namespace PTOTMT.Common.Entities
         public string LastName { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public Guid TitleId { get; set; }
         public string NTLogin { get; set; }
         public string EmailAddress { get; set; }
         public Guid RoleId { get; set; }
