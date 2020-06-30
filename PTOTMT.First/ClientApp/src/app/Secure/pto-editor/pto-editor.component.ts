@@ -86,7 +86,7 @@ export class PTOEditorComponent implements OnInit {
     this.pto.startDate = event.next;
   }
 
-  savePTO(ptoForm: NgForm): void {  //quotaForm also has the form value as thisquotaeditorForm.value
+  savePTO(ptoForm: FormGroup): void {  //quotaForm also has the form value as thisquotaeditorForm.value
     if (this.ptoeditorForm.valid) {
       this.dialogRef.close(this.ptoeditorForm.value);
       if (this.ptoeditorForm.valid) {

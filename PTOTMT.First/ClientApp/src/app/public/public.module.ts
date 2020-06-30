@@ -4,6 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faBell, faUserPlus, faSignInAlt, faUser, faSignOutAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { PublicLayoutComponent } from './public-layout/public-layout.component';
 import { HeaderBarComponent } from './header-bar/header-bar.component';
@@ -37,6 +38,8 @@ const routes: Routes = [
     CommonModule,
     FlexLayoutModule,
     FontAwesomeModule,
+    FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild(routes)
     ],
   exports: [

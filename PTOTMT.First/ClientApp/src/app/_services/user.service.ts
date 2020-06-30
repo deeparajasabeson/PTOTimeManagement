@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserFromDBEntity } from '../_entities/UserFromDBEntity';
 import { UserEntity } from '../_entities/UserEntity';
+import { LoginFormData } from '../_viewmodels/LoginFormData';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -20,6 +21,11 @@ export class UserService {
 
   constructor(private http: HttpClient) {
     this.userUrl = "https://localhost:44382/api/users";
+  }
+
+  public login(loginData: LoginFormData): Observable<UserFromDBEntity> {
+    const credentials = JSON.stringify(loginData);
+    return this.http.post<UserFromDBEntity>(this.userUrl, credentials, httpOptions);
   }
 
   public getCoWorkers(user: UserFromDBEntity): Observable<any> {

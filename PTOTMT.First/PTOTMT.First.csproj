@@ -53,7 +53,9 @@
     <None Remove="ClientApp\src\app\_validators\FlexCustomValidators.validator.ts" />
     <None Remove="ClientApp\src\app\_validators\PTOCustomValidators.validator.ts" />
     <None Remove="ClientApp\src\app\_validators\QuotaCustomValidators.Validator.ts" />
+    <None Remove="ClientApp\src\app\_validators\RegisterCustomValidators.validator.ts" />
     <None Remove="ClientApp\src\app\_viewmodels\FlexDialogData.ts" />
+    <None Remove="ClientApp\src\app\_viewmodels\LoginFormData.ts" />
     <None Remove="ClientApp\src\app\_viewmodels\PTODialogData.ts" />
     <None Remove="ClientApp\src\app\_viewmodels\RequestDisplayDialogData.ts" />
     <None Remove="ClientApp\src\app\_viewmodels\UserEntity.ts" />
@@ -95,6 +97,12 @@
     </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\_services\user.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_validators\FlexCustomValidators.validator.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_validators\RegisterCustomValidators.validator.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\_viewmodels\LoginFormData.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\_viewmodels\UserFormData.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

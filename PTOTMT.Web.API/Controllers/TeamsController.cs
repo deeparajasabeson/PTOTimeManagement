@@ -26,6 +26,7 @@ namespace PTOTMT.Service.Controllers
 
         // GET: api/Teams
         [HttpGet]
+        [AllowAnonymous]
         public IEnumerable<Team> GetTeam()
         {
             return uow.TeamRepo.GetAll();

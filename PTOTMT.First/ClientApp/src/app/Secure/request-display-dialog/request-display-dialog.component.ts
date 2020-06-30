@@ -7,8 +7,7 @@ import { RequestDisplayDialogData } from '../../_viewmodels/RequestDisplayDialog
 
 @Component({
   selector: 'app-request-display-dialog',
-  templateUrl: './request-display-dialog.component.html',
-  styleUrls: ['./request-display-dialog.component.css']
+  templateUrl: './request-display-dialog.component.html'
 })
 export class RequestDisplayDialogComponent {
   @Input() public data: RequestDisplayDialogData;  

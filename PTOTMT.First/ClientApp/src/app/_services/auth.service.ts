@@ -4,6 +4,8 @@ import { NgForm } from '@angular/forms';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { DataSharingService } from './datasharing.service';
+import { Observable } from 'rxjs';
+import { UserFromDBEntity } from '../_entities/UserFromDBEntity';
 
 @Injectable({
   providedIn: 'root'  
@@ -23,14 +25,14 @@ export class AuthService {
     //this.loginUrl = baseUrl + "api/users/login";
   }
 
-  public login(loginForm: NgForm) {
+  public login(loginForm: NgForm) :Observable<UserFromDBEntity>{
     const credentials = JSON.stringify(loginForm.value);
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json"
       })
     };
-    return this.http.post(this.loginUrl, credentials, httpOptions);
+    return this.http.post<UserFromDBEntity>(this.loginUrl, credentials, httpOptions);
   }
 
   public isUserAuthenticated(): boolean {

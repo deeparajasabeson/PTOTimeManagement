@@ -32,7 +32,9 @@ namespace PTOTMT.Service.Controllers
         }
 
         // GET: api/Users
-        [HttpGet, Route("")]
+        [HttpGet]
+        [AllowAnonymous]
+
         public IEnumerable<User> GetUser()
         {
             return uow.UserRepo.GetAll();

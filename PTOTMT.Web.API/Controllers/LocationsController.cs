@@ -23,6 +23,7 @@ namespace PTOTMT.Service.Controllers
 
         // GET: api/Locations
         [HttpGet]
+        [AllowAnonymous]
         public IEnumerable<Location> GetLocation()
         {
             return uow.LocationRepo.GetAll();

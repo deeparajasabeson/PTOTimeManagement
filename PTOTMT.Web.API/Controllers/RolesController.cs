@@ -24,6 +24,7 @@ namespace PTOTMT.Service.Controllers
 
         // GET: api/Roles
         [HttpGet]
+        [AllowAnonymous]
         public IEnumerable<Role> GetRole()
         {
             return uow.RoleRepo.GetAll();
