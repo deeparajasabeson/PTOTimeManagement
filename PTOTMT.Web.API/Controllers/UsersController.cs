@@ -33,8 +33,6 @@ namespace PTOTMT.Service.Controllers
 
         // GET: api/Users
         [HttpGet]
-        [AllowAnonymous]
-
         public IEnumerable<User> GetUser()
         {
             return uow.UserRepo.GetAll();
@@ -58,6 +56,19 @@ namespace PTOTMT.Service.Controllers
         public IEnumerable<User> GetUser(Guid teamId, Guid locationId)
         {
             return uow.UserRepo.GetAll().Where(user => user.TeamFunctionId == teamId && user.LocationId == locationId);
+        }
+
+        // GET: api/Users/leadershipusers/
+        [AllowAnonymous]
+        [HttpGet("leadershipusers/{locationId}")]
+        public IEnumerable<User> GetLeadershipUsers(Guid locationId)
+        {
+            return uow.UserRepo.GetAll()
+                              .Where(user => user.LocationId == locationId)
+                              .Join(uow.RoleRepo.GetAll().Where(role => role.IsLeadership),
+                                        user => user.RoleId,
+                                        role => role.Id,
+                                        (user, role) => user);
         }
 
         // PUT: api/Users/5

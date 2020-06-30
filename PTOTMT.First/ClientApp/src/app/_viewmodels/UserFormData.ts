@@ -13,7 +13,7 @@ export interface UserFormData {
   ntLogin: string;
   emailAddress: string;
   leadershipUsers: UserFromDBEntity[],
-  report2UserId: string,
+  reportToUserId: string,
   locationTypes: LocationFromDBEntity[];
   locationId: string;
   roles: RoleFromDBEntity[];

@@ -1,14 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 
+import { RegisterCustomValidators } from '../../_validators/RegisterCustomValidators.validator';
 import { CommonLibrary } from '../../_library/common.library';
 import { UserService } from '../../_services/user.service';
-import { AuthService } from '../../_services/auth.service';
 import { TeamService } from '../../_services/team.service';
 import { RoleService } from '../../_services/role.service';
 import { LocationService } from '../../_services/location.service';
-import { DataStorageService } from '../../_services/datastorage.service';
 import { UserFormData } from '../../_viewmodels/UserFormData';
 import { UserFromDBEntity } from '../../_entities/UserFromDBEntity';
 import { UserEntity } from '../../_entities/UserEntity';
@@ -16,7 +15,6 @@ import { LocationFromDBEntity } from '../../_entities/LocationFromDBEntity';
 import { RoleFromDBEntity } from '../../_entities/RoleFromDBEntity';
 import { TeamFromDBEntity } from '../../_entities/TeamFromDBEntity';
 import { LoginFormData } from '../../_viewmodels/LoginFormData';
-import { RegisterCustomValidators } from '../../_validators/RegisterCustomValidators.validator';
 
 
 @Component({
@@ -28,27 +26,25 @@ export class RegisterComponent implements OnInit {
   userForm: FormGroup;
   loginData: LoginFormData;
 
-  currentUser: UserFromDBEntity;
+  user: UserFromDBEntity;
   leadershipUsers: UserFromDBEntity[] = [];
   locations: LocationFromDBEntity[] = [];
   roles: RoleFromDBEntity[] = [];
   teams: TeamFromDBEntity[] = [];
 
   showProfile: boolean;
-  isNewUser: true;
+  isNewUser: boolean;
 
   constructor(private router: Router,
                         private formBuilder: FormBuilder,
                         private userService: UserService,
-                        private authService: AuthService,
                         private locationService: LocationService,
                         private roleService: RoleService,
-                        private teamService: TeamService,
-                        private dataStorageService: DataStorageService) { }
+                        private teamService: TeamService) { }
 
   ngOnInit() {
     this.isNewUser = true;
-    this.showProfile = false;
+    this.showProfile =  false;
     this.readDataFromDB();
 
     this.userForm = new FormGroup({
@@ -58,13 +54,12 @@ export class RegisterComponent implements OnInit {
 
     this.registerForm = this.formBuilder.group({
       id: [''],
-      isNewUser: [true],
       confirmPassword: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: [''],
       ntLogin: ['', Validators.required],
       emailAddress: ['', [Validators.required, Validators.email]],
-      report2UserId: ['', Validators.required],
+      reportToUserId: ['', Validators.required],
       locationId: ['', Validators.required],
       roleId: ['', Validators.required],
       teamId: ['', Validators.required],
@@ -83,6 +78,7 @@ export class RegisterComponent implements OnInit {
 
           this.teamService.getTeams().toPromise().then((teamdata: TeamFromDBEntity[]) => {
             teamdata.forEach(val => this.teams.push(Object.assign({}, val)));
+            this.onLocationChange(this.locations[0].id);
           });
         });
       });
@@ -99,9 +95,23 @@ export class RegisterComponent implements OnInit {
       password: userFormData.password
     };
     this.userService.login(this.loginData).toPromise().then((response: any) => {
-      this.currentUser = (<any>response).user;
-      console.log(this.currentUser);
-      debugger;
+      this.user = (<any>response).user;
+
+      this.onLocationChange(this.user.locationId);
+
+      if (this.user.id != undefined && this.user.id != null && this.user.id != '') {
+        this.registerForm.controls.confirmPassword.disable();
+        this.registerForm.controls.firstName.setValue(this.user.firstName);
+        this.registerForm.controls.lastName.setValue(this.user.lastName);
+        this.registerForm.controls.ntLogin.setValue(this.user.ntLogin);
+        this.registerForm.controls.emailAddress.setValue(this.user.emailAddress);
+        this.registerForm.controls.reportToUserId.setValue(this.user.reportToUserId);
+        this.registerForm.controls.locationId.setValue(this.user.locationId);
+        this.registerForm.controls.roleId.setValue(this.user.roleId);
+        this.registerForm.controls.teamId.setValue(this.user.teamFunctionId);
+      }
+      this.showProfile = true;
+      this.isNewUser = false;
     });
   }
 
@@ -113,14 +123,17 @@ export class RegisterComponent implements OnInit {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   }
+
   onLocationChange(locationId: string) {
+    setTimeout(() => {
     this.userService
       .getLeadershipUsers(locationId)
       .toPromise()
       .then((leadershipusers: UserFromDBEntity[]) => {
+        this.leadershipUsers = [];
         leadershipusers.forEach(val => this.leadershipUsers.push(Object.assign({}, val)));
       });
-    this.registerForm.get('leadershipUsers').setValue(this.leadershipUsers);
+    }, 2000);
   }
 
   register(registerUser: UserFormData) {
@@ -133,7 +146,7 @@ export class RegisterComponent implements OnInit {
       ntLogin : registerUser.ntLogin,
       emailAddress : registerUser.emailAddress,
       roleId : registerUser.roleId,
-      reportToUserId : registerUser.report2UserId,
+      reportToUserId : registerUser.reportToUserId,
       locationId : registerUser.locationId,
       teamFunctionId : registerUser.teamId,
       isActive : true,

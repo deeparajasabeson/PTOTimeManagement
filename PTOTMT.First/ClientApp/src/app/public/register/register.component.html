@@ -11,73 +11,89 @@
         <div class="col-1"></div>
         <div class="col-3">
           User Name<br />
-          <input type="email" formControlName="userName" name="userName" class="form-control">
+          <input type="email" formControlName="userName" class="form-control">
           <div *ngIf="u.userName.errors">
             <div *ngIf="u.userName.touched && u.userName.errors.required" class="error">User Name is required</div>
           </div>
         </div>
+        <div class="col-1"></div>
         <div class="col-3">
           Password<br />
-          <input type="password" formControlName="password" name="password" class="form-control">
+          <input type="password" formControlName="password" class="form-control">
           <div *ngIf="u.password.errors">
             <div *ngIf="u.password.touched && u.password.errors.required" class="error">Password is required</div>
           </div>
         </div>
+        <div class="col-1"></div>
         <div class="col-3">
           <br />
-          <button type="submit" class="btn btn-success">
+          <button type="submit" class="btn btn-info">
             Create/Edit Profile
           </button>
         </div>
       </div>
       <hr />
-    </form>
+</form>
     <!--other properties of user--> 
     <div *ngIf="showProfile">
-      <form formGroup="registerForm" (submit)="register(registerForm.value)">
+      <form [formGroup]="registerForm" (submit)="register(registerForm.value)">
         <div class="form-row">
           <div class="col-1"></div>
           <div class="col-3">
-            <label for="firstName">First Name</label><br />
-            <input type="text" id="firstName" name="firstName" formControlName="firstName" required>
-            <br />
+            <span *ngIf="isNewUser">
+              Confirm Password<br />
+              <input type="password" formControlName="confirmPassword" class="form-control">
+              <br />
+            </span>
+            <br *ngIf="!this.isNewUser" />
+            <div *ngIf="!this.isNewUser" class="error">User profile already exists !</div>
+            <div class="error" *ngIf="isNewUser && confirmPassoword.touched && registerForm.hasError('invalidPassword')">
+              Password does not match. Please re-enter.
+            </div>
+            <br *ngIf="!(isNewUser && confirmPassoword.touched && registerForm.hasError('invalidPassword'))" />
           </div>
-          <div class="col-1"></div>
-          <div class="col-3">
-            <label for="lastName">Last Name</label><br />
-            <input type="text" id="lastName" name="lastName" formControlName="lastName" required>
-            <br />
+            <div class="col-1"></div>
+            <div class="col-3">
+              First Name<br />
+              <input type="text" formControlName="firstName" class="form-control">
+              <br />
+            </div>
+            <div class="col-1"></div>
+            <div class="col-3">
+              <label for="lastName">Last Name</label><br />
+              <input type="text" formControlName="lastName" class="form-control">
+              <br />
+            </div>
           </div>
+        <div class="form-row">
           <div class="col-1"></div>
           <div class="col-3">
             <label for="ntLogin">NTLogin</label><br />
-            <input type="text" id="ntLogin" name="ntLogin" formControlName="ntLogin" required>
+            <input type="text" formControlName="ntLogin" class="form-control">
             <br />
           </div>
-        </div>
-        <div class="form-row">
           <div class="col-1"></div>
           <div class="col-3">
             <label for="emailAddress">Email Address</label><br />
-            <input type="email" id="emailAddress" name="emailAddress" formControlName="emailAddress" required>
+            <input type="email" formControlName="emailAddress" class="form-control">
             <br />
           </div>
           <div class="col-1"></div>
           <div class="col-3">
             <label for="locationId">Location</label><br />
-            <select id="locationId" formControlName="locationId" required (change)="onLocationChange(locationId.value)">
+            <select formControlName="locationId" #locationId class="form-control" (change)="onLocationChange(locationId.value)">
               <option *ngFor="let location of locations" [(value)]="location.id">{{ location.name }}</option>
-            </select>
-          </div>
-          <div class="col-1"></div>
-          <div class="col-3">
-            <label for="report2UserId">Reporting Manager</label><br />
-            <select class="form-control" id="report2UserId" formControlName="report2UserId" required>
-              <option *ngFor="let leadership of leadershipUsers" [(value)]="leadership.id">{{ leadership.firstName }} {{ leadership.lastname }} - {{ leadership.ntLogin }}</option>
             </select>
           </div>
         </div>
         <div class="form-row">
+          <div class="col-1"></div>
+          <div class="col-3">
+            <label for="report2UserId">Reporting Manager</label><br />
+            <select class="form-control" formControlName="reportToUserId" required>
+              <option *ngFor="let leadership of leadershipUsers" [(value)]="leadership.id">{{ leadership.firstName }} {{ leadership.lastname }} - {{ leadership.ntLogin }}</option>
+            </select>
+          </div>
           <div class="col-1"></div>
           <div class="col-3">
             <label for="roleId">Role</label><br />
@@ -93,18 +109,25 @@
             </select>
           </div>
         </div>
+        <br />
         <div class="text-center">
-            <button type="submit"
-                    class="btn btn-success"
-                    [disabled]="!registerForm.valid">
-              Register User
-            </button>&nbsp;
-            <button class="btn btn-danger deletebutton"
-                    (click)="deleteUser(registerForm.get('id').value)">
-              Delete User
-            </button>&nbsp;
-            <button class="btn btn-secondary" type="reset" (click)="onReset()">Clear Form</button>
-            <button type="button"
+          <button type="submit"
+                  class="btn btn-success"
+                  [disabled]="!registerForm.valid">
+            <span *ngIf="isNewUser">Register User</span>
+            <span *ngIf="!isNewUser">Update Profile</span>
+          </button>&nbsp;
+          <button *ngIf="!isNewUser"
+                  class="btn btn-danger deletebutton"
+                  (click)="deleteUser(registerForm.get('id').value)">
+            Delete User
+          </button>&nbsp;
+          <button type="reset"
+                  class="btn btn-secondary"
+                  (click)="onReset()">
+            Clear Form
+          </button>&nbsp;
+          <button type="button"
                   class="btn btn-danger cancelbutton`"
                   (click)="onBack()">
             Cancel

@@ -28,6 +28,7 @@ Use PTOTimeManagement
 GO
 
 Declare @UserId uniqueidentifier = NEWID(),
+             @LeadershipRoleId uniqueidentifier = NEWID(),
              @RoleId uniqueidentifier = NEWID(),
               @ReportToUserId uniqueidentifier = NEWID(),
              @LocationId uniqueidentifier = NEWID(),
@@ -47,13 +48,13 @@ Values
 Insert into Security.[User]
 (Id, FirstName, LastName, UserName, Password, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamFunctionId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(@ReportToUserId, 'Harold', 'Gulube', 'haroldgulube@gmail.com', 'harold', 'hgulub400', 'haroldgulube@gmail.com',@RoleId, @UserId,@LocationId, @LeadershipAdminId, 1, @UserId, GETDATE(), @UserId, GETDATE())
+(@ReportToUserId, 'Harold', 'Gulube', 'haroldgulube@gmail.com', 'harold', 'hgulub400', 'haroldgulube@gmail.com',@LeadershipRoleId, @UserId,@LocationId, @LeadershipAdminId, 1, @UserId, GETDATE(), @UserId, GETDATE())
 
 -- Security.Role TABLE
 Insert into Security.Role 
 (Id, Name, Description, IsActive, IsLeadership, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn) 
 Values  
-(NEWID(), 'Manager', 'Team Manager', 1, 1, @UserId, GETDATE(), @UserId, GETDATE())
+(@LeadershipRoleId, 'Manager', 'Team Manager', 1, 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Security.Role 
 (Id, Name, Description, IsActive, IsLeadership, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn) 
 Values  
