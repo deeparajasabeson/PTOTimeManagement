@@ -14,7 +14,7 @@ namespace PTOTMT.Common.Entities
         public Guid RoleId { get; set; }
         public Guid ReportToUserId { get; set; }
         public Guid LocationId { get; set; }
-        public Guid TeamFunctionId { get; set; }
+        public Guid TeamId { get; set; }
         public bool IsActive { get; set; }
         public Guid CreatedBy { get; set; }
         public DateTimeOffset CreatedOn { get; set; }

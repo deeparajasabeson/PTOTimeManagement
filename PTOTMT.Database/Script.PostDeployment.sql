@@ -40,13 +40,13 @@ Declare @UserId uniqueidentifier = NEWID(),
 
  -- Security.User TABLE
 Insert into Security.[User]
-(Id, FirstName, LastName, UserName, Password, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamFunctionId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, FirstName, LastName, UserName, Password, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
 (@UserId, 'Deepa', 'Rajasabeson', 'deeparajasabeson@gmail.com', 'deepa',  'drajas401', 'deeparajasabeson@gmail.com', @RoleId, @ReportToUserId, @LocationId,  @TeamId, 1, @UserId, GETDATE(), @UserId, GETDATE())
 
 
 Insert into Security.[User]
-(Id, FirstName, LastName, UserName, Password, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamFunctionId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, FirstName, LastName, UserName, Password, NTLogin, EmailAddress, RoleId, ReportToUserId, LocationId, TeamId, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
 (@ReportToUserId, 'Harold', 'Gulube', 'haroldgulube@gmail.com', 'harold', 'hgulub400', 'haroldgulube@gmail.com',@LeadershipRoleId, @UserId,@LocationId, @LeadershipAdminId, 1, @UserId, GETDATE(), @UserId, GETDATE())
 
@@ -179,7 +179,7 @@ Alter Table Security.[User]
 ADD  CONSTRAINT FK_RoleUser FOREIGN KEY (RoleId) REFERENCES [Security].[Role] ([Id]) ,
          CONSTRAINT FK_UserUser_ReportToUserId FOREIGN KEY (ReportToUserId) REFERENCES [Security].[User] ([Id]),
          CONSTRAINT FK_LocationUser FOREIGN KEY (LocationId) REFERENCES [Config].[Location] ([Id]),
-         CONSTRAINT FK_TeamUser FOREIGN KEY (TeamFunctionId) REFERENCES [Security].[Team] ([Id]),
+         CONSTRAINT FK_TeamUser FOREIGN KEY (TeamId) REFERENCES [Security].[Team] ([Id]),
          CONSTRAINT FK_UserUser_CreatedBy FOREIGN KEY (CreatedBy) REFERENCES [Security].[User] ([Id]),
          CONSTRAINT FK_UserUser_UpdatedBy FOREIGN KEY (UpdatedBy) REFERENCES [Security].[User] ([Id])
 

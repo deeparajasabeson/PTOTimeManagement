@@ -9,7 +9,7 @@
     [RoleId]         UNIQUEIDENTIFIER   NOT NULL,
     [ReportToUserId] UNIQUEIDENTIFIER   NOT NULL,
     [LocationId]     UNIQUEIDENTIFIER   NOT NULL,
-    [TeamFunctionId] UNIQUEIDENTIFIER   NOT NULL,
+    [TeamId] UNIQUEIDENTIFIER   NOT NULL,
     [IsActive]       BIT                NOT NULL,
     [CreatedBy]      UNIQUEIDENTIFIER   NOT NULL,
     [CreatedOn]      DATETIMEOFFSET (7) DEFAULT (getdate()) NOT NULL,
@@ -19,7 +19,7 @@
     CONSTRAINT FK_LocationUser FOREIGN KEY ([LocationId]) REFERENCES [Config].[Location] ([Id]),
     CONSTRAINT FK_UserUser_ReportToUserId FOREIGN KEY ([ReportToUserId]) REFERENCES [security].[User]  ([Id]),
     CONSTRAINT FK_RoleUser FOREIGN KEY ([RoleId]) REFERENCES [Security].[Role] ([Id]),
-    CONSTRAINT FK_TeamUser FOREIGN KEY ([TeamFunctionId]) REFERENCES [Security].[Team] ([Id]),
+    CONSTRAINT FK_TeamUser FOREIGN KEY ([TeamId]) REFERENCES [Security].[Team] ([Id]),
     CONSTRAINT FK_UserUser_CreatedBy FOREIGN KEY ([CreatedBy]) REFERENCES [security].[User]  ([Id]),
     CONSTRAINT FK_UserUser_UpdatedBy FOREIGN KEY ([UpdatedBy]) REFERENCES[security].[User]  ([Id])
 );

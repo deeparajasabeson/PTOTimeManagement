@@ -75,8 +75,16 @@
           <div class="col-1"></div>
           <div class="col-3">
             <label for="emailAddress">Email Address</label><br />
-            <input type="email" formControlName="emailAddress" class="form-control">
-            <br />
+            <input type="email" formControlName="emailAddress" class="form-control" email>
+            <div *ngIf="r.emailAddress.errors">
+              <div *ngIf="r.emailAddress.errors.required">
+                Email Address  required.
+              </div>
+              <div *ngIf="r.emailAddress.errors.pattern || r.emailAddress.errors.email">
+                Email Address not valid.
+              </div>
+            </div>
+            <br *ngIf="!r.emailAddress.errors" />
           </div>
           <div class="col-1"></div>
           <div class="col-3">
@@ -111,9 +119,7 @@
         </div>
         <br />
         <div class="text-center">
-          <button type="submit"
-                  class="btn btn-success"
-                  [disabled]="!registerForm.valid">
+          <button type="submit" class="btn btn-success">
             <span *ngIf="isNewUser">Register User</span>
             <span *ngIf="!isNewUser">Update Profile</span>
           </button>&nbsp;

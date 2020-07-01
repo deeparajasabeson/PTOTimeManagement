@@ -34,7 +34,8 @@ export class RegisterComponent implements OnInit {
 
   showProfile: boolean;
   isNewUser: boolean;
-
+  emailPattern: string = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
+      
   constructor(private router: Router,
                         private formBuilder: FormBuilder,
                         private userService: UserService,
@@ -58,7 +59,7 @@ export class RegisterComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: [''],
       ntLogin: ['', Validators.required],
-      emailAddress: ['', [Validators.required, Validators.email]],
+      emailAddress: ['', [Validators.required, Validators.email, Validators.pattern(this.emailPattern)]],
       reportToUserId: ['', Validators.required],
       locationId: ['', Validators.required],
       roleId: ['', Validators.required],
@@ -100,6 +101,7 @@ export class RegisterComponent implements OnInit {
       this.onLocationChange(this.user.locationId);
 
       if (this.user.id != undefined && this.user.id != null && this.user.id != '') {
+        this.registerForm.controls.id.setValue(this.user.id);
         this.registerForm.controls.confirmPassword.disable();
         this.registerForm.controls.firstName.setValue(this.user.firstName);
         this.registerForm.controls.lastName.setValue(this.user.lastName);
@@ -108,7 +110,7 @@ export class RegisterComponent implements OnInit {
         this.registerForm.controls.reportToUserId.setValue(this.user.reportToUserId);
         this.registerForm.controls.locationId.setValue(this.user.locationId);
         this.registerForm.controls.roleId.setValue(this.user.roleId);
-        this.registerForm.controls.teamId.setValue(this.user.teamFunctionId);
+        this.registerForm.controls.teamId.setValue(this.user.teamId);
       }
       this.showProfile = true;
       this.isNewUser = false;
@@ -117,11 +119,6 @@ export class RegisterComponent implements OnInit {
 
   onReset() {
     this.registerForm.reset();
-  }
-
-  validateEmail(email) {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
   }
 
   onLocationChange(locationId: string) {
@@ -141,22 +138,21 @@ export class RegisterComponent implements OnInit {
       id : registerUser.id,
       firstName: registerUser.firstName,
       lastName: registerUser.lastName,
-      userName : registerUser.userName,
-      password : registerUser.password,
+      userName : this.user.userName,
+      password : this.user.password,
       ntLogin : registerUser.ntLogin,
       emailAddress : registerUser.emailAddress,
       roleId : registerUser.roleId,
       reportToUserId : registerUser.reportToUserId,
       locationId : registerUser.locationId,
-      teamFunctionId : registerUser.teamId,
+      teamId : registerUser.teamId,
       isActive : true,
-      createdBy: registerUser.id,
-      createdOn: new Date(),
+      createdBy: (this.isNewUser ? registerUser.id : this.user.createdBy),
+      createdOn: (this.isNewUser ? new Date() : new Date(this.user.createdOn)),
       updatedBy: registerUser.id,
       updatedOn: new Date()
     };
-
-    if (registerUser.id == '') {
+    if (registerUser.id == '' && this.isNewUser) {
       user.id = CommonLibrary.GenerateUUID();
       user.createdBy = user.id;
       user.updatedBy = user.id;

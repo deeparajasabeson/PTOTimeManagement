@@ -88,7 +88,7 @@ export class QuotaCalendarComponent implements OnInit {
 
   //Read Quotas by Team Id
   readQuotasbyTeamId() {
-    let teamId: string = this.datastorageService.getUserEntity().teamFunctionId;
+    let teamId: string = this.datastorageService.getUserEntity().teamId;
     let response = this.quotaService.getQuotasByTeamId(teamId);
     response.toPromise().then((data: QuotaFromDBEntity[]) => {
       QuotaCalendarComponent.setSubscribeData(data);
@@ -214,7 +214,7 @@ export class QuotaCalendarComponent implements OnInit {
       remainingHours: remainingHours,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
-      teamId: userDetails.teamFunctionId,
+      teamId: userDetails.teamId,
       isActive: true,
       createdBy: userDetails.id,
       createdOn: this.toDate,

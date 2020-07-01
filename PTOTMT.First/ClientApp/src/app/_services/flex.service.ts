@@ -6,7 +6,6 @@ import { FlexEntity } from '../_entities/FlexEntity';
 import { FlexFromDBEntity } from '../_entities/FlexFromDBEntity';
 
 
-
 const httpOptions = {
   headers: new HttpHeaders({
     "Content-Type": "application/json"

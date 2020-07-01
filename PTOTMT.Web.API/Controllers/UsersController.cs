@@ -55,7 +55,7 @@ namespace PTOTMT.Service.Controllers
         [HttpGet("coworkers/")]
         public IEnumerable<User> GetUser(Guid teamId, Guid locationId)
         {
-            return uow.UserRepo.GetAll().Where(user => user.TeamFunctionId == teamId && user.LocationId == locationId);
+            return uow.UserRepo.GetAll().Where(user => user.TeamId == teamId && user.LocationId == locationId);
         }
 
         // GET: api/Users/leadershipusers/
@@ -74,6 +74,7 @@ namespace PTOTMT.Service.Controllers
         // PUT: api/Users/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [AllowAnonymous]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -94,10 +95,8 @@ namespace PTOTMT.Service.Controllers
         }
 
         // POST: api/Users
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [AllowAnonymous]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<User> PostUser(User user)
         {
             uow.UserRepo.Post(user);
@@ -112,7 +111,9 @@ namespace PTOTMT.Service.Controllers
         {
             if (uow.UserRepo.Exists(id))
             {
-                uow.UserRepo.DeleteById(id);
+                User user = uow.UserRepo.GetById(id);
+                user.IsActive = false;
+                uow.UserRepo.Put(user, user.Id);
                 uow.SaveChanges();
                 return NoContent();
             }
@@ -126,7 +127,9 @@ namespace PTOTMT.Service.Controllers
         {
             if (uow.UserRepo.Exists(user.Id))
             {
-                uow.UserRepo.Delete(user);
+                User userFromDB = uow.UserRepo.GetById(user.Id);
+                userFromDB.IsActive = false;
+                uow.UserRepo.Put(userFromDB, userFromDB.Id);
                 uow.SaveChanges();
                 return NoContent();
             }
@@ -149,7 +152,7 @@ namespace PTOTMT.Service.Controllers
                 User user = uow.UserRepo.GetUserDetails(credentials);
                 if (user == null) { return Unauthorized(); }
                 string tokenString = GenerateJWTToken(user);
-                Team team = uow.TeamRepo.GetById(user.TeamFunctionId);
+                Team team = uow.TeamRepo.GetById(user.TeamId);
 
                 return Ok(new { Token = tokenString, 
                                            User = user, 

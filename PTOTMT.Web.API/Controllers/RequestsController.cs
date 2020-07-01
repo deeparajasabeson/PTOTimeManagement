@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using PTOTMT.Common.Entities;
 using PTOTMT.Repository;
 using PTOTMT.Repository.Abstraction.Web;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace PTOTMT.Service.Controllers
 {
@@ -141,9 +141,22 @@ namespace PTOTMT.Service.Controllers
         {
             Quota quotaToAllot = quotaService.FindQuota(request);
             request = quotaService.SendPTOEmails(request, quotaToAllot);
-            uow.RequestRepo.Post(request);
-            uow.SaveChanges();
-            return CreatedAtAction(nameof(GetRequest), new { id = request.Id }, request);
+            if (RequestExists(request.Id))
+            {
+                try
+                {
+                    uow.RequestRepo.Put(request, request.Id);
+                    uow.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException) { throw; }
+                return Ok();
+            }
+            else
+            {
+                Request addedRequest = uow.RequestRepo.Post(request);
+                uow.SaveChanges();
+                return CreatedAtAction(nameof(GetRequest), new { id = addedRequest.Id }, addedRequest);
+            }
         }
 
         // DELETE: api/Requests/5
@@ -162,7 +175,7 @@ namespace PTOTMT.Service.Controllers
             return NotFound();
         }
 
-        // DELETE: api/Requests/5
+        // DELETE: api/Requests
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteRequest(Request request)

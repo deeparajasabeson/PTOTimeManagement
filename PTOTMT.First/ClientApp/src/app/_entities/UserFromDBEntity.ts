@@ -10,7 +10,7 @@ export interface UserFromDBEntity {
   roleId: string
   reportToUserId: string;
   locationId: string;
-  teamFunctionId: string;
+  teamId: string;
   isActive: boolean;
   createdBy: string;
   createdOn: string;

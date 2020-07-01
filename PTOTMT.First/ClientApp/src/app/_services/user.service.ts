@@ -32,7 +32,7 @@ export class UserService {
   public getCoWorkers(user: UserFromDBEntity): Observable<any> {
 
     const paramdata = new HttpParams();
-    paramdata.set('teamId', user.teamFunctionId)
+    paramdata.set('teamId', user.teamId)
     paramdata.set('locationId', user.locationId);
 
     const httpOptions = {
@@ -58,17 +58,22 @@ export class UserService {
 
   public registerUser(user: UserEntity) {
     const newUser = JSON.stringify(user);
-    return this.http.post(this.userUrl, newUser, httpOptions);
+    let response = this.http.post(this.userUrl, newUser, httpOptions);
+    response.toPromise().then();
+    return response;
   }
 
   public updateUser(user: UserEntity) {
-    const updateUser = JSON.stringify(user);
-    return this.http.put(this.userUrl, updateUser, httpOptions);
+    const updatedUser = JSON.stringify(user);
+    let requestUrl = this.userUrl + "/" + user.id;
+    let response = this.http.put(requestUrl, updatedUser, httpOptions);
+    response.toPromise().then();
+    return response;
   }
 
   public deleteUser(userId) {
     let requestUrl: string = this.userUrl + "/" + userId;
-    return this.http.delete(this.userUrl, httpOptions);
+    return this.http.delete(requestUrl, httpOptions);
   }
 }
 

@@ -6,8 +6,6 @@ import { TeamFromDBEntity } from '../_entities/TeamFromDBEntity';
 // UserFormData.ts
 export interface UserFormData {
   id: string;
-  userName: string;
-  password: string;
   firstName: string;
   lastName: string;
   ntLogin: string;

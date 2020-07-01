@@ -33,7 +33,7 @@ namespace PTOTMT.Repository.Implementation.Web
                                                                                         pto.EndDateTime <= quota.EndDateTime &&
                                                                                         pto.QuotaId == null &&
                                                                                         pto.StatusId == waitlist.Id &&
-                                                                                        uow.UserRepo.GetById(pto.UserId).TeamFunctionId == quota.TeamId
+                                                                                        uow.UserRepo.GetById(pto.UserId).TeamId == quota.TeamId
                                                                                        ))
                                                              .OrderBy(pto => pto.CreatedOn)
                                                              .ToList();

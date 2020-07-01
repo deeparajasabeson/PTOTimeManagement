@@ -82,8 +82,6 @@ namespace PTOTMT.Service.Controllers
             return Ok();
             }
 
-
-
         // POST: api/Quotas/find
         [HttpGet("find")]
         public ActionResult<Quota> FindQuota(FindQuotaEntity entity)
