@@ -1,32 +1,118 @@
 <br>
 <h3>My Notifications</h3>
 <br>
-    <div class="container" *ngIf="userRequestList.length > 0">
-      <table class="table table-striped table-bordered table-hovertable-sm table-responsive">
-        <thead>
-          <tr class="table-dark">
-            <th>Requestor</th>
-            <th>Request Type</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let request of userRequestList">
-            <td>{{ request.userId | userName }}</td>
-            <td>{{ request.requestTypeId | requestTypeName }}</td>
-            <td>{{ request.startDateTime | date: 'short' }}&nbsp;--&nbsp;{{ request.endDateTime | date:'short' }}&nbsp;</td>
-            <td>{{ request.statusId | statusName }}</td>
-            <td><a class="link" [routerLink]="['/requestdisplay', request.Id]">Open</a></td>
-          </tr>
-          <tr *ngFor="let flex of userFlexList">
-            <td>{{ flex.userId | userName }}</td>
-            <td>{{ flex.flexTypeId | flexTypeName }}</td>
-            <td>{{flex.startDateTime | date: 'short' }}&nbsp;--&nbsp;{{ flex.endDateTime | date:'short' }}&nbsp;</td>
-            <td>{{ flex.statusId | statusName }}</td>
-            <td><a class="link" [routerLink]="['/requestdisplay', flex.Id]">Open</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<!--<div class="container" *ngIf="userRequestList.length > 0">-->
+
+<mat-form-field>
+  <mat-label>PTO Request Filter : </mat-label>
+  <input (keyup)="applyRequestFilter($event)" matInput placeholder="filter" #input1>
+</mat-form-field>
+
+<mat-form-field>
+  <mat-label>Flex Request Filter : </mat-label>
+  <input (keyup)="applyFlexFilter($event.target.value)" matInput placeholder="filter" #input2>
+</mat-form-field>
+
+<mat-table [dataSource]="userRequestList" class="mat-elevation-z8" matSort>
+  <!-- Requestor Column -->
+  <ng-container matColumnDef="Requestor">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Requester </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.userId | userName}} </mat-cell>
+  </ng-container>
+
+  <!-- Request Type Column -->
+  <ng-container matColumnDef="Request Type">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Request Type </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.requestTypeId | requestTypeName}} </mat-cell>
+  </ng-container>
+
+  <!-- Description Column -->
+  <ng-container matColumnDef="Description">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Description </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{ element.startDateTime | date: 'short' }}&nbsp;--&nbsp;{{ element.endDateTime | date:'short' }}&nbsp;</mat-cell>
+  </ng-container>
+
+  <!-- Status Column -->
+  <ng-container matColumnDef="Status">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.statusId | statusName}} </mat-cell>
+  </ng-container>
+
+  <!-- Action Column -->
+  <ng-container matColumnDef="Action">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+    <mat-cell *matCellDef="let element"><a class="link" [routerLink]="['/requestdisplay', element.Id]">Open</a></mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+
+<mat-table [dataSource]="flexRequestList" class="mat-elevation-z8">
+  <!-- Requestor Column -->
+  <ng-container matColumnDef="Requestor">
+    <mat-cell *matCellDef="let element"> {{element.userId | userName}} </mat-cell>
+  </ng-container>
+
+  <!-- Request Type Column -->
+  <ng-container matColumnDef="Request Type">
+    <mat-cell *matCellDef="let element"> {{element.flexTypeId | flexTypeName}} </mat-cell>
+  </ng-container>
+
+  <!-- Description Column -->
+  <ng-container matColumnDef="Description">
+    <mat-cell *matCellDef="let element"> {{ element.startDateTime | date: 'short' }}&nbsp;--&nbsp;{{ element.endDateTime | date:'short' }}&nbsp;</mat-cell>
+  </ng-container>
+
+  <!-- Status Column -->
+  <ng-container matColumnDef="Status">
+    <mat-cell *matCellDef="let element"> {{element.statusId | statusName}} </mat-cell>
+  </ng-container>
+
+  <!-- Action Column -->
+  <ng-container matColumnDef="Action">
+    <mat-cell *matCellDef="let element"><a class="link" [routerLink]="['/requestdisplay', element.Id]">Open</a></mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+  <!-- Row shown when there is no matching data. -->
+  <mat-row *matNoDataRow>
+    <mat-cell colspan="4">No data matching the filter "{{input1.value}}"</mat-cell>
+    <mat-cell colspan="4">No data matching the filter "{{input2.value}}"</mat-cell>
+  </mat-row>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</mat-table>
+
+
+<!--</div>-->
+<!--<div class="container" *ngIf="userRequestList.length > 0">
+  <table class="table table-striped table-bordered table-hovertable-sm table-responsive">
+    <thead>
+      <tr class="table-dark">
+        <th>Requestor</th>
+        <th>Request Type</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let request of userRequestList">
+        <td>{{ request.userId | userName }}</td>
+        <td>{{ request.requestTypeId | requestTypeName }}</td>
+        <td>{{ request.startDateTime | date: 'short' }}&nbsp;--&nbsp;{{ request.endDateTime | date:'short' }}&nbsp;</td>
+        <td>{{ request.statusId | statusName }}</td>
+        <td><a class="link" [routerLink]="['/requestdisplay', request.Id]">Open</a></td>
+      </tr>
+      <tr *ngFor="let flex of userFlexList">
+        <td>{{ flex.userId | userName }}</td>
+        <td>{{ flex.flexTypeId | flexTypeName }}</td>
+        <td>{{flex.startDateTime | date: 'short' }}&nbsp;--&nbsp;{{ flex.endDateTime | date:'short' }}&nbsp;</td>
+        <td>{{ flex.statusId | statusName }}</td>
+        <td><a class="link" [routerLink]="['/requestdisplay', flex.Id]">Open</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>-->

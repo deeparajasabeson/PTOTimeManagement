@@ -6,27 +6,27 @@ import {
   MatButtonModule,
   MatInputModule,
   MatDatepickerModule,
-  MatNativeDateModule
+  MatNativeDateModule,
+  MatTableModule
 } from '@angular/material';
 
+const materialmodules = [
+  MatDialogModule,
+  MatFormFieldModule,
+  MatButtonModule,
+  MatInputModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatTableModule
+];
 
 @NgModule({
   imports: [
     CommonModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
+    materialmodules
   ],
   exports: [
-    MatDialogModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatNativeDateModule
+    materialmodules
   ]
 })
 export class MaterialModule { }
