@@ -34,7 +34,6 @@ export class RegisterComponent implements OnInit {
 
   showProfile: boolean;
   isNewUser: boolean;
-  emailPattern: string = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
       
   constructor(private router: Router,
                         private formBuilder: FormBuilder,
@@ -52,14 +51,14 @@ export class RegisterComponent implements OnInit {
       userName: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required])
     });
-
+    let emailPattern: string = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
     this.registerForm = this.formBuilder.group({
       id: [''],
       confirmPassword: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: [''],
       ntLogin: ['', Validators.required],
-      emailAddress: ['', [Validators.required, Validators.email, Validators.pattern(this.emailPattern)]],
+      emailAddress: ['', [Validators.required, Validators.email, Validators.pattern(emailPattern)]],
       reportToUserId: ['', Validators.required],
       locationId: ['', Validators.required],
       roleId: ['', Validators.required],
