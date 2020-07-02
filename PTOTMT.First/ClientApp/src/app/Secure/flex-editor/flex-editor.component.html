@@ -293,7 +293,6 @@
       <button type="submit"
               class="btn btn-success"
               (click)="saveFlex(flexeditorForm.value)"
-              [disabled]="!flexeditorForm.valid"
               [mat-dialog-close]="data">
         Request <span *ngIf="flex != null">{{flex.flexTypeValue}}</span>
       </button>
