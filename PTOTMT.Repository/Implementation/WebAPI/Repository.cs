@@ -12,7 +12,7 @@ namespace PTOTMT.Repository.Implementation.WebAPI
 
         public IEnumerable<TEntity> GetAll()
         {
-            return _context.Set<TEntity>().ToList();
+            return _context.Set<TEntity>();
         }
 
         public TEntity GetById(object Id)

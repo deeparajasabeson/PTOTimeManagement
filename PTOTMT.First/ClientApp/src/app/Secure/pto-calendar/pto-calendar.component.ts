@@ -10,9 +10,7 @@ import timeGrigPlugin from '@fullcalendar/timegrid';
 
 import { PTODialogData } from '../../_viewmodels/PTODialogData';
 import { FlexDialogData } from '../../_viewmodels/FlexDialogData';
-import { QuotaEntity } from '../../_entities/QuotaEntity';
 import { PTOEntity } from '../../_entities/PTOEntity';
-import { StatusFromDBEntity } from '../../_entities/StatusFromDBEntity';
 import { FlexEntity } from '../../_entities/FlexEntity';
 import { FlexFromDBEntity } from '../../_entities/FlexFromDBEntity';
 import { FlexTypeFromDBEntity } from '../../_entities/FlexTypeFromDBEntity';

@@ -47,7 +47,7 @@ export class FlexService {
                                                               fromDate: Date,
                                                               toDate: Date): Promise<FlexFromDBEntity[]> {
     let requestUrl: string = this.flexUrl +
-      "/flexrequestsbyuseridindaterange" +
+      "/flexsbyuseridindaterange" +
       "?userId=" + userId +
       "&fromDate=" + fromDate.toUTCString() +
       "&toDate=" + toDate.toUTCString();

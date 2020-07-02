@@ -21,7 +21,7 @@ namespace PTOTMT.Service.Controllers
         private readonly IUnitOfWorkWebAPI uow;
         private readonly IQuotaService quotaService;
         private readonly IEmailSender emailSender;
-        public FlexsController(IUnitOfWorkWebAPI _uow, 
+        public FlexsController(IUnitOfWorkWebAPI _uow,
                                               IQuotaService _quotaService,
                                               IEmailSender _emailSender)
         {
@@ -58,8 +58,8 @@ namespace PTOTMT.Service.Controllers
             return Flexs.Where(f => f.UserId == userId);
         }
 
-        [HttpGet("flexrequestsbyuseridindaterange")]
-        public IEnumerable<Flex> GetFlexsByUserIdInDateRange(Guid userId, DateTime fromDate, DateTime toDate)
+        [HttpGet("flexsbyuseridindaterange/{userId}")]
+        public IEnumerable<Flex> GetFlexsByUserIdInDateRange(Guid userId, [FromQuery]DateTime fromDate, [FromQuery]DateTime toDate)
         {
             IEnumerable<Flex> flexsRequests = GetFlex().Where(f => f.UserId == userId);
             DateTime date = new DateTime(1111, 11, 1, 1, 7, 13);
@@ -78,10 +78,10 @@ namespace PTOTMT.Service.Controllers
             }
             return flexsRequests;
         }
-        
+
         // GET: api/requests/flexsreportingmembers
-        [HttpGet("flexsreportingmembers")]
-        public IEnumerable<Flex> GetFlexsReportingMembers(Guid leadershipuserId, DateTime fromDate, DateTime toDate)
+        [HttpGet("flexsreportingmembers/{leadershipuserId}")]
+        public IEnumerable<Flex> GetFlexsReportingMembers(Guid leadershipuserId, [FromQuery]DateTime fromDate, [FromQuery]DateTime toDate)
         {
             IEnumerable<Flex> flexList = GetFlex();
             IEnumerable<User> reportingMembersList = uow.UserRepo.GetAll().Where(u => u.ReportToUserId == leadershipuserId);
@@ -109,7 +109,7 @@ namespace PTOTMT.Service.Controllers
         }
 
         // GET: api/requests/approveflex
-        [HttpGet("approveflex")]
+        [HttpGet("approveflex/{id}")]
         public void ApproveFlex(Guid id)
         {
             Flex flex = uow.FlexRepo.GetById(id);
@@ -120,7 +120,7 @@ namespace PTOTMT.Service.Controllers
         }
 
         // GET: api/requests/declineflex
-        [HttpGet("declineflex")]
+        [HttpGet("declineflex/{id}")]
         public void DeclineFlex(Guid id)
         {
             Flex flex = uow.FlexRepo.GetById(id);
@@ -233,7 +233,7 @@ namespace PTOTMT.Service.Controllers
             return NotFound();
         }
 
-        // DELETE: api/flexs/5
+        // DELETE: api/flexs
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteFlex(Flex flex)

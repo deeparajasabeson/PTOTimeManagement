@@ -19,6 +19,8 @@ import { QuotaFromDBEntity } from '../../_entities/QuotaFromDBEntity';
 import { UserFromDBEntity } from '../../_entities/UserFromDbEntity';
 import { QuotaService } from '../../_services/quota.service';
 import { DataStorageService } from '../../_services/datastorage.service';
+import { RoleService } from '../../_services/role.service';
+import { RoleFromDBEntity } from '../../_entities/RoleFromDBEntity';
 
 
 @Component({
@@ -34,7 +36,8 @@ export class QuotaCalendarComponent implements OnInit {
   calendarWeekends = true;
   calendarEvents: EventInput[] = [];
   options: any;
-  user = null;
+  user: UserFromDBEntity;
+  role: RoleFromDBEntity;
   previousDate = null;
   toDate = new Date();
   toDateNgbDateStruct: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(this.toDate);
@@ -66,29 +69,45 @@ export class QuotaCalendarComponent implements OnInit {
   constructor(public dialog: MatDialog,
     private quotaService: QuotaService,
     private toasterService: ToastrService,
+    private roleService: RoleService,
     private datastorageService: DataStorageService) { }
 
   // Execute after constructor when component is initialized
   ngOnInit() {
-    this.options = {
-      customButtons: {
-        newquota: {
-          text: 'New PTO Quota',
-          click: () => this.getQuota(null)    // click: this.getQuota(null).bind(this) // <-------- CAN ALSO USE THIS ONE
-        }
-      },
-      header: {
-        left: 'prev,next today newquota',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    this.user = this.datastorageService.getUserEntity();
+    this.roleService.getRoleById(this.user.roleId).toPromise().then((response) => {
+      this.role = response;
+      if (this.role.isLeadership) {
+        this.options = {
+          customButtons: {
+            newquota: {
+              text: 'New PTO Quota',
+              click: () => this.getQuota(null)    // click: this.getQuota(null).bind(this) // <-------- CAN ALSO USE THIS ONE
+            }
+          },
+          header: {
+            left: 'prev,next today newquota',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          }
+        };
       }
-    };
+      else {
+        this.options = {
+          header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          }
+        };
+      }
+    });
     this.readQuotasbyTeamId();
   }
 
   //Read Quotas by Team Id
   readQuotasbyTeamId() {
-    let teamId: string = this.datastorageService.getUserEntity().teamId;
+    let teamId: string = this.user.teamId;
     let response = this.quotaService.getQuotasByTeamId(teamId);
     response.toPromise().then((data: QuotaFromDBEntity[]) => {
       QuotaCalendarComponent.setSubscribeData(data);
@@ -134,7 +153,7 @@ export class QuotaCalendarComponent implements OnInit {
   // Edit Quota when event is clicked
   handleEventClick(info) {
     let quotaId = info.event.id;
-    if (quotaId == null) {
+    if (quotaId == null || !this.role.isLeadership) {
       return;
     }
 
@@ -224,7 +243,6 @@ export class QuotaCalendarComponent implements OnInit {
     let response = this.quotaService.saveQuota(quotaEntity);
     let quota;
     response.toPromise().then((data: QuotaEntity) => {
-      debugger;
       response.pipe(map((res: HttpResponse<any>) => {
          this.toasterService.success(
             "Status Code : " + res.status.toString(),
@@ -268,7 +286,9 @@ export class QuotaCalendarComponent implements OnInit {
 
   // Execute when date cell is clicked
   handleDateClick(arg) {
-    let quotaStartDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(arg.date)
-    this.getQuota(quotaStartDate);
+    if (this.role.isLeadership) {
+      let quotaStartDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(arg.date)
+      this.getQuota(quotaStartDate);
+    }
   }
 }

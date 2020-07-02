@@ -92,7 +92,6 @@ export class FlexEditorComponent implements OnInit {
       this.dialogRef.close(this.flexeditorForm.value);
       if (this.flexeditorForm.valid) {
         this.flex = this.flexeditorForm.value;
-        debugger;
       }
     }
   }
