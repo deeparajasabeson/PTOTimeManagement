@@ -103,8 +103,8 @@ export class PTOCalendarComponent implements OnInit {
     };
     this.InitializeDialogData();
     this.readRequestTypes();
-    this.readPTObyUserId();
     this.readFlexTypes();
+    this.readPTObyUserId();
     this.readFlexbyUserId();
   }
 
@@ -199,7 +199,7 @@ export class PTOCalendarComponent implements OnInit {
     this.flex.flexTypeId = (this.flexShiftSlide != undefined && this.flexShiftSlide != null) ? this.flexShiftSlide.id : "";
   }
 
-  //Read PTOs by Team Id
+  //Read PTOs by User Id
   readPTObyUserId() {
     let userId: string = this.datastorageService.getUserEntity().id;
     let response = this.ptoService.getPTOsByUserId(userId);
@@ -250,7 +250,7 @@ export class PTOCalendarComponent implements OnInit {
     response.then((data: FlexFromDBEntity[]) => {
       let flexList = data;
       if (flexList == null || flexList == undefined) {
-        return
+        return;
       }
       var length = this.calendarEvents.length;
       for (var i = 0; i < flexList.length; ++i) {
@@ -478,7 +478,7 @@ export class PTOCalendarComponent implements OnInit {
       startDateTime: startDateTime,
       endDateTime: endDateTime,
       isForward: this.flex.isForward,
-      coWorkerId: this.flex.coWorkerId,
+      coWorkerId: (this.flex.coWorkerId == null) ? '00000000-0000-0000-0000-000000000000' : this.flex.coWorkerId,
       anotherStartDateTime: anotherStartDateTime,
       anotherEndDateTime: anotherEndDateTime,
       statusId: this.flex.statusId,

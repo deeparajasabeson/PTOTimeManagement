@@ -3,16 +3,17 @@ export interface FlexFromDBEntity {
   id: string,
   userId: string,
   flexTypeId: string,
-  name: string;
+  name: string,
   description: string,
   isForward: boolean,
   startDateTime: string,
   endDateTime: string,
   hours: number,
-  coWorkerId: string;
+  coWorkerId: string,
+  coWorkerFlexId: string,
   anotherStartDateTime: string,
   anotherEndDateTime: string,
-  statusId: string;
+  statusId: string,
   isActive: boolean,
   createdBy: string,
   createdOn: string,

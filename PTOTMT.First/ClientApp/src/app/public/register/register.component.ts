@@ -43,14 +43,15 @@ export class RegisterComponent implements OnInit {
                         private teamService: TeamService) { }
 
   ngOnInit() {
-    this.isNewUser = true;
-    this.showProfile =  false;
     this.readDataFromDB();
 
+    this.isNewUser = true;
+    this.showProfile = false;
     this.userForm = new FormGroup({
       userName: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required])
     });
+
     let emailPattern: string = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
     this.registerForm = this.formBuilder.group({
       id: [''],
@@ -110,9 +111,12 @@ export class RegisterComponent implements OnInit {
         this.registerForm.controls.locationId.setValue(this.user.locationId);
         this.registerForm.controls.roleId.setValue(this.user.roleId);
         this.registerForm.controls.teamId.setValue(this.user.teamId);
+        this.isNewUser = false;
+      }
+      else {
+        this.isNewUser = true;
       }
       this.showProfile = true;
-      this.isNewUser = false;
     });
   }
 
@@ -160,7 +164,26 @@ export class RegisterComponent implements OnInit {
     else {
       this.userService.updateUser(user);
     }
+    this.InitForm();
   }
+
+  InitForm()
+  {
+    this.isNewUser = true;
+    this.showProfile = false;
+    this.userForm.get('userName').setValue('');
+    this.userForm.get('password').setValue('');
+    this.registerForm.get('id').setValue('');
+    this.registerForm.get('confirmPassword').setValue('');
+    this.registerForm.get('firstName').setValue('');
+    this.registerForm.get('lastName').setValue('');
+    this.registerForm.get('ntLogin').setValue('');
+    this.registerForm.get('emailAddress').setValue('');
+    this.registerForm.get('reportToUserId').setValue('');
+    this.registerForm.get('locationId').setValue('');
+    this.registerForm.get('roleId').setValue('');
+    this.registerForm.get('teamId').setValue('');
+    }
 
   deleteUser(userId: string) {
     this.userService.deleteUser(userId);
