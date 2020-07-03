@@ -228,7 +228,8 @@ export class PTOCalendarComponent implements OnInit {
             createdBy: ptoList[i].createdBy,
             createdOn: ptoList[i].createdOn,
             updatedBy: ptoList[i].updatedBy,
-            updatedOn: ptoList[i].updatedOn
+            updatedOn: ptoList[i].updatedOn,
+            isFlex: false
           }
         };
       }
@@ -278,7 +279,8 @@ export class PTOCalendarComponent implements OnInit {
             createdBy: flexList[i].createdBy,
             createdOn: flexList[i].createdOn,
             updatedBy: flexList[i].updatedBy,
-            updatedOn: flexList[i].updatedOn
+            updatedOn: flexList[i].updatedOn,
+            isFlex: true
           }
         };
       }
@@ -311,36 +313,36 @@ export class PTOCalendarComponent implements OnInit {
     if (eventId == null) {
       return;
     }
+    if (info.event.extendedProps.isFlex) {
+      this.handleFlexEventClick(eventId);
+    }
+   else {
+      let response = this.ptoService.getPTOById(eventId);
+      response.subscribe((data: PTOFromDBEntity) => {
+        let ptoToEdit = data;
 
-    let response = this.ptoService.getPTOById(eventId);
-    response.subscribe((data: PTOFromDBEntity) => {
-      let ptoToEdit = data;
-      if (ptoToEdit == null || ptoToEdit == undefined) {
-        this.handleFlexEventClick(eventId);  
-        return;
-      }
+        //Clicked event is a PTO request
+        let startDateTime = new Date(ptoToEdit.startDateTime);
+        let ptoStartDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(startDateTime);
+        let endDateTime = new Date(ptoToEdit.endDateTime);
+        let ptoEndDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(endDateTime);
 
-      //Clicked event is a PTO request
-      let startDateTime = new Date(ptoToEdit.startDateTime);
-      let ptoStartDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(startDateTime);
-      let endDateTime = new Date(ptoToEdit.endDateTime);
-      let ptoEndDate: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(endDateTime);
-
-      this.pto.id = ptoToEdit.id;
-      this.pto.userId = ptoToEdit.userId;
-      this.pto.description = ptoToEdit.description;
-      this.pto.requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
-     this.pto.requestTypeId = ptoToEdit.requestTypeId,
-      this.pto.hours = ptoToEdit.hours;
-      this.pto.startDate = ptoStartDate;
-      this.pto.startTime = ptoToEdit.startDateTime.substr(11, 5);
-      this.pto.endDate = ptoEndDate;
-      this.pto.endTime = ptoToEdit.endDateTime.substr(11, 5);
-      this.pto.quotaId = ptoToEdit.quotaId;
-      this.pto.statusId = ptoToEdit.statusId;
-      this.pto.isNewEvent = false;
-      this.getPTO(null);
+        this.pto.id = ptoToEdit.id;
+        this.pto.userId = ptoToEdit.userId;
+        this.pto.description = ptoToEdit.description;
+        this.pto.requestTypes = PTOCalendarComponent.subscribeRequestTypeFromDBEntity;
+        this.pto.requestTypeId = ptoToEdit.requestTypeId,
+          this.pto.hours = ptoToEdit.hours;
+        this.pto.startDate = ptoStartDate;
+        this.pto.startTime = ptoToEdit.startDateTime.substr(11, 5);
+        this.pto.endDate = ptoEndDate;
+        this.pto.endTime = ptoToEdit.endDateTime.substr(11, 5);
+        this.pto.quotaId = ptoToEdit.quotaId;
+        this.pto.statusId = ptoToEdit.statusId;
+        this.pto.isNewEvent = false;
+        this.getPTO(null);
       });
+    }
   }
 
   //Search in Flex table and handle the clicked event
@@ -452,7 +454,21 @@ export class PTOCalendarComponent implements OnInit {
       id: ptoEntity.id,
       allDay: ptoEntity.allDay,
       color: this.eventColor[Math.floor(Math.random() * (this.eventColor.length - 1 - 0) + 0)],
-      textColor: "white"
+      textColor: "white",
+      description: ptoEntity.description,
+      extendedProps: {
+        hours: ptoEntity.hours,
+        userId: ptoEntity.userId,
+        requestTypeId: ptoEntity.requestTypeId,
+        statusId: ptoEntity.statusId,
+        quotaId: ptoEntity.quotaId,
+        isActive: ptoEntity.isActive,
+        createdBy: ptoEntity.createdBy,
+        createdOn: ptoEntity.createdOn,
+        updatedBy: ptoEntity.updatedBy,
+        updatedOn: ptoEntity.updatedOn,
+        isFlex: true
+      }
     })
     let calendarApi = this.calendarComponent.getApi();
     if (calendarApi.needsRerender) {
@@ -515,7 +531,8 @@ export class PTOCalendarComponent implements OnInit {
         createdBy: flexEntity.createdBy,
         createdOn: flexEntity.createdOn,
         updatedBy: flexEntity.updatedBy,
-        updatedOn: flexEntity.updatedOn
+        updatedOn: flexEntity.updatedOn,
+        isFlex: true
       }
     });
     let calendarApi = this.calendarComponent.getApi();

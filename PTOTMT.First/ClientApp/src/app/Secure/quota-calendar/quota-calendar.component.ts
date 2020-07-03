@@ -79,12 +79,19 @@ export class QuotaCalendarComponent implements OnInit {
 
   // Execute after constructor when component is initialized
   ngOnInit() {
+    this.user = this.datastorageService.getUserEntity();
+    this.options = {
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+    }
     setTimeout(() => {
-      this.user = this.datastorageService.getUserEntity();
       this.roleService.getRoleById(this.user.roleId).toPromise().then((response) => {
         this.role = response;
         if (this.role.isLeadership) {
-          this.options = {
+          this.options = ({
             customButtons: {
               newquota: {
                 text: 'New PTO Quota',
@@ -96,22 +103,13 @@ export class QuotaCalendarComponent implements OnInit {
               center: 'title',
               right: 'dayGridMonth,timeGridWeek,timeGridDay'
             }
-          };
-        }
-        else {
-          this.options = {
-            header: {
-              left: 'prev,next today',
-              center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            }
-          };
+          });
         }
       });
      this.teamService.getTeams().toPromise().then((teamdata: TeamFromDBEntity[]) => {
        teamdata.forEach(val => this.quota.teams.push(Object.assign({}, val)));
      });
-    }, 5000);
+    }, 4000);
     this.readQuotasbyTeamId();
   }
 

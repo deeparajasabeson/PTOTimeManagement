@@ -36,19 +36,14 @@ namespace PTOTMT.Service.Controllers
 
         // GET: api/Requests/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Request> GetRequest(Guid? id)
         {
             var request = uow.RequestRepo.GetById(id);
-            if (request == null)
-            {
-                return NotFound();
-            }
             return request;
         }
 
         // GET: api/requests/ptorequestsbyuserid/<userId:Guid>
-        [HttpGet("ptorequestsbyuserid/{userId}")]
+        [HttpGet("ptorequestsbyuserid")]
         public IEnumerable<Request> GetRequestsByUserId(Guid userId)
         {
             var requests = GetRequest();
