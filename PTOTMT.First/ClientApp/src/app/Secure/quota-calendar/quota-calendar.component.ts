@@ -21,6 +21,8 @@ import { QuotaService } from '../../_services/quota.service';
 import { DataStorageService } from '../../_services/datastorage.service';
 import { RoleService } from '../../_services/role.service';
 import { RoleFromDBEntity } from '../../_entities/RoleFromDBEntity';
+import { TeamService } from '../../_services/team.service';
+import { TeamFromDBEntity } from '../../_entities/TeamFromDBEntity';
 
 
 @Component({
@@ -45,6 +47,8 @@ export class QuotaCalendarComponent implements OnInit {
   quota: QuotaDialogData = {
     id: "",
     quotaName: "",
+    teamId: "",
+    teams: [],
     originalHours: 0,
     minutes: 0,
     remainingHours: 0,
@@ -70,38 +74,44 @@ export class QuotaCalendarComponent implements OnInit {
     private quotaService: QuotaService,
     private toasterService: ToastrService,
     private roleService: RoleService,
+    private teamService: TeamService,
     private datastorageService: DataStorageService) { }
 
   // Execute after constructor when component is initialized
   ngOnInit() {
-    this.user = this.datastorageService.getUserEntity();
-    this.roleService.getRoleById(this.user.roleId).toPromise().then((response) => {
-      this.role = response;
-      if (this.role.isLeadership) {
-        this.options = {
-          customButtons: {
-            newquota: {
-              text: 'New PTO Quota',
-              click: () => this.getQuota(null)    // click: this.getQuota(null).bind(this) // <-------- CAN ALSO USE THIS ONE
+    setTimeout(() => {
+      this.user = this.datastorageService.getUserEntity();
+      this.roleService.getRoleById(this.user.roleId).toPromise().then((response) => {
+        this.role = response;
+        if (this.role.isLeadership) {
+          this.options = {
+            customButtons: {
+              newquota: {
+                text: 'New PTO Quota',
+                click: () => this.getQuota(null)    // click: this.getQuota(null).bind(this) // <-------- CAN ALSO USE THIS ONE
+              }
+            },
+            header: {
+              left: 'prev,next today newquota',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay'
             }
-          },
-          header: {
-            left: 'prev,next today newquota',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-          }
-        };
-      }
-      else {
-        this.options = {
-          header: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-          }
-        };
-      }
-    });
+          };
+        }
+        else {
+          this.options = {
+            header: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            }
+          };
+        }
+      });
+     this.teamService.getTeams().toPromise().then((teamdata: TeamFromDBEntity[]) => {
+       teamdata.forEach(val => this.quota.teams.push(Object.assign({}, val)));
+     });
+    }, 5000);
     this.readQuotasbyTeamId();
   }
 
@@ -153,7 +163,7 @@ export class QuotaCalendarComponent implements OnInit {
   // Edit Quota when event is clicked
   handleEventClick(info) {
     let quotaId = info.event.id;
-    if (quotaId == null || !this.role.isLeadership) {
+    if (quotaId == null) {
       return;
     }
 
@@ -174,6 +184,7 @@ export class QuotaCalendarComponent implements OnInit {
 
     this.quota.id = quotaToEdit.id;
     this.quota.quotaName = quotaToEdit.name,
+      this.quota.teamId = quotaToEdit.teamId,
       this.quota.originalHours = quotaToEdit.originalHours;
     this.quota.remainingHours = quotaToEdit.remainingHours;
     this.quota.startDate = quotaStartDate;
@@ -191,8 +202,8 @@ export class QuotaCalendarComponent implements OnInit {
   getQuota(startDate: NgbDateStruct): void {
     let dialogConfig = CommonLibrary.CreateDialog();
     dialogConfig.id = "quota-editor";
-    dialogConfig.height = "60%";
-    dialogConfig.data = { quota: this.quota };  // One way to pass data to modal window
+    dialogConfig.height = "75%";
+    dialogConfig.data = { quota: this.quota, isLeadership: this.role.isLeadership };  // One way to pass data to modal window
     if (startDate != null) {
       dialogConfig.data.quota.startDate = startDate;
       if (CommonLibrary.NgbDateStruct2Date(startDate) > CommonLibrary.NgbDateStruct2Date(this.quota.endDate)) {
@@ -201,6 +212,7 @@ export class QuotaCalendarComponent implements OnInit {
     }
     const dialogRef = this.dialog.open(QuotaEditorComponent, dialogConfig);
     dialogRef.componentInstance.quota = this.quota;  //another way to pass quota to modal window
+    dialogRef.componentInstance.isLeadership = this.role.isLeadership;
 
     dialogRef.afterClosed().subscribe(resultData => {
       if (resultData != null && resultData != undefined) {
@@ -233,7 +245,7 @@ export class QuotaCalendarComponent implements OnInit {
       remainingHours: remainingHours,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
-      teamId: userDetails.teamId,
+      teamId: this.quota.teamId,
       isActive: true,
       createdBy: userDetails.id,
       createdOn: this.toDate,
@@ -241,7 +253,7 @@ export class QuotaCalendarComponent implements OnInit {
       updatedOn: this.toDate
     };
     let response = this.quotaService.saveQuota(quotaEntity);
-    let quota;
+    //let tquota;
     response.toPromise().then((data: QuotaEntity) => {
       response.pipe(map((res: HttpResponse<any>) => {
          this.toasterService.success(
@@ -250,8 +262,8 @@ export class QuotaCalendarComponent implements OnInit {
             { positionClass: 'toast-bottom-center' });
         }
       ));
-      quota = data;
-      if (quota == null || quota == undefined) { return; }
+      //tquota = data;
+      //if (tquota == null || tquota == undefined) { return; }
       this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
         title: quotaEntity.name,
         start: startDateTime,

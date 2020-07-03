@@ -10,6 +10,14 @@
     </div>
     <div mat-dialog-content>
       <div class="row">
+        <div class="col-6 form-group">
+          <label for="teamId">Select a Team</label>
+          <select class="form-control" id="teamId" formControlName="teamId" required>
+            <option *ngFor="let team of quota.teams" [ngValue]="team.id">{{ team.name }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-6">
           Quota Name<br />
           <input type="text"
@@ -118,18 +126,20 @@
              maxlength="50">
     </div>
     <div mat-dialog-actions class="modal-footer ">
-      <button type="submit"
-              class="btn btn-success"
-              (click)="saveQuota(quotaeditorForm.value)"
-              [mat-dialog-close]="data">
-        Submit Quota
-      </button>
-      <span *ngIf="!quotaeditorForm.get('isNewEvent').value">
-        <button class="btn btn-danger deletebutton"
-                (click)="deleteQuota(quotaeditorForm.value)"
+      <span *ngIf="isLeadership">
+        <button type="submit"
+                class="btn btn-success"
+                (click)="saveQuota(quotaeditorForm.value)"
                 [mat-dialog-close]="data">
-          Delete Quota
+          Submit Quota
         </button>
+        <span *ngIf="!quotaeditorForm.get('isNewEvent').value">
+          <button class="btn btn-danger deletebutton"
+                  (click)="deleteQuota(quotaeditorForm.value)"
+                  [mat-dialog-close]="data">
+            Delete Quota
+          </button>
+        </span>
       </span>
       <button type="button"
               class="btn btn-warning cancelbutton"

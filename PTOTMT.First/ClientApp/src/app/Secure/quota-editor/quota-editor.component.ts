@@ -15,9 +15,11 @@ import { ValidateMinutes } from '../../_validators/ValidateMinutes';
 export class QuotaEditorComponent implements OnInit {
   @ViewChild('dp', null) dp: NgbDatepicker;
   @Input() public quota: QuotaDialogData;  //Input from Calendar through @Input() property
-  quotaeditorForm: FormGroup;
-  private toDate = new Date();  //used in endDate filter in calendar template
+  @Input() public isLeadership: boolean;
 
+  quotaeditorForm: FormGroup;
+
+  private toDate = new Date();  //used in endDate filter in calendar template
   toDateNgbDateStruct: NgbDateStruct = {
     year: this.toDate.getFullYear(),
     month: this.toDate.getMonth(),
@@ -32,16 +34,17 @@ export class QuotaEditorComponent implements OnInit {
 
   ngOnInit() {
     this.quotaeditorForm = this.fb.group({
-      id: [this.quota.id],
-      quotaName: [this.quota.quotaName, Validators.maxLength(30)],
-      originalHours: [Math.floor(this.quota.originalHours), [Validators.required, Validators.min(0)]],
-      minutes: [(this.quota.originalHours - Math.floor(this.quota.originalHours)) * 100, [Validators.min(0), Validators.max(30), ValidateMinutes]],
-      remainingHours: [this.quota.remainingHours],
-      startDate: [this.quota.startDate, Validators.required],
-      startTime: [this.quota.startTime, [Validators.required, Validators.min(0.01), Validators.max(24)]],
-      endDate: [this.quota.endDate, Validators.required],
-      endTime: [this.quota.endTime, [Validators.required, Validators.min(0.01), Validators.max(24)]],
-      description: [this.quota.description, Validators.maxLength(50)],
+      id: [{ value: this.quota.id, disabled: !this.isLeadership }],
+      quotaName: [{ value: this.quota.quotaName, disabled: !this.isLeadership }, Validators.maxLength(30)],
+      teamId: [{ value: this.quota.teamId, disabled: !this.isLeadership }, Validators.required],
+      originalHours: [{ value: Math.floor(this.quota.originalHours), disabled: !this.isLeadership }, [Validators.required, Validators.min(0)]],
+      minutes: [{ value: (this.quota.originalHours - Math.floor(this.quota.originalHours)) * 100, disabled: !this.isLeadership }, [Validators.min(0), Validators.max(30), ValidateMinutes]],
+      remainingHours: [{ value: this.quota.remainingHours, disabled: !this.isLeadership }],
+      startDate: [{ value: this.quota.startDate, disabled: !this.isLeadership }, Validators.required],
+      startTime: [{ value: this.quota.startTime, disabled: !this.isLeadership }, [Validators.required, Validators.min(0.01), Validators.max(24)]],
+      endDate: [{ value: this.quota.endDate, disabled: !this.isLeadership }, Validators.required],
+      endTime: [{ value: this.quota.endTime, disabled: !this.isLeadership }, [Validators.required, Validators.min(0.01), Validators.max(24)]],
+      description: [{ value: this.quota.description, disabled: !this.isLeadership }, Validators.maxLength(50)],
       isNewEvent: [this.quota.isNewEvent]
     }, {
       validator: QuotaCustomValidators.ValidateOriginalHours()
