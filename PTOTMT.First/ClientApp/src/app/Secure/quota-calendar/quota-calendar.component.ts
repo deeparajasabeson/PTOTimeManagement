@@ -87,29 +87,27 @@ export class QuotaCalendarComponent implements OnInit {
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
     }
-    setTimeout(() => {
-      this.roleService.getRoleById(this.user.roleId).toPromise().then((response) => {
-        this.role = response;
-        if (this.role.isLeadership) {
-          this.options = ({
-            customButtons: {
-              newquota: {
-                text: 'New PTO Quota',
-                click: () => this.getQuota(null)    // click: this.getQuota(null).bind(this) // <-------- CAN ALSO USE THIS ONE
-              }
-            },
-            header: {
-              left: 'prev,next today newquota',
-              center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    this.roleService.getRoleById(this.user.roleId).toPromise().then((response) => {
+      this.role = response;
+      if (this.role.isLeadership) {
+        this.options = ({
+          customButtons: {
+            newquota: {
+              text: 'New PTO Quota',
+              click: () => this.getQuota(null)    // click: this.getQuota(null).bind(this) // <-------- CAN ALSO USE THIS ONE
             }
-          });
-        }
-      });
-     this.teamService.getTeams().toPromise().then((teamdata: TeamFromDBEntity[]) => {
-       teamdata.forEach(val => this.quota.teams.push(Object.assign({}, val)));
-     });
-    }, 4000);
+          },
+          header: {
+            left: 'prev,next today newquota',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          }
+        });
+      }
+    });
+    this.teamService.getTeams().toPromise().then((teamdata: TeamFromDBEntity[]) => {
+      teamdata.filter(team => !team.isLeadership).forEach(val => this.quota.teams.push(Object.assign({}, val)));
+    });
     this.readQuotasbyTeamId();
   }
 

@@ -51,7 +51,7 @@ namespace PTOTMT.Service.Controllers
         }
 
         // GET: api/Flexs/flexsbyuserid/<userId:Guid>
-        [HttpGet("flexsbyuserid/{userId}")]
+        [HttpGet("flexsbyuserid")]
         public IEnumerable<Flex> GetFlexsByUserId(Guid userId)
         {
             var Flexs = GetFlex();
@@ -80,8 +80,8 @@ namespace PTOTMT.Service.Controllers
         }
 
         // GET: api/requests/flexsreportingmembers
-        [HttpGet("flexsreportingmembers/{leadershipuserId}")]
-        public IEnumerable<Flex> GetFlexsReportingMembers(Guid leadershipuserId, [FromQuery]DateTime fromDate, [FromQuery]DateTime toDate)
+        [HttpGet("flexsreportingmembers")]
+        public IEnumerable<Flex> GetFlexsReportingMembers([FromQuery]Guid leadershipuserId, [FromQuery]DateTime fromDate, [FromQuery]DateTime toDate)
         {
             IEnumerable<Flex> flexList = GetFlex();
             IEnumerable<User> reportingMembersList = uow.UserRepo.GetAll().Where(u => u.ReportToUserId == leadershipuserId);
@@ -109,7 +109,7 @@ namespace PTOTMT.Service.Controllers
         }
 
         // GET: api/requests/approveflex
-        [HttpGet("approveflex/{id}")]
+        [HttpGet("approveflex")]
         public void ApproveFlex(Guid id)
         {
             Flex flex = uow.FlexRepo.GetById(id);
@@ -120,7 +120,7 @@ namespace PTOTMT.Service.Controllers
         }
 
         // GET: api/requests/declineflex
-        [HttpGet("declineflex/{id}")]
+        [HttpGet("declineflex")]
         public void DeclineFlex(Guid id)
         {
             Flex flex = uow.FlexRepo.GetById(id);

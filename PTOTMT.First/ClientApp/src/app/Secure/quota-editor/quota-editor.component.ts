@@ -36,7 +36,9 @@ export class QuotaEditorComponent implements OnInit {
     this.quotaeditorForm = this.fb.group({
       id: [{ value: this.quota.id, disabled: !this.isLeadership }],
       quotaName: [{ value: this.quota.quotaName, disabled: !this.isLeadership }, Validators.maxLength(30)],
-      teamId: [{ value: this.quota.teamId, disabled: !this.isLeadership }, Validators.required],
+      teamId: [{
+        value: (this.quota.teamId.length == 0) ? this.quota.teams[0].id : this.quota.teamId, disabled: !this.isLeadership
+      }, Validators.required],
       originalHours: [{ value: Math.floor(this.quota.originalHours), disabled: !this.isLeadership }, [Validators.required, Validators.min(0)]],
       minutes: [{ value: (this.quota.originalHours - Math.floor(this.quota.originalHours)) * 100, disabled: !this.isLeadership }, [Validators.min(0), Validators.max(30), ValidateMinutes]],
       remainingHours: [{ value: this.quota.remainingHours, disabled: !this.isLeadership }],

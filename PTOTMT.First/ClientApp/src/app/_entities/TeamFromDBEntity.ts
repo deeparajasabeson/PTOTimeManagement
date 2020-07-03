@@ -3,6 +3,7 @@ export interface TeamFromDBEntity {
   id: string,
   name: string,
   description: string,
+  isLeadership: boolean,
   maxShiftSlideHours: number,
   shiftStartTimeLimit: number,
   shiftEndTimeLimit: number,

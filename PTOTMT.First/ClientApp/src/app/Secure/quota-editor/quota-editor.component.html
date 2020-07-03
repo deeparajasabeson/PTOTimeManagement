@@ -10,7 +10,7 @@
     </div>
     <div mat-dialog-content>
       <div class="row">
-        <div class="col-6 form-group">
+        <div class="col-4 form-group">
           <label for="teamId">Select a Team</label>
           <select class="form-control" id="teamId" formControlName="teamId" required>
             <option *ngFor="let team of quota.teams" [ngValue]="team.id">{{ team.name }}</option>

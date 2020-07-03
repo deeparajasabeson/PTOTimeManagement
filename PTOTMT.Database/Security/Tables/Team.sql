@@ -2,6 +2,7 @@
     [Id]          UNIQUEIDENTIFIER   NOT NULL,
     [Name]        NVARCHAR (30)      NOT NULL,
     [Description] NVARCHAR (50)      NULL,
+    [IsLeadership] BIT                NOT NULL,
     [MaxShiftSlideHours] DECIMAL(1,0) NOT NULL, 
     [ShiftStartTimeLimit] DECIMAL(4, 2) NOT NULL, 
     [ShiftEndTimeLimit] DECIMAL(4, 2) NOT NULL, 

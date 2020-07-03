@@ -77,21 +77,21 @@ Values
 
 --Security.Team TABLE
 Insert into Security.Team 
-(Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, Name, Description, IsLeadership, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values
-(NEWID(), 'Help Desk', 'Team of Help Desk Associates', 3,  8, 21, 1, @UserId, GETDATE(), @UserId, GETDATE())
+(NEWID(), 'Help Desk', 'Team of Help Desk Associates', 0, 3,  8, 21, 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Security.Team 
-(Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, Name, Description, IsLeadership, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(NEWID(), 'OnBoarding / Recovery (OBR)', 'OnBoarding, Recovery Team', 3,  9, 18, 1, @UserId, GETDATE(), @UserId, GETDATE())
+(NEWID(), 'OnBoarding / Recovery (OBR)', 'OnBoarding, Recovery Team', 0, 3,  9, 18, 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Security.Team 
-(Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, Name, Description, IsLeadership, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(@TeamId, 'Sales Order Entry (SOE)', 'Sales Order Entry Team', 3, 9, 17, 1, @UserId, GETDATE(), @UserId, GETDATE())
+(@TeamId, 'Sales Order Entry (SOE)', 'Sales Order Entry Team', 0, 3, 9, 17, 1, @UserId, GETDATE(), @UserId, GETDATE())
 Insert into Security.Team 
-(Id, Name, Description, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
+(Id, Name, Description, IsLeadership, MaxShiftSlideHours, ShiftStartTimeLimit, ShiftEndTimeLimit, IsActive, CreatedBy, CreatedOn, UpdatedBy, UpdatedOn)
 Values 
-(@LeadershipAdminId, 'Leadership / Admin', 'Leadership, Admin Team', 3,  8, 6, 1,@UserId, GETDATE(), @UserId, GETDATE())
+(@LeadershipAdminId, 'Leadership / Admin', 'Leadership, Admin Team', 1, 3,  8, 6, 1,@UserId, GETDATE(), @UserId, GETDATE())
 
 --Config.RequestType TABLE
 Insert into Config.RequestType 
