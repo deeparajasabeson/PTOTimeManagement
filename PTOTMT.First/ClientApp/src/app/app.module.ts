@@ -18,9 +18,18 @@ import { ErrorDialogService } from './_services/error-dialog.service';
 import { AuthService } from './_services/auth.service';
 import { DataStorageService } from './_services/datastorage.service';
 import { DataSharingService } from './_services/datasharing.service';
+import { UserService } from './_services/user.service';
+import { FlexTypeService } from './_services/flextype.service';
+import { PTOService } from './_services/pto.service';
+import { LocationService } from './_services/location.service';
+import { FlexService } from './_services/flex.service';
+import { QuotaService } from './_services/quota.service';
+import { RoleService } from './_services/role.service';
+import { RequestTypeService } from './_services/requesttype.service';
+import { TeamService } from './_services/team.service';
+import { StatusService } from './_services/status.service';
 import { HttpConfigInterceptor } from './_interceptors/HttpConfigInterceptor';
 //import { httpInterceptorProviders } from './_interceptors/index';
-
 
 import { PublicModule } from './public/public.module';
 import { SecureModule } from './secure/secure.module';
@@ -74,6 +83,16 @@ export function tokenGetter() {
     ErrorDialogService,
     DataStorageService,
     DataSharingService,
+    UserService,
+    FlexService,
+    FlexTypeService,
+    LocationService,
+    PTOService,
+    QuotaService,
+    RequestTypeService,
+    RoleService,
+    StatusService,
+    TeamService,
     { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
   ],
   entryComponents: [

@@ -12,3 +12,7 @@
   .notificationbtn:hover {
     color:white;
   }
+
+  a.active {
+      font-weight: bold;
+  }

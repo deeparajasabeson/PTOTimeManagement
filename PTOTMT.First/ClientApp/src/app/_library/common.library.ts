@@ -1,7 +1,6 @@
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialogConfig } from '@angular/material/dialog';
 
-
 export class CommonLibrary
 {
     //Convert NgbDateStruct date to Date format

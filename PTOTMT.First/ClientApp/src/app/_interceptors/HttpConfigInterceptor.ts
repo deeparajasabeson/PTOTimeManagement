@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError, retry } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
@@ -28,8 +28,8 @@ export class HttpConfigInterceptor implements HttpInterceptor {
       return next.handle(req);
     }
     newHeaders = newHeaders.append('Content-Type', 'application/json')
-                                                  .append('Authorization', 'Bearer ' +  authToken)
-                                                  .append('Accept', 'application/json');
+                                              .append('Authorization', 'Bearer ' +  authToken)
+                                              .append('Accept', 'application/json');
     const clonedAuthRequest = req.clone({
       headers: newHeaders
     });

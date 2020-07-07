@@ -17,4 +17,4 @@ const routes: Routes = [
   ],
   exports: [ RouterModule ]
 })
-export class HomeModule { }
+export default class HomeModule { }

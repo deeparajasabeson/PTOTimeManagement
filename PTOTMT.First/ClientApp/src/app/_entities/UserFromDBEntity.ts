@@ -7,7 +7,7 @@ export interface UserFromDBEntity {
   password: string;
   ntLogin: string;
   emailAddress: string;
-  roleId: string
+  roleId: string;
   reportToUserId: string;
   locationId: string;
   teamId: string;

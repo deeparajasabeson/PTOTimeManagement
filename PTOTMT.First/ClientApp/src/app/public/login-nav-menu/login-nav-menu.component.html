@@ -21,7 +21,7 @@
     </span>
   </li>
   <li class="nav-item">
-    <a class="nav-link text-dark" [routerLink]='["/logout"]' [state]='{ local: true }' title="LogOut">
+    <a class="nav-link text-dark" style="cursor:pointer" [routerLink]='["/logout"]' routerLinkActive="active" routerLinkActiveOptions="{exact:true}" [state]='{ local: true }' title="LogOut">
       <fa-icon icon="sign-out-alt"></fa-icon>
       <b>Logout</b>
     </a>
@@ -29,14 +29,14 @@
 </ul>
 <ul class="nav navbar-nav navbar-right" *ngIf="!isUserAuthenticated">
   <li class="nav-item">
-    <a class="nav-link text-dark" [routerLink]='["/register"]'>
+    <a class="nav-link text-dark" style="cursor:pointer" [routerLink]='["/register"]' routerLinkActive="active" routerLinkActiveOptions="{exact:true}">
       <fa-icon icon="user-plus"></fa-icon>&nbsp;
       <b>Register</b>
     </a>
   </li>
   &emsp;
   <li class="nav-item">
-    <a class="nav-link text-dark" [routerLink]='["/login"]'>
+    <a class="nav-link text-dark" style="cursor:pointer" [routerLink]='["/login"]' routerLinkActive="active" routerLinkActiveOptions="{exact:true}">
       <fa-icon icon="sign-in-alt"></fa-icon>&nbsp;
       <b>Login</b>
     </a>
