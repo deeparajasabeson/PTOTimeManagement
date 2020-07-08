@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from "@angular/router";
 import { NgForm } from '@angular/forms';
 import { AuthService } from '../../_services/auth.service';
@@ -13,6 +13,7 @@ import { HeaderBarComponent } from '../../public/header-bar/header-bar.component
 })
 export class LoginComponent {
   invalidLogin: boolean = false;
+  @ViewChild('loginForm', null) loginForm: any;
 
   constructor(private router: Router,
                       private auth: AuthService,
@@ -20,8 +21,8 @@ export class LoginComponent {
                       private dataSharingService: DataSharingService,
                       private headerBarComponent: HeaderBarComponent) { }
 
-  public login(form: NgForm) {
-    this.auth.login(form)
+  public login(loginForm: NgForm) {
+    this.auth.login(loginForm)
       .subscribe(response =>
       {
         let token = (<any>response).token;

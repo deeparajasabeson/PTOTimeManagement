@@ -4,23 +4,25 @@ import { of } from 'rxjs';
 import { CommonLibrary } from '../_library/common.library';
 import { LocationService } from './location.service';
 import { LocationFromDBEntity } from '../_entities/LocationFromDBEntity';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('DatasharingService', () => {
-  let http: jasmine.SpyObj<HttpClient> = jasmine.createSpyObj('HttpClient', ['get']);
+  let httpClientSpy: jasmine.SpyObj<HttpClient> = jasmine.createSpyObj('HttpClient', ['get']);
   let locationService: LocationService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [LocationService]
+      providers: [LocationService, HttpClient],
+      schemas: [NO_ERRORS_SCHEMA]
     });
-    locationService = TestBed.get(LocationService);
+     locationService = new LocationService(httpClientSpy);//TestBed.get(LocationService);
   });
 
-  it('should be created', inject([LocationService], (service: LocationService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', () => {
+    expect(locationService).toBeTruthy();
+  });
 
-  it('should get locations', () => {
+  it('should get locations',  () => {
     const locations: LocationFromDBEntity[] = [{
       id: '',
       name: 'Nashville',
@@ -39,8 +41,9 @@ describe('DatasharingService', () => {
       createdOn: new Date(),
       updatedBy: '',
       updatedOn: new Date()
-    }];
-    http.get.and.returnValue(of(locations));
+      }];
+
+    httpClientSpy.get.and.returnValue(of(locations));
     locationService.getLocations().subscribe(result => {
       expect(result.length).toEqual(2);
     });
@@ -48,7 +51,7 @@ describe('DatasharingService', () => {
 
   it('should get location by id', () => {
     let locationId: string = CommonLibrary.GenerateUUID();
-    const location: LocationFromDBEntity= {
+    const location: LocationFromDBEntity = {
       id: locationId,
       name: 'Atlanta',
       description: 'Atlanta Head Office',
@@ -58,9 +61,9 @@ describe('DatasharingService', () => {
       updatedBy: '',
       updatedOn: new Date()
     }
-    http.get.and.returnValue(of(location));
+    httpClientSpy.get.and.returnValue(of(location));
     locationService.getLocationById(location.id).subscribe(result => {
       expect(result.name).toEqual('Atlanta');
     });
-  })
+  });
 });

@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-4"></div>
   <div class="col-4">
-    <form class="form-signin" #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+    <form class="form-signin" loginForm="ngForm" (ngSubmit)="login(loginForm)">
       <div class="container-fluid">
         <h2 class="form-signin-heading">Login</h2>
         <div *ngIf="invalidLogin" class="alert alert-danger">Invalid username or password.</div>
@@ -12,10 +12,10 @@
         <label for="password">Password</label>
         <input type="password" id="password" name="password" ngModel class="form-control" placeholder="Password" required>
         <br />
-        <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="!loginForm.form.valid">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
         <div class="already">
           <p>Don't have an account yet?</p>
-            <a [routerLink]='["/register"]'>Sign Up</a>
+            <a routerLink='/register'>Sign Up</a>
         </div>
       </div>
     </form>

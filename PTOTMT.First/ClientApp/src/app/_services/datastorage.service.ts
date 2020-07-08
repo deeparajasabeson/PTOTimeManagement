@@ -1,4 +1,3 @@
-/// <reference path="flex.service.ts" />
 import { Injectable } from '@angular/core';
 import { UserFromDBEntity } from '../_entities/UserFromDBEntity';
 import { StatusFromDBEntity } from '../_entities/StatusFromDBEntity';
