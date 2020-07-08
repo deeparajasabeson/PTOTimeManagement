@@ -20,9 +20,9 @@ export class StatusService {
     this.statusUrl = "https://localhost:44382/api/statuses";
     }
 
-  public getStatusById(statusId: string) {
+  public getStatusById(statusId: string): Observable<StatusFromDBEntity> {
     let requestUrl: string = this.statusUrl + "/" + statusId;
-    return this.http.get<any>(requestUrl, httpOptions);
+    return this.http.get<StatusFromDBEntity>(requestUrl, httpOptions);
   }
 
   public getStatusByName(statusName: string) {

@@ -14,10 +14,10 @@ describe('UserNamePipe', () => {
   const USER_OBJECT : UserFromDBEntity= {
     id: '6E19E05D-2050-4A5D-83FA-7D87E882AC6D',
     firstName: 'Deepa',
-    lastName: ' Rajasabeson',
+    lastName: 'Rajasabeson',
     userName: '', password: '', ntLogin: '', emailAddress: '', roleId: '', reportToUserId: '', locationId: '', teamId: '',
     isActive: true,
-    createdBy: '', createdOn: '', updatedBy: '', updatedOn: ''
+    createdBy: '', createdOn: new Date(), updatedBy: '', updatedOn: new Date()
   };
 
   beforeEach(() => {
@@ -42,6 +42,6 @@ describe('UserNamePipe', () => {
   });
 
   it('should return username for userId', inject([UserService], (userService: UserService) => {  // a way to create and inject Service object  - we do not use it here
-    expect(pipe.transform('6E19E05D-2050-4A5D-83FA-7D87E882AC6D')).toEqual('');
+    expect(pipe.transform('6E19E05D-2050-4A5D-83FA-7D87E882AC6D')).toEqual('Deepa Rajasabeson');
   }));
 });

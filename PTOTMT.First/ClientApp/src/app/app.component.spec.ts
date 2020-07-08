@@ -11,9 +11,8 @@ describe('AppComponent', () => {
       declarations: [AppComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
-    appComponent = new AppComponent();
+
     fixture = TestBed.createComponent(AppComponent);
-    //appComponent = fixture.componentInstance;
     appComponent = fixture.debugElement.componentInstance;
     fixture.detectChanges();
   }));

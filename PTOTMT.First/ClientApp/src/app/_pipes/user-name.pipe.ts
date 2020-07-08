@@ -10,12 +10,11 @@ export class UserNamePipe implements PipeTransform {
   constructor(private userService: UserService) { }
 
   transform(userId: any, ...args: any[]): string {
-    let userName: string = "";
+    let user: UserFromDBEntity;
     this.userService.getUserById(userId)
-      .toPromise()
-      .then((user: UserFromDBEntity) => {
-        userName = user.firstName + " " + user.lastName;
+      .subscribe((data: UserFromDBEntity) => {
+        user = data;
       });
-    return userName;
+    return user.firstName + " " + user.lastName;
   }
 }

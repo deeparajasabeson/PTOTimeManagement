@@ -10,12 +10,11 @@ export class StatusNamePipe implements PipeTransform {
   constructor(private statusService: StatusService) { }
 
   transform(statusId: any, ...args: any[]): string {
-    let statusName: string = "";
+    let status: StatusFromDBEntity;
     this.statusService.getStatusById(statusId)
-      .toPromise()
-      .then((status: StatusFromDBEntity) => {
-        statusName = status.name;
+      .subscribe((data: StatusFromDBEntity) => {
+        status = data;
       });
-    return statusName;
+    return status.name;
   }
 }

@@ -6,7 +6,7 @@ import { LocationService } from './location.service';
 import { LocationFromDBEntity } from '../_entities/LocationFromDBEntity';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-describe('DatasharingService', () => {
+describe('LocationService', () => {
   let httpClientSpy: jasmine.SpyObj<HttpClient> = jasmine.createSpyObj('HttpClient', ['get']);
   let locationService: LocationService;
 

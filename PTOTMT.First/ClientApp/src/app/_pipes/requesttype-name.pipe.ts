@@ -11,13 +11,13 @@ export class RequestTypeNamePipe implements PipeTransform {
   constructor(private requestTypeService: RequestTypeService) { }
 
   transform(requestTypeId: any, ...args: any[]): string {
-    let flexTypeName: string = "";
+    let requestType: RequestTypeFromDBEntity;
+
     this.requestTypeService.getRequestTypeById(requestTypeId)
-      .toPromise()
-      .then((data: RequestTypeFromDBEntity) => {
-        flexTypeName = data.name;
+      .subscribe((data: RequestTypeFromDBEntity) => {
+        requestType = data;
     });
-    return flexTypeName;
+    return requestType.name;
   };
 }
 
