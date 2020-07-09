@@ -69,7 +69,6 @@
             <input ngbDatepicker #dp
                    formControlName="startDate"
                    placeholder="mm/dd/yyyy"
-                   #dpstartDate="ngbDatepicker"
                    name="startDate"
                    size="10"
                    required
@@ -96,7 +95,6 @@
             <input ngbDatepicker #dp
                    formControlName="endDate"
                    placeholder="mm/dd/yyyy"
-                   #dpendDate="ngbDatepicker"
                    name="endDate"
                    size="10"
                    min="{{startDate > toDate ? startDate : toDate | date: 'mm/dd/yyyy'}}"
@@ -128,15 +126,13 @@
     <div mat-dialog-actions class="modal-footer ">
       <span *ngIf="isLeadership">
         <button type="submit"
-                class="btn btn-success"
-                (click)="saveQuota(quotaeditorForm.value)"
-                [mat-dialog-close]="data">
+                class="btn btn-success save"
+                (click)="saveQuota(quotaeditorForm.value)">
           Submit Quota
         </button>
         <span *ngIf="!quotaeditorForm.get('isNewEvent').value">
           <button class="btn btn-danger deletebutton"
-                  (click)="deleteQuota(quotaeditorForm.value)"
-                  [mat-dialog-close]="data">
+                  (click)="deleteQuota(quotaeditorForm.value)">
             Delete Quota
           </button>
         </span>

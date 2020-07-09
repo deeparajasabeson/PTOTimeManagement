@@ -53,20 +53,19 @@ export class RegisterComponent implements OnInit {
     });
 
     let emailPattern: string = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
-    this.registerForm = this.formBuilder.group({
-      id: [''],
-      confirmPassword: ['', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: [''],
-      ntLogin: ['', Validators.required],
-      emailAddress: ['', [Validators.required, Validators.email, Validators.pattern(emailPattern)]],
-      reportToUserId: ['', Validators.required],
-      locationId: ['', Validators.required],
-      roleId: ['', Validators.required],
-      teamId: ['', Validators.required],
-    }, {
-        validator: RegisterCustomValidators.MustMatchPassword(this.userForm.value.password)
+    this.registerForm = new FormGroup({
+      id: new FormControl(''),
+      confirmPassword: new FormControl('', [Validators.required]),
+      firstName: new FormControl('', [Validators.required]),
+      lastName: new FormControl(''),
+      ntLogin: new FormControl('', [Validators.required]),
+      emailAddress: new FormControl('', [Validators.required, Validators.email, Validators.pattern(emailPattern)]),
+      reportToUserId: new FormControl('', [Validators.required]),
+      locationId: new FormControl('', [Validators.required]),
+      roleId: new FormControl('', [Validators.required]),
+      teamId: new FormControl('', [Validators.required])
     });
+    this.registerForm.validator = RegisterCustomValidators.MustMatchPassword(this.userForm.value.password);
   }
 
   readDataFromDB() {

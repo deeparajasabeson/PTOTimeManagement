@@ -9,7 +9,7 @@ export interface TeamFromDBEntity {
   shiftEndTimeLimit: number,
   isActive: boolean,
   createdBy: string,
-  createdOn: string,
+  createdOn: Date,
   updatedBy: string,
-  updatedOn: string
+  updatedOn: Date
 }

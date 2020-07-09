@@ -7,6 +7,7 @@ import { MaterialModule } from '../material.module';
 import { QuotaCustomValidators } from '../../_validators/QuotaCustomValidators.Validator';
 import { QuotaService } from '../../_services/quota.service';
 import { ValidateMinutes } from '../../_validators/ValidateMinutes';
+import { CommonLibrary } from '../../_library/common.library';
 
 @Component({
   selector:'app-quota-editor',
@@ -20,11 +21,7 @@ export class QuotaEditorComponent implements OnInit {
   quotaeditorForm: FormGroup;
 
   private toDate = new Date();  //used in endDate filter in calendar template
-  toDateNgbDateStruct: NgbDateStruct = {
-    year: this.toDate.getFullYear(),
-    month: this.toDate.getMonth(),
-    day: this.toDate.getDate()
-  }
+  toDateNgbDateStruct: NgbDateStruct = CommonLibrary.Date2NgbDateStruct(this.toDate);
 
   constructor(
         private dialogRef: MatDialogRef<QuotaEditorComponent>,
